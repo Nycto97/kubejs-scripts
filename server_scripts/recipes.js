@@ -141,18 +141,17 @@ ServerEvents.recipes((event) => {
             item = `create:crushed_raw_${type}`;
         } else if (type == 'ruby' || type == 'jade' || type == 'aquamarine' || type == 'onyx') {
             item = `epicsamurai:${type}`;
+        } else if (type == 'lapis') {
+            item = 'lapis_lazuli';
         }
 
         if (type == 'copper') {
             firstItemAmount = hasFirstItemBonus ? 7 : 5;
             secondItemChance = 0.25;
         } else if (type == 'redstone' || type == 'lapis') {
-            if (type == 'redstone') {
-                firstItemAmount = hasFirstItemBonus ? 7 : 6;
-            } else {
-                item = 'lapis_lazuli';
-                firstItemAmount = hasFirstItemBonus ? 12 : 10;
-            }
+            type == 'redstone'
+                ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
+                : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
             secondItemChance = 0.5;
         } else {
             firstItemAmount = hasFirstItemBonus ? 2 : 1;
