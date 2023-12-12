@@ -141,6 +141,8 @@ ServerEvents.recipes((event) => {
             item = `create:crushed_raw_${type}`;
         } else if (type == 'ruby' || type == 'jade' || type == 'aquamarine' || type == 'onyx') {
             item = `epicsamurai:${type}`;
+        } else if (type == 'lapis') {
+            item = 'lapis_lazuli';
         }
 
         if (type == 'copper') {
@@ -150,7 +152,6 @@ ServerEvents.recipes((event) => {
             if (type == 'redstone') {
                 firstItemAmount = hasFirstItemBonus ? 7 : 6;
             } else {
-                item = 'lapis_lazuli';
                 firstItemAmount = hasFirstItemBonus ? 12 : 10;
             }
             secondItemChance = 0.5;
