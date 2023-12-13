@@ -9,31 +9,38 @@
 /* Show a title on screen and send a message regarding
    shaders to the player when they change dimension */
 CommonAddedEvents.playerChangeDimension((event) => {
-    const playerName = event.player.getUsername();
-    const server = event.server;
-    const dimensionOld = event.getOldLevel().dimension.toString();
-    const dimensionNew = event.getNewLevel().dimension.toString();
+    const playerName = event.player.getUsername(),
+        server = event.server;
+
+    const dimensionOld = event.getOldLevel().dimension.toString(),
+        dimensionNew = event.getNewLevel().dimension.toString();
+
     const dimensionWhitelistForShader = [
         'minecraft:overworld',
         'minecraft:the_end',
         'minecraft:the_nether',
         'nycto:usw_vanilla'
     ];
-    const isDimensionOldWhitelisted = dimensionWhitelistForShader.includes(dimensionOld);
-    const isDimensionNewWhitelisted = dimensionWhitelistForShader.includes(dimensionNew);
-    // const isDimensionFromAdAstra = dimensionNew.startsWith('ad_astra:');
-    const subtitleDisableShaderCmd =
-        'title @s subtitle [{"text":"Please ","color":"white"},{"text":"disable ","color":"red"},{"text":"your shader!","color":"white"}]';
+
+    const isDimensionOldWhitelisted = dimensionWhitelistForShader.includes(dimensionOld),
+        isDimensionNewWhitelisted = dimensionWhitelistForShader.includes(dimensionNew);
+
     const titleDisableShaderCmd =
-        'title @s title [{"text":"Disable ","color":"red"},{"text":"Shader","color":"white"}]';
+            'title @s title [{"text":"Disable ","color":"red"},{"text":"Shader","color":"white"}]',
+        subtitleDisableShaderCmd =
+            'title @s subtitle [{"text":"Please ","color":"white"},{"text":"disable ","color":"red"},{"text":"your shader!","color":"white"}]';
+
     const messageDisableShaderInfo =
         '\u00A7cShaders break the skybox, lightning, atmosphere and custom effects in non-vanilla dimensions!';
-    const subtitleEnableShaderCmd =
-        'title @s subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]';
+
     const titleEnableShaderCmd =
-        'title @s title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]';
+            'title @s title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]',
+        subtitleEnableShaderCmd =
+            'title @s subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]';
+
     const messageEnableShaderInfo =
         '\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End and USW Vanilla dimensions!';
+
     const messageShaderTip =
         "\u00A7bTip:\u00A7f Press ESC > Options > Control Settings > Key Binds > type 'shader' in the text field > bind Toggle Shaders to F7";
 

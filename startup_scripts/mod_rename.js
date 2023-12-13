@@ -8,7 +8,6 @@
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit((event) => {
-    /* ##### Start variables & functions ##### */
     // TODO move array to separate file and import it here
     const modsToRename = [
         {
@@ -465,16 +464,11 @@ StartupEvents.postInit((event) => {
         }
     };
 
-    /* ##### End variables & functions ##### */
-
-    /* ################################## */
-
-    /* ##### Start code execution ##### */
-
     /* Rename mods */
     modsToRename.forEach((mod) => renameMod(mod));
 
-    /* Add all messages to 1 array after sorting them and add dividers where needed */
+    /* Add all messages to 1 array after sorting
+       them and add dividers where needed */
     modAllMessages.push(
         modSkippedNotInstalledMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
     );
@@ -489,8 +483,7 @@ StartupEvents.postInit((event) => {
 
     modAllMessages.push(modRenamedMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
 
-    /* Print out all messages, grouped by activity, alphabetically sorted per group, ignoring case */
+    /* Print out all messages, grouped by activity,
+       alphabetically sorted per group, ignoring case */
     modAllMessages.forEach((message) => console.log(message));
-
-    /* ##### End code execution ##### */
 });

@@ -7,24 +7,6 @@
 */
 
 /*
-   INFO:
-   Using RegEx with \/^(.)*$\/
-    / -> Start and end of RegEx
-    ^ -> Start of line
-    ( -> Start of group
-    . -> Match any character
-    ) -> End of group
-    * -> Match group 0 or more times
-    $ -> End of line
-
-   Example: /^some_mod:.*vertical_slab$/
-   some_mod:vertical_slab matches
-
-   Use this RegEx to match lines not containing a certain word:
-   /^whatever:textyouwant((?!word).)*$/
-*/
-
-/*
    ATTENTION:
    Block tags are used for controlling behavior with blocks in block form
    Item tags are used for controlling behavior in item form, like recipe inputs

@@ -6,24 +6,6 @@
    LICENSE file in the root directory of this source tree.
 */
 
-/*
-   INFO:
-   Using RegEx with \/^(.)*$\/
-    / -> Start and end of RegEx
-    ^ -> Start of line
-    ( -> Start of group
-    . -> Match any character
-    ) -> End of group
-    * -> Match group 0 or more times
-    $ -> End of line
-
-   Example: /^some_mod:.*vertical_slab$/
-   some_mod:vertical_slab matches
-
-   Use this RegEx to match lines not containing a certain word:
-   /^whatever:textyouwant((?!word).)*$/
-*/
-
 /* 
    ATTENTION:
    input = ANY input !!!
@@ -41,12 +23,23 @@ ServerEvents.recipes((event) => {
             recipeIds.forEach((recipeId) => event.remove({ id: recipeId }))
     }; */
 
+    // TODO make id generate function
+
+    const addSmeltingRecipe = (input, output, xp, time) => {
+        // const id = ...(input, output)
+        event
+            .smelting(output, input)
+            .id(
+                `nycto:smelting/${output.substring(output.indexOf(':') + 1)}_from_${input.substring(
+                    input.indexOf(':') + 1
+                )}`
+            )
+            .xp(xp)
+            .cookingTime(time);
+    };
+
     const replaceInputUsingIdFilter = (id, inputToReplace, newInput) => {
-        event.replaceInput(
-            { id: id }, // Arg 1: the filter
-            inputToReplace, // Arg 2: the item to replace
-            newInput // Arg 3: the item to replace it with (can be a tag)
-        );
+        event.replaceInput({ id: id }, inputToReplace, newInput /* can be a tag */);
     };
 
     const addScarecrowRecipe = (color) => {
@@ -114,12 +107,12 @@ ServerEvents.recipes((event) => {
             return;
         }
 
-        let hasFirstItemBonus = false;
-        let firstItemAmount;
-        let secondItemChance;
-        let time;
-        let item = type;
-        let items;
+        let hasFirstItemBonus = false,
+            firstItemAmount,
+            secondItemChance,
+            time,
+            item = type,
+            items;
 
         if (type == 'coal') {
             time = 150;
@@ -204,11 +197,7 @@ ServerEvents.recipes((event) => {
     addOreCrushingRecipe('undergarden:depthrock_cloggrum_ore', 'cloggrum', 'undergarden:depthrock');
     addOreCrushingRecipe('undergarden:shiverstone_cloggrum_ore', 'cloggrum', 'undergarden:shiverstone');
 
-    event
-        .smelting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
-        .id('nycto:smelting/cloggrum_ingot_from_crushed_raw_cloggrum')
-        .xp(0.7)
-        .cookingTime(200);
+    addSmeltingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 0.7, 200);
     event
         .blasting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
         .id('nycto:blasting/cloggrum_ingot_from_crushed_raw_cloggrum')
@@ -224,11 +213,7 @@ ServerEvents.recipes((event) => {
 
     addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
-    event
-        .smelting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
-        .id('nycto:smelting/froststeel_ingot_from_crushed_raw_froststeel')
-        .xp(0.7)
-        .cookingTime(200);
+    addSmeltingRecipe('undergarden:crushed_raw_froststeel', 'undergarden:froststeel_ingot', 0.7, 200);
     event
         .blasting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
         .id('nycto:blasting/froststeel_ingot_from_crushed_raw_froststeel')
@@ -246,11 +231,7 @@ ServerEvents.recipes((event) => {
     addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
     addOreCrushingRecipe('undergarden:tremblecrust_utherium_ore', 'utherium', 'undergarden:tremblecrust');
 
-    event
-        .smelting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
-        .id('nycto:smelting/utherium_crystal_from_crushed_raw_utherium')
-        .xp(1)
-        .cookingTime(200);
+    addSmeltingRecipe('undergarden:crushed_raw_utherium', 'undergarden:utherium_crystal', 1, 200);
     event
         .blasting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
         .id('nycto:blasting/utherium_crystal_from_crushed_raw_utherium')
@@ -313,21 +294,13 @@ ServerEvents.recipes((event) => {
     
        Add smelting and smoking recipes for minecraft:leather with
        minecraft:rotten_flesh and rottencreatures:magma_rotten_flesh */
-    event
-        .smelting('minecraft:leather', 'minecraft:rotten_flesh')
-        .id('nycto:smelting/leather_from_rotten_flesh')
-        .xp(0.25)
-        .cookingTime(200);
+    addSmeltingRecipe('minecraft:rotten_flesh', 'minecraft:leather', 0.25, 200);
     event
         .smoking('minecraft:leather', 'minecraft:rotten_flesh')
         .id('nycto:smoking/leather_from_rotten_flesh')
         .xp(0.25)
         .cookingTime(100);
-    event
-        .smelting('minecraft:leather', 'rottencreatures:magma_rotten_flesh')
-        .id('nycto:smelting/leather_from_magma_rotten_flesh')
-        .xp(0.25)
-        .cookingTime(200);
+    addSmeltingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 0.25, 200);
     event
         .smoking('minecraft:leather', 'rottencreatures:magma_rotten_flesh')
         .id('nycto:smoking/leather_from_magma_rotten_flesh')
@@ -388,21 +361,13 @@ ServerEvents.recipes((event) => {
 
     /* Add smelting and blasting recipes for epicsamurai:ruby with
        epicsamurai:ruby_ore and epicsamurai:deepslate_ruby_ore */
-    event
-        .smelting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
-        .id('nycto:smelting/ruby_from_ruby_ore')
-        .xp(0.75)
-        .cookingTime(200);
+    addSmeltingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 0.75, 200);
     event
         .blasting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
         .id('nycto:blasting/ruby_from_ruby_ore')
         .xp(0.75)
         .cookingTime(100);
-    event
-        .smelting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
-        .id('nycto:smelting/ruby_from_deepslate_ruby_ore')
-        .xp(0.75)
-        .cookingTime(200);
+    addSmeltingRecipe('epicsamurai:deepslate_ruby_ore', 'epicsamurai:ruby', 0.75, 200);
     event
         .blasting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
         .id('nycto:blasting/ruby_from_deepslate_ruby_ore')
@@ -522,27 +487,17 @@ ServerEvents.recipes((event) => {
     /* Darker Depths */
 
     addOreCrushingRecipe('darkerdepths:aridrock_gold_ore', 'gold', 'darkerdepths:aridrock');
-
     addOreCrushingRecipe('darkerdepths:aridrock_iron_ore', 'iron', 'darkerdepths:aridrock');
-
     addOreCrushingRecipe('darkerdepths:aridrock_coal_ore', 'coal', 'darkerdepths:aridrock');
-
     addOreCrushingRecipe('darkerdepths:aridrock_lapis_ore', 'lapis', 'darkerdepths:aridrock');
-
     addOreCrushingRecipe('darkerdepths:aridrock_diamond_ore', 'diamond', 'darkerdepths:aridrock');
-
     addOreCrushingRecipe('darkerdepths:aridrock_redstone_ore', 'redstone', 'darkerdepths:aridrock');
 
     addOreCrushingRecipe('darkerdepths:limestone_gold_ore', 'gold', 'darkerdepths:limestone');
-
     addOreCrushingRecipe('darkerdepths:limestone_iron_ore', 'iron', 'darkerdepths:limestone');
-
     addOreCrushingRecipe('darkerdepths:limestone_coal_ore', 'coal', 'darkerdepths:limestone');
-
     addOreCrushingRecipe('darkerdepths:limestone_lapis_ore', 'lapis', 'darkerdepths:limestone');
-
     addOreCrushingRecipe('darkerdepths:limestone_diamond_ore', 'diamond', 'darkerdepths:limestone');
-
     addOreCrushingRecipe('darkerdepths:limestone_redstone_ore', 'redstone', 'darkerdepths:limestone');
 
     /* Deeper and Darker */
@@ -568,15 +523,13 @@ ServerEvents.recipes((event) => {
     /* Epic Samurai */
 
     addOreCrushingRecipe('epicsamurai:ruby_ore', 'ruby', 'cobblestone');
-    addOreCrushingRecipe('epicsamurai:deepslate_ruby_ore', 'ruby', 'cobbled_deepslate');
-
     addOreCrushingRecipe('epicsamurai:jade_ore', 'jade', 'cobblestone');
-    addOreCrushingRecipe('epicsamurai:deepslate_jade_ore', 'jade', 'cobbled_deepslate');
-
     addOreCrushingRecipe('epicsamurai:aquamarine_ore', 'aquamarine', 'cobblestone');
-    addOreCrushingRecipe('epicsamurai:deepslate_aquamarine_ore', 'aquamarine', 'cobbled_deepslate');
-
     addOreCrushingRecipe('epicsamurai:onyx_ore', 'onyx', 'cobblestone');
+
+    addOreCrushingRecipe('epicsamurai:deepslate_ruby_ore', 'ruby', 'cobbled_deepslate');
+    addOreCrushingRecipe('epicsamurai:deepslate_jade_ore', 'jade', 'cobbled_deepslate');
+    addOreCrushingRecipe('epicsamurai:deepslate_aquamarine_ore', 'aquamarine', 'cobbled_deepslate');
     addOreCrushingRecipe('epicsamurai:deepslate_onyx_ore', 'onyx', 'cobbled_deepslate');
 
     /* Randomium */
@@ -654,93 +607,3 @@ ServerEvents.recipes((event) => {
         }
     ]);
 });
-
-// TODO MOVE TO OTHER GENERAL CODE FILE !!!
-/* 
-   ATTENTION
-   The following code can only be used to manually copy/paste the output
-   from console.log to the In Control! config file, as it is not possible
-   to write [] to json files with JsonIO.write() (provided by KubeJS).
-*/
-
-/* 
-   ATTENTION 
-   NEW, BETTER, EASIER APPROACH !
-   RULE 1: ALLOW MINECRAFT MOBS
-   RULE 2: DENY ALL MODS
-   FIRST RULE THAT MATCHES, STOPS THAT MOB FROM BEING AFFECTED BY
-   FOLLOWING RULES, UNLESS continue: true IS SPECIFIED IN THE RULE
-
-[
-    {
-        "result": "allow",
-        "mod": "minecraft",
-        "dimension": "nycto:usw_vanilla",
-        "onjoin": true
-    },
-    {
-        "result": "deny",
-        "dimension": "nycto:usw_vanilla",
-        "onjoin": true
-    }
-]
-   
-   INFO
-   @ChiefArug:
-   "When a rule matches and has a result then InControl! stops processing
-   further rules for that mob unless the rule also specified continue: true.
-   So if you have a result: allow, it will stop InControl! processing any further rules,
-   including deny ones"
-*/
-
-// WARNING DO NOT REMOVE THIS COMMENTED OUT CODE !!!
-/* const allServerModIds = Platform.getList();
-const arrayWithAllModIdsForInControlBlacklist = [];
-const arrayWithAllModIdsForInControlBlacklistStringified = [];
-const constructBlacklistObject = (modId) => {
-    return {
-        result: 'deny',
-        mod: modId,
-        dimension: 'nycto:usw_vanilla',
-        onjoin: true
-    };
-};
-
-allServerModIds.forEach((modId) => {
-    modId != 'minecraft' && arrayWithAllModIdsForInControlBlacklist.push(constructBlacklistObject(modId));
-});
-
-arrayWithAllModIdsForInControlBlacklist.map((object) => {
-    arrayWithAllModIdsForInControlBlacklistStringified.push(JSON.stringify(object));
-});
-
-console.log(
-    `There are ${arrayWithAllModIdsForInControlBlacklistStringified.length} mods loaded on the server (including minecraft, forge and jar in jar mods).`
-);
-
-for (let i = 0; i < 5; i++) {
-    console.log('-'.repeat(89));
-}
-console.log(`${'-'.repeat(21)} START MANUALLY GENERATED InControl! BLACKLIST ${'-'.repeat(21)}`);
-//console.log('--- This is only for visual reference, actual json gets written to InControl! config! ---');
-for (let i = 0; i < 5; i++) {
-    console.log('-'.repeat(89));
-}
-console.log(`[${arrayWithAllModIdsForInControlBlacklistStringified.toString()}]`);
-for (let i = 0; i < 5; i++) {
-    console.log('-'.repeat(89));
-}
-console.log(`${'-'.repeat(22)} END MANUALLY GENERATED InControl! BLACKLIST ${'-'.repeat(22)}`);
-for (let i = 0; i < 5; i++) {
-    console.log('-'.repeat(89));
-}
-
-const filePath = 'config/incontrol/spawn.json'; */
-
-// JsonIO.write(filePath, arrayWithAllModIdsForInControlBlacklistStringified.toString());
-//JsonIO.write(filePath, JSON.stringify({ 1: '1' }));
-// JsonIO.read(filePath) != null
-//     ? console.log(`File has been successfully saved to "Server Nycto/${filePath}"`)
-//     : console.log(
-//           `Something went wrong! Failed to save to "Server Nycto/${filePath}" Config file not found, meaning the script successfully located and deleted the file, but failed to write to it! Please check and fix your JsonIO.write() call!`
-//       );
