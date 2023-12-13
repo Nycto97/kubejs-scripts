@@ -102,7 +102,11 @@ ServerEvents.recipes((event) => {
             type != 'ruby' &&
             type != 'jade' &&
             type != 'aquamarine' &&
-            type != 'onyx'
+            type != 'onyx' &&
+            type != 'cloggrum' &&
+            type != 'froststeel' &&
+            type != 'utherium' &&
+            type != 'regalium'
         ) {
             console.log(
                 `ERROR: addOreCrushingRecipe: type ${type} not found! Add logic to addOreCrushingRecipe to handle this type!`
@@ -119,22 +123,23 @@ ServerEvents.recipes((event) => {
 
         if (type == 'coal') {
             time = 150;
-        } else if (
-            type == 'emerald' ||
-            type == 'diamond' ||
-            type == 'ruby' ||
-            type == 'jade' ||
-            type == 'aquamarine' ||
-            type == 'onyx'
-        ) {
+        } else if (type == 'froststeel' || type == 'regalium') {
+            time = 300;
+        } else if (type == 'emerald' || type == 'diamond' || type == 'ruby' || type == 'jade') {
             time = 350;
+        } else if (type == 'utherium') {
+            time = 420;
         } else {
             time = 250;
         }
 
-        if (mainBlock == 'cobbled_deepslate') {
+        if (
+            mainBlock == 'cobbled_deepslate' ||
+            mainBlock == 'undergarden:shiverstone' ||
+            mainBlock == 'undergarden:tremblecrust'
+        ) {
+            mainBlock == 'undergarden:tremblecrust' ? (time += 200) : (time += 100);
             hasFirstItemBonus = true;
-            time += 100;
         }
 
         if (type == 'iron' || type == 'copper' || type == 'gold') {
@@ -143,21 +148,21 @@ ServerEvents.recipes((event) => {
             item = `epicsamurai:${type}`;
         } else if (type == 'lapis') {
             item = 'lapis_lazuli';
+        } else if (type == 'cloggrum' || type == 'froststeel' || type == 'utherium' || type == 'regalium') {
+            item = `undergarden:crushed_raw_${type}`;
         }
 
         if (type == 'copper') {
             firstItemAmount = hasFirstItemBonus ? 7 : 5;
             secondItemChance = 0.25;
         } else if (type == 'redstone' || type == 'lapis') {
-            if (type == 'redstone') {
-                firstItemAmount = hasFirstItemBonus ? 7 : 6;
-            } else {
-                firstItemAmount = hasFirstItemBonus ? 12 : 10;
-            }
+            type == 'redstone'
+                ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
+                : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
             secondItemChance = 0.5;
         } else {
             firstItemAmount = hasFirstItemBonus ? 2 : 1;
-            secondItemChance = hasFirstItemBonus ? 0.25 : 0.75;
+            secondItemChance = hasFirstItemBonus && mainBlock != 'undergarden:tremblecrust' ? 0.25 : 0.75;
         }
 
         items = [
@@ -182,6 +187,101 @@ ServerEvents.recipes((event) => {
 
         addCrushingRecipe(input, time, items);
     };
+
+    /* The Undergarden */
+
+    addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
+    addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
+
+    addOreCrushingRecipe('undergarden:depthrock_iron_ore', 'iron', 'undergarden:depthrock');
+    addOreCrushingRecipe('undergarden:shiverstone_iron_ore', 'iron', 'undergarden:shiverstone');
+
+    addOreCrushingRecipe('undergarden:depthrock_gold_ore', 'gold', 'undergarden:depthrock');
+
+    addOreCrushingRecipe('undergarden:depthrock_diamond_ore', 'diamond', 'undergarden:depthrock');
+    addOreCrushingRecipe('undergarden:shiverstone_diamond_ore', 'diamond', 'undergarden:shiverstone');
+
+    addOreCrushingRecipe('undergarden:depthrock_cloggrum_ore', 'cloggrum', 'undergarden:depthrock');
+    addOreCrushingRecipe('undergarden:shiverstone_cloggrum_ore', 'cloggrum', 'undergarden:shiverstone');
+
+    event
+        .smelting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
+        .id('nycto:smelting/cloggrum_ingot_from_crushed_raw_cloggrum')
+        .xp(0.7)
+        .cookingTime(200);
+    event
+        .blasting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
+        .id('nycto:blasting/cloggrum_ingot_from_crushed_raw_cloggrum')
+        .xp(0.7)
+        .cookingTime(100);
+
+    event.recipes.create
+        .splashing(
+            ['9x undergarden:cloggrum_nugget', Item.of('createcafe:oreo_crushed').withChance(0.75)],
+            'undergarden:crushed_raw_cloggrum'
+        )
+        .id('nycto:splashing/cloggrum_nugget_from_crushed_raw_cloggrum');
+
+    addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
+
+    event
+        .smelting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
+        .id('nycto:smelting/froststeel_ingot_from_crushed_raw_froststeel')
+        .xp(0.7)
+        .cookingTime(200);
+    event
+        .blasting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
+        .id('nycto:blasting/froststeel_ingot_from_crushed_raw_froststeel')
+        .xp(0.7)
+        .cookingTime(100);
+
+    event.recipes.create
+        .splashing(
+            ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
+            'undergarden:crushed_raw_froststeel'
+        )
+        .id('nycto:splashing/froststeel_nugget_from_crushed_raw_froststeel');
+
+    addOreCrushingRecipe('undergarden:depthrock_utherium_ore', 'utherium', 'undergarden:depthrock');
+    addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
+    addOreCrushingRecipe('undergarden:tremblecrust_utherium_ore', 'utherium', 'undergarden:tremblecrust');
+
+    event
+        .smelting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
+        .id('nycto:smelting/utherium_crystal_from_crushed_raw_utherium')
+        .xp(1)
+        .cookingTime(200);
+    event
+        .blasting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
+        .id('nycto:blasting/utherium_crystal_from_crushed_raw_utherium')
+        .xp(1)
+        .cookingTime(100);
+
+    event.recipes.create
+        .splashing(
+            ['9x undergarden:utheric_shard', Item.of('projecte:red_matter').withChance(0.05)],
+            'undergarden:crushed_raw_utherium'
+        )
+        .id('nycto:splashing/utheric_shard_from_crushed_raw_utherium');
+
+    event
+        .shaped('1x undergarden:regalium_crystal', ['SSS', 'SSS', 'SSS'], {
+            S: 'undergarden:regalic_shard'
+        })
+        .id('nycto:regalium_crystal_from_regalic_shard');
+    event
+        .shapeless('9x undergarden:regalic_shard', ['undergarden:regalium_crystal'])
+        .id('nycto:regalic_shard_from_regalium_crystal');
+
+    addOreCrushingRecipe('undergarden:depthrock_regalium_ore', 'regalium', 'undergarden:depthrock');
+    addOreCrushingRecipe('undergarden:shiverstone_regalium_ore', 'regalium', 'undergarden:shiverstone');
+
+    event.recipes.create
+        .splashing(
+            ['9x undergarden:regalic_shard', Item.of('enchanted_golden_apple').withChance(0.05)],
+            'undergarden:crushed_raw_regalium'
+        )
+        .id('nycto:splashing/regalic_shard_from_crushed_raw_regalium');
 
     /* Remove all recipes having vertical slabs from Builders Crafts and
        Additions as input or output since Quark already adds all of these
@@ -354,22 +454,22 @@ ServerEvents.recipes((event) => {
     event
         .smelting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
         .id('nycto:smelting/ruby_from_ruby_ore')
-        .xp(1)
+        .xp(0.75)
         .cookingTime(200);
     event
         .blasting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
         .id('nycto:blasting/ruby_from_ruby_ore')
-        .xp(1)
+        .xp(0.75)
         .cookingTime(100);
     event
         .smelting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
         .id('nycto:smelting/ruby_from_deepslate_ruby_ore')
-        .xp(1)
+        .xp(0.75)
         .cookingTime(200);
     event
         .blasting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
         .id('nycto:blasting/ruby_from_deepslate_ruby_ore')
-        .xp(1)
+        .xp(0.75)
         .cookingTime(100);
 
     /* Remove recipes for ruby gems and blocks from
