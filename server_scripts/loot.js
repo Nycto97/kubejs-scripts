@@ -6,24 +6,6 @@
    LICENSE file in the root directory of this source tree.
 */
 
-/*
-   INFO:
-   Using RegEx with \/^(.)*$\/
-    / -> Start and end of RegEx
-    ^ -> Start of line
-    ( -> Start of group
-    . -> Match any character
-    ) -> End of group
-    * -> Match group 0 or more times
-    $ -> End of line
-
-   Example: /^some_mod:.*vertical_slab$/
-   some_mod:vertical_slab matches
-
-   Use this RegEx to match lines not containing a certain word:
-   /^whatever:textyouwant((?!word).)*$/
-*/
-
 /* 
    ATTENTION:
    Ingredient.all.itemIds does NOT return all registered items and blocks,
@@ -33,13 +15,10 @@
    To get all registered items, use Item.getTypeList()
 */
 
-let allBlocks = Block.getTypeList();
-let allItems = Item.getTypeList();
-let allBlocksAndItems = allBlocks.concat(allItems);
+let allBlocks = Block.getTypeList(),
+    allItems = Item.getTypeList();
 
-console.log(
-    `There are ${allItems.length} items and ${allBlocks.length} blocks registered in your world, totalling ${allBlocksAndItems.length}.`
-);
+console.log(`There are ${allItems.length} items and ${allBlocks.length} blocks registered in your world.`);
 
 LootJS.modifiers((event) => {
     /* Enable the log output */
@@ -61,7 +40,7 @@ LootJS.modifiers((event) => {
         event
             .addBlockLootModifier(block)
             /* Using removeLoot and addLoot instead of replaceLoot since the
-           vanilla drop chance seems unchanged when using replaceLoot */
+               vanilla drop chance seems unchanged when using replaceLoot */
             .removeLoot(lootToRemove)
             .addLoot(LootEntry.of(lootToAdd, amount).when((c) => c.randomChance(chance)));
     };
@@ -79,10 +58,6 @@ LootJS.modifiers((event) => {
     /* Remove all vertical slabs from Vertical Slabs Compat - Create: Deco mod
        from the current loot pool so they don't drop their block when breaking */
     removeAllBlockLoot(/^v_slab_compat:createdeco.*vertical_slab$/);
-
-    /* Remove all connected glass (borderless glass) from Connected Glass mod
-       from the current loot pool so they don't drop their block when breaking */
-    // event.addBlockLootModifier(/^connectedglass:borderless.*$/).removeLoot(/^connectedglass:borderless.*$/);
 
     /* Shulker Drops Two mod replacement
 
@@ -111,6 +86,7 @@ LootJS.modifiers((event) => {
 
     /* There will be many more items that need to be added! */
     const cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
+
     const blacklistedItems = allItems.filter(
         (item) =>
             item == 'minecraft:air' ||
@@ -124,7 +100,7 @@ LootJS.modifiers((event) => {
     };
 
     /* TODO find out how it comes that this works, while the commented
-   out code below is the full, 'correct' way to do this */
+       out code below is the full, 'correct' way to do this */
     const filteredItems = allItems.filter(isNotBlacklisted);
     // const filteredItems = allItems.filter((item) => isNotBlacklisted(item));
 

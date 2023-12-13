@@ -8,7 +8,6 @@
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit((event) => {
-    /* ##### Start variables & functions ##### */
     // TODO move array to separate file and import it here
     const modsToRename = [
         {
@@ -442,14 +441,14 @@ StartupEvents.postInit((event) => {
                Only then will the compiler look for a key corresponding to the evaluated expression.
         */
         const modRef = Platform.mods[mod.modId];
-        /* Check if mod is installed */
+        /* Check if mod is installed. */
         if (modRef != undefined) {
             /*
-               new String() allows to store the current name and refer to it later,
-               even after the initial value (modRef.name) gets updated.
+               new String() allows to store the current name and refer to it
+               later, even after the initial value (modRef.name) gets updated.
             */
             const defaultModName = new String(modRef.name);
-            /* Check if mod already has preferred name and skip rename if it does */
+            /* Check if mod already has preferred name and skip rename if it does. */
             if (modRef.name != mod.preferredModName) {
                 modRef.name = mod.preferredModName;
                 modRenamedMessages.push(
@@ -465,16 +464,11 @@ StartupEvents.postInit((event) => {
         }
     };
 
-    /* ##### End variables & functions ##### */
-
-    /* ################################## */
-
-    /* ##### Start code execution ##### */
-
     /* Rename mods */
     modsToRename.forEach((mod) => renameMod(mod));
 
-    /* Add all messages to 1 array after sorting them and add dividers where needed */
+    /* Add all messages to 1 array after sorting
+       them and add dividers where needed. */
     modAllMessages.push(
         modSkippedNotInstalledMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
     );
@@ -489,8 +483,7 @@ StartupEvents.postInit((event) => {
 
     modAllMessages.push(modRenamedMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
 
-    /* Print out all messages, grouped by activity, alphabetically sorted per group, ignoring case */
+    /* Print out all messages, grouped by activity,
+       alphabetically sorted per group, ignoring case */
     modAllMessages.forEach((message) => console.log(message));
-
-    /* ##### End code execution ##### */
 });
