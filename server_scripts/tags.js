@@ -163,4 +163,11 @@ ServerEvents.tags('item', (event) => {
 
     /* Add modded items to #minecraft:beacon_payment_items */
     event.add('minecraft:beacon_payment_items', ['epicsamurai:ruby']);
+
+    event.add('create:crushed_raw_materials', [
+        'undergarden:crushed_raw_cloggrum',
+        'undergarden:crushed_raw_froststeel',
+        'undergarden:crushed_raw_utherium',
+        'undergarden:crushed_raw_regalium'
+    ]);
 });
