@@ -98,11 +98,15 @@ blocks = combineAndFormatBlocks(leavesVanilla, leavesModdedFiltered, []);
 printBlocksForShader(blocks.moddedBlocks, blocks.combinedAndFormattedBlocks, 'leaves', '10008');
 
 /*
-   ORES
+   (MODDED) ORES
 */
 
 const oresModdedFiltered = allBlocks.filter(
-    (block) => !block.startsWith('minecraft:') && !block.includes('coal') && block.endsWith('_ore')
+    (block) =>
+        !block.startsWith('minecraft:') &&
+        !block.startsWith('forbidden_arcanus:') &&
+        !block.includes('coal') &&
+        block.endsWith('_ore')
 );
 /* INFO: Add other blocks that should be treated as ores to the array */
 const oresModded = ['infernalexp:dimstone'];
