@@ -526,27 +526,6 @@ ServerEvents.recipes((event) => {
         }
     ]);
 
-    /* Croptopia */
-
-    addCrushingRecipe('croptopia:salt_ore', 300, [
-        {
-            item: 'croptopia:salt',
-            chance: 0.75
-        },
-        {
-            item: 'croptopia:salt',
-            chance: 0.25
-        },
-        {
-            item: 'create:experience_nugget',
-            chance: 0.75
-        },
-        {
-            item: 'calcite',
-            chance: 0.125
-        }
-    ]);
-
     /* Darker Depths */
 
     addOreCrushingRecipe('darkerdepths:aridrock_gold_ore', 'gold', 'darkerdepths:aridrock');
