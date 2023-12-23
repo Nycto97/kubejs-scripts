@@ -152,11 +152,18 @@ printBlocksForShader(blocks.moddedBlocks, blocks.combinedAndFormattedBlocks, 'ir
 
 const stainedGlassVanilla =
     'stained_glass white_stained_glass orange_stained_glass magenta_stained_glass light_blue_stained_glass yellow_stained_glass lime_stained_glass pink_stained_glass gray_stained_glass light_gray_stained_glass cyan_stained_glass purple_stained_glass blue_stained_glass brown_stained_glass green_stained_glass red_stained_glass black_stained_glass';
-// TODO fix and add conditions (Connected Glass' stained glass does not have stained in the blockId!)
+// TODO add other stained glass blocks to array
+// INFO: Connected Glass' stained glass does not have stained in the blockId!
+// Include tinted glass?
 const stainedGlassModdedFiltered = allBlocks.filter(
-    (block) => !block.includes('minecraft:') && block.includes('connectedglass:')
-    // block.endsWith('stained_glass')
-    // || block.endsWith('')
+    (block) =>
+        !block.startsWith('minecraft:') &&
+        !block.includes('pane') &&
+        !block.includes('tinted') &&
+        (block.endsWith('stained_glass') ||
+            block.startsWith('connectedglass:borderless_glass_') ||
+            block.startsWith('connectedglass:clear_glass_') ||
+            block.startsWith('connectedglass:scratched_glass_'))
 );
 
 /* INFO: Add other blocks that should be treated as stained glass to the array */
