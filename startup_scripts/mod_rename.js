@@ -15,8 +15,24 @@ StartupEvents.postInit((event) => {
             preferredModName: 'Ad Astra: Giselle Add-on'
         },
         {
+            modId: 'alexsabnormalities',
+            preferredModName: "Alex's Mobs: Abnormalities"
+        },
+        {
             modId: 'animatica',
             preferredModName: 'Animatica'
+        },
+        {
+            modId: 'arseng',
+            preferredModName: 'Applied Energistics 2: Ars Énergistique (Ars Nouveau)'
+        },
+        {
+            modId: 'merequester',
+            preferredModName: 'Applied Energistics 2: ME Requester'
+        },
+        {
+            modId: 'ae2things',
+            preferredModName: 'Applied Energistics 2: Things'
         },
         {
             modId: 'ars_creo',
@@ -29,6 +45,10 @@ StartupEvents.postInit((event) => {
         {
             modId: 'ars_instrumentum',
             preferredModName: 'Ars Nouveau: Ars Instrumentum'
+        },
+        {
+            modId: 'arsomega',
+            preferredModName: 'Ars Nouveau: Ars Omega'
         },
         {
             modId: 'ars_scalaes',
@@ -65,6 +85,10 @@ StartupEvents.postInit((event) => {
         {
             modId: 'bintfar',
             preferredModName: 'Bed Is Not Too Far Away'
+        },
+        {
+            modId: 'better_beacons',
+            preferredModName: 'Better Beacons'
         },
         {
             modId: 'betterfpsdist',
@@ -104,11 +128,23 @@ StartupEvents.postInit((event) => {
         },
         {
             modId: 'computercraft',
-            preferredModName: 'ComputerCraft: Tweaked'
+            preferredModName: 'ComputerCraft'
+        },
+        {
+            modId: 'advancedperipherals',
+            preferredModName: 'ComputerCraft: Advanced Peripherals'
         },
         {
             modId: 'cccbridge',
             preferredModName: 'ComputerCraft: Create Compat'
+        },
+        {
+            modId: 'connectivity',
+            preferredModName: 'Connectivity'
+        },
+        {
+            modId: 'constructionwand',
+            preferredModName: 'Construction Wands'
         },
         {
             modId: 'createbigcannons',
@@ -147,6 +183,10 @@ StartupEvents.postInit((event) => {
             preferredModName: 'Create: Garnished'
         },
         {
+            modId: 'creategoggles',
+            modPreferredName: 'Create: Goggles'
+        },
+        {
             modId: 'liquidburner',
             preferredModName: 'Create: Liquid Burner'
         },
@@ -161,6 +201,10 @@ StartupEvents.postInit((event) => {
         {
             modId: 'createindustry',
             preferredModName: 'Create: The Factory Must Grow'
+        },
+        {
+            modId: 'culllessleaves',
+            preferredModName: 'Cull Less Leaves'
         },
         {
             modId: 'cupboard',
@@ -211,8 +255,32 @@ StartupEvents.postInit((event) => {
             preferredModName: "Farmer's Delight: Abnormals Delight"
         },
         {
+            modId: 'aetherdelight',
+            preferredModName: "Farmer's Delight: Aether Delight"
+        },
+        {
+            modId: 'alexsdelight',
+            preferredModName: "Farmer's Delight: Alex's Delight"
+        },
+        {
+            modId: 'brewinandchewin',
+            preferredModName: "Farmer's Delight: Brewin' And Chewin'"
+        },
+        {
             modId: 'cataclysm_delight',
             preferredModName: "Farmer's Delight: Cataclysm Delight"
+        },
+        {
+            modId: 'collectorsreap',
+            preferredModName: "Farmer's Delight: Collector's Reap"
+        },
+        {
+            modId: 'culturaldelights',
+            preferredModName: "Farmer's Delight: Cultural Delight"
+        },
+        {
+            modId: 'delightful',
+            preferredModName: "Farmer's Delight: Delightful"
         },
         {
             modId: 'endersdelight',
@@ -235,8 +303,16 @@ StartupEvents.postInit((event) => {
             preferredModName: "Farmer's Delight: Nether's Delight"
         },
         {
+            modId: 'fastasyncworldsave',
+            preferredModName: 'Fast Async World Save'
+        },
+        {
             modId: 'create_questing',
             preferredModName: 'FTB Quests: Create Questing'
+        },
+        {
+            modId: 'gpumemleakfix',
+            preferredModName: 'GPU Memory Leak Fix'
         },
         {
             modId: 'hunterillager',
@@ -245,6 +321,10 @@ StartupEvents.postInit((event) => {
         {
             modId: 'incontrol',
             preferredModName: 'In Control!'
+        },
+        {
+            modId: 'metalbarrels',
+            preferredModName: 'Iron Barrels'
         },
         {
             modId: 'tieredshulkers',
@@ -265,6 +345,10 @@ StartupEvents.postInit((event) => {
         {
             modId: 'kubejs_create',
             preferredModName: 'KubeJS: Create'
+        },
+        {
+            modId: 'kubejs_immersive_engineering',
+            preferredModName: 'KubeJS: Immersive Engineering'
         },
         {
             modId: 'lootjs',
@@ -347,8 +431,24 @@ StartupEvents.postInit((event) => {
             preferredModName: 'Neapolitan: Seasonals'
         },
         {
+            modId: 'notenoughanimations',
+            preferredModName: 'Not Enough Animations'
+        },
+        {
             modId: 'elevatorid',
             preferredModName: 'OpenBlocks Elevator'
+        },
+        {
+            modId: 'pneumaticcraft',
+            preferredModName: 'PneumaticCraft'
+        },
+        {
+            modId: 'polyeng',
+            preferredModName: 'Polymorph: Applied Energistics 2'
+        },
+        {
+            modId: 'refinedpolymorph',
+            preferredModName: 'Polymorph: Refined Storage'
         },
         {
             modId: 'equivadds',
@@ -357,6 +457,14 @@ StartupEvents.postInit((event) => {
         {
             modId: 'expequiv',
             preferredModName: 'ProjectE: Expanded Equivalence'
+        },
+        {
+            modId: 'refinedstorageaddons',
+            preferredModName: 'Refined Storage: Add-ons'
+        },
+        {
+            modId: 'rsrequestify',
+            preferredModName: 'Refined Storage: Requestify'
         },
         {
             modId: 'revampedwolf',
@@ -391,6 +499,10 @@ StartupEvents.postInit((event) => {
             preferredModName: 'Storage Drawers: Functional Storage Extra'
         },
         {
+            modId: 'structureessentials',
+            preferredModName: 'Structure Essentials'
+        },
+        {
             modId: 'deep_aether',
             preferredModName: 'The Aether: Deep Aether'
         },
@@ -400,7 +512,7 @@ StartupEvents.postInit((event) => {
         },
         {
             modId: 'tflostblocks',
-            preferredModName: 'The Twilight Forest: The Lost Blocks'
+            preferredModName: 'The Twilight Forest: Lost Blocks'
         },
         {
             modId: 'upgradednetherite_items',
