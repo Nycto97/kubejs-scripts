@@ -15,6 +15,10 @@ StartupEvents.postInit((event) => {
             preferredModName: 'Ad Astra: Giselle Add-on'
         },
         {
+            modId: 'alexsabnormalities',
+            preferredModName: "Alex's Mobs: Abnormalities"
+        },
+        {
             modId: 'animatica',
             preferredModName: 'Animatica'
         },
@@ -211,8 +215,16 @@ StartupEvents.postInit((event) => {
             preferredModName: "Farmer's Delight: Abnormals Delight"
         },
         {
+            modId: 'alexsdelight',
+            preferredModName: "Farmer's Delight: Alex's Delight"
+        },
+        {
             modId: 'cataclysm_delight',
             preferredModName: "Farmer's Delight: Cataclysm Delight"
+        },
+        {
+            modId: 'culturaldelights',
+            preferredModName: "Farmer's Delight: Cultural Delight"
         },
         {
             modId: 'endersdelight',
