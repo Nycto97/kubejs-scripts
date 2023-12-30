@@ -15,6 +15,9 @@
    To get all registered items, use Item.getTypeList()
 */
 
+/* Set to true to enable logging of blacklisted Rare Ice loot */
+const logBlacklistedRareIceLoot = false;
+
 let allBlocks = Block.getTypeList(),
     allItems = Item.getTypeList();
 
@@ -101,11 +104,12 @@ LootJS.modifiers((event) => {
     const filteredItems = allItems.filter(isNotBlacklisted);
     // const filteredItems = allItems.filter((item) => isNotBlacklisted(item));
 
-    console.log(
-        `\n\n${
-            allItems.length - filteredItems.length
-        } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
-    );
+    logBlacklistedRareIceLoot &&
+        console.log(
+            `\n\n${
+                allItems.length - filteredItems.length
+            } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
+        );
 
     event.addLootTableModifier('rare-ice:chests/rare_ice').apply((ctx) => {
         ctx.findLoot(Ingredient.all).forEach((item) => {
