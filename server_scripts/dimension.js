@@ -15,27 +15,28 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const dimensionOld = event.getOldLevel().dimension.toString(),
         dimensionNew = event.getNewLevel().dimension.toString();
 
+    /* Demon Realm is the only custom non-overworld
+       dimension where everything looks better with shader */
     const dimensionWhitelistForShader = [
         'minecraft:overworld',
         'minecraft:the_nether',
         'minecraft:the_end',
+        'arsomega:demon_realm',
         'nycto:usw_vanilla'
     ];
 
     const isDimensionOldWhitelisted = dimensionWhitelistForShader.includes(dimensionOld),
         isDimensionNewWhitelisted = dimensionWhitelistForShader.includes(dimensionNew);
 
-    const subtitleDisableShaderCmd =
-            'title @s subtitle [{"text":"Please ","color":"white"},{"text":"disable ","color":"red"},{"text":"your shader!","color":"white"}]',
-        titleDisableShaderCmd = 'title @s title [{"text":"Disable ","color":"red"},{"text":"Shader","color":"white"}]',
+    const subtitleDisableShaderCmd = `title ${playerName} subtitle [{"text":"Please ","color":"white"},{"text":"disable ","color":"red"},{"text":"your shader!","color":"white"}]`,
+        titleDisableShaderCmd = `title ${playerName} title [{"text":"Disable ","color":"red"},{"text":"Shader","color":"white"}]`,
         messageDisableShaderInfo =
-            '\u00A7cShaders break the skybox, lightning, atmosphere and custom effects in non-vanilla dimensions!';
+            '\u00A7cShaders break the skybox, lightning, atmosphere and custom effects in (most) non-vanilla dimensions!';
 
-    const subtitleEnableShaderCmd =
-            'title @s subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]',
-        titleEnableShaderCmd = 'title @s title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]',
+    const subtitleEnableShaderCmd = `title ${playerName} subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]`,
+        titleEnableShaderCmd = `title ${playerName} title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]`,
         messageEnableShaderInfo =
-            '\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End and USW Vanilla dimensions!';
+            '\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End, Demon Realm and USW Vanilla!';
 
     const messageShaderTip =
         "\u00A7bTip:\u00A7f Press ESC > Options > Control Settings > Key Binds > type 'shader' in the text field > bind Toggle Shaders to F7";
@@ -51,18 +52,18 @@ CommonAddedEvents.playerChangeDimension((event) => {
     !isDimensionNewWhitelisted &&
         isDimensionOldWhitelisted &&
         server.scheduleInTicks(60, () => {
-            event.player.runCommandSilent('title @s times 15 125 18') &&
-                event.player.runCommandSilent(subtitleDisableShaderCmd) &&
-                event.player.runCommandSilent(titleDisableShaderCmd) &&
+            server.runCommandSilent(`title ${playerName} times 15 125 18`) &&
+                server.runCommandSilent(subtitleDisableShaderCmd) &&
+                server.runCommandSilent(titleDisableShaderCmd) &&
                 event.player.tell(`${messageDisableShaderInfo}\n\n${messageShaderTip}`);
         });
 
     !isDimensionOldWhitelisted &&
         isDimensionNewWhitelisted &&
         server.scheduleInTicks(60, () => {
-            event.player.runCommandSilent('title @s times 15 95 18') &&
-                event.player.runCommandSilent(subtitleEnableShaderCmd) &&
-                event.player.runCommandSilent(titleEnableShaderCmd) &&
+            server.runCommandSilent(`title ${playerName} times 15 95 18`) &&
+                server.runCommandSilent(subtitleEnableShaderCmd) &&
+                server.runCommandSilent(titleEnableShaderCmd) &&
                 event.player.tell(`${messageEnableShaderInfo}\n\n${messageShaderTip}`);
         });
 });
