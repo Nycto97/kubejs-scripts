@@ -25,6 +25,29 @@ ServerEvents.tags('block', (event) => {
     // TODO
     // event.removeAll('minecraft:mutant_enderman_holdable');
 
+    /* Re-add items & blocks that should stay
+       tagged as #minecraft:enderman_holdable */
+    event.add('minecraft:enderman_holdable', [
+        'aether:purple_flower',
+        'aether:white_flower',
+        'biomesoplenty:glowshroom',
+        'biomesoplenty:toadstool',
+        'enderzoology:concussion_charge',
+        'enderzoology:confusing_charge',
+        'enderzoology:ender_charge',
+        'gardens_of_the_dead:blistercrown',
+        'gardens_of_the_dead:soulblight_fungus',
+        'gardens_of_the_dead:soulblight_sprouts',
+        'regions_unexplored:brimsprout',
+        'regions_unexplored:cobalt_roots',
+        'regions_unexplored:glistering_bloom',
+        'regions_unexplored:glistering_fern',
+        'regions_unexplored:glistering_sprout',
+        'regions_unexplored:mycotoxic_grass',
+        'savage_and_ravage:spore_bomb',
+        '#undergarden:mushrooms'
+    ]);
+
     /* The Aether: Enhanced Extinguishing
        Extinguish more torches in The Aether instead of only minecraft:torch
        RECIPE CHANGE WORKED WITH DATAPACK, changed input from "block": "minecraft:torch"
