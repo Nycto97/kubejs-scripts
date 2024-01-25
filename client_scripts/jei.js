@@ -34,4 +34,13 @@ JEIEvents.hideItems((event) => {
     /* Hide ruby gems, blocks and ores from MoreCraft
        from JEI GUI since we use Epic Samurai's ruby */
     event.hide(['morecraft:ruby', 'morecraft:ruby_block', 'morecraft:ruby_ore', 'morecraft:deepslate_ruby_ore']);
+
+    /* Hide disabled items from Paraglider from JEI GUI */
+    event.hide([
+        'paraglider:heart_container',
+        'paraglider:stamina_vessel',
+        'paraglider:spirit_orb',
+        'paraglider:anti_vessel',
+        'paraglider:essence'
+    ]);
 });
