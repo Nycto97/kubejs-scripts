@@ -16,4 +16,7 @@ ProjectEEvents.setEMC((event) => {
     to be generated from this one; i.e crafting recipes */
     event.setEMCBefore('architects_palette:withered_bone', 160);
     event.setEMCBefore('blue_skies:lunar_cobblestone', 1);
+
+    /* Prevent XP exploit */
+    event.setEMCBefore('minecraft:experience_bottle', 0);
 });
