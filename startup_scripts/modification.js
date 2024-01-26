@@ -18,8 +18,12 @@
    Tags are currently unsupported.
 */
 
+let isInstalled = (modId) => Platform.mods[modId] != undefined;
+
 // TODO find out if vanilla items can be used without adding minecraft: prefix
 // TODO add all signs to 32 or 64 stacksize group (RegEx?)
+
+/* Modify items */
 ItemEvents.modification((event) => {
     const maxStackSize5 = ['minecraft:enchanted_book'],
         maxStackSize10 = [
@@ -44,8 +48,10 @@ ItemEvents.modification((event) => {
             'minecraft:red_bed',
             'minecraft:black_bed'
         ],
-        maxStackSize50 = ['cgm:missile', 'cgm:grenade'],
+        maxStackSize50 = [],
         maxStackSize64 = ['minecraft:egg', 'minecraft:bucket', 'minecraft:ender_pearl'];
+
+    isInstalled('cgm') && maxStackSize50.push('cgm:missile', 'cgm:grenade');
 
     maxStackSize5.forEach((item) => event.modify(item, (i) => (i.maxStackSize = 5)));
 

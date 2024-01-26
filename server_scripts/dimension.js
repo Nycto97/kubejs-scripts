@@ -6,6 +6,8 @@
    LICENSE file in the root directory of this source tree.
 */
 
+let isInstalled = (modId) => Platform.mods[modId] != undefined;
+
 /* Show a title on screen and send a message regarding
    shaders to the player when they change dimension */
 CommonAddedEvents.playerChangeDimension((event) => {
@@ -15,15 +17,16 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const dimensionOld = event.getOldLevel().dimension.toString(),
         dimensionNew = event.getNewLevel().dimension.toString();
 
-    /* Demon Realm is the only custom non-overworld
-       dimension where everything looks better with shader */
     const dimensionWhitelistForShader = [
         'minecraft:overworld',
         'minecraft:the_end',
         'minecraft:the_nether',
-        'arsomega:demon_realm',
         'nycto:usw_vanilla'
     ];
+
+    /* Demon Realm is currently the only custom non-overworld
+       dimension where everything looks better with shader */
+    isInstalled('arsomega') && dimensionWhitelistForShader.push('arsomega:demon_realm');
 
     const isDimensionOldWhitelisted = dimensionWhitelistForShader.includes(dimensionOld),
         isDimensionNewWhitelisted = dimensionWhitelistForShader.includes(dimensionNew);
@@ -37,8 +40,9 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const titleEnableShaderCmd = `title ${playerName} title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]`,
         subtitleEnableShaderCmd = `title ${playerName} subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]`;
 
-    const messageEnableShaderInfo =
-        '\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End, Demon Realm and USW Vanilla!';
+    const messageEnableShaderInfo = `\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End${
+        isInstalled('arsomega') ? ', Demon Realm' : ''
+    } and USW Vanilla!`;
 
     const messageShaderTip =
         "\u00A7bTip:\u00A7f Press ESC > Options > Control Settings > Key Binds > type 'shader' in the text field > bind Toggle Shaders to F7";

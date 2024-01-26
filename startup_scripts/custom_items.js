@@ -6,11 +6,16 @@
    LICENSE file in the root directory of this source tree.
 */
 
-StartupEvents.registry(
-    /* Adding custom items under the mod's namespace so that
-       JEI shows these items along the mod's items and blocks */
-    'item',
-    (event) => {
+let isInstalled = (modId) => Platform.mods[modId] != undefined;
+
+/* Register custom items */
+StartupEvents.registry('item', (event) => {
+    /* 
+       Adding custom items under the mod's namespace so that
+       JEI shows these items along the mod's items and blocks 
+    */
+
+    if (isInstalled('undergarden')) {
         event.create('undergarden:crushed_raw_cloggrum').texture('nycto:item/crushed_raw_cloggrum');
 
         event.create('undergarden:crushed_raw_froststeel').texture('nycto:item/crushed_raw_froststeel');
@@ -21,4 +26,4 @@ StartupEvents.registry(
 
         event.create('undergarden:regalic_shard').texture('nycto:item/regalic_shard');
     }
-);
+});

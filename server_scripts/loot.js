@@ -56,11 +56,12 @@ LootJS.modifiers((event) => {
 
     /* Remove all vertical slabs from Builders Crafts and Additions mod
        from the current loot pool so they don't drop their block when breaking */
-    removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
+    if (isInstalled('buildersaddition')) removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
 
     /* Remove all vertical slabs from Vertical Slabs Compat - Create: Deco mod
        from the current loot pool so they don't drop their block when breaking */
-    removeAllBlockLoot(/^v_slab_compat:createdeco.*vertical_slab$/);
+    if (isInstalled('v_slab_compat') && isInstalled('createdeco'))
+        removeAllBlockLoot(/^v_slab_compat:createdeco.*vertical_slab$/);
 
     /* Shulker Drops Two mod replacement
 
@@ -75,49 +76,56 @@ LootJS.modifiers((event) => {
         .addLoot(LootEntry.of('minecraft:shulker_shell', 2).when((c) => c.randomChance(1.0)))
         .addLoot(LootEntry.of('minecraft:diamond').when((c) => c.randomChance(0.1)));
 
-    /* Needed for already existing ruby ores from MoreCraft, changed
-       frequency to 0 but some chunks got generated already */
-    replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
-    replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby_ore', 'epicsamurai:ruby_ore');
-    replaceBlockLoot('morecraft:deepslate_ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
-    replaceBlockLoot('morecraft:deepslate_ruby_ore', 'morecraft:deepslate_ruby_ore', 'epicsamurai:deepslate_ruby_ore');
+    /* We've reset the overworld + I made a datapack to disable
+       ruby ores from MoreCraft, but leave this code in just in case */
+    if (isInstalled('morecraft') && isInstalled('epicsamurai')) {
+        replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
+        replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby_ore', 'epicsamurai:ruby_ore');
+        replaceBlockLoot('morecraft:deepslate_ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
+        replaceBlockLoot(
+            'morecraft:deepslate_ruby_ore',
+            'morecraft:deepslate_ruby_ore',
+            'epicsamurai:deepslate_ruby_ore'
+        );
+    }
 
     /* INFO: START RARE ICE LOOT */
+    if (isInstalled('rare-ice')) {
+        /* There will be many more items that need to be added! */
+        let cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-    /* There will be many more items that need to be added! */
-    const cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
-
-    const blacklistedItems = allItems.filter(
-        (item) =>
-            item == 'minecraft:air' ||
-            cannotStartWith.some((itemNameStart) => item.startsWith(itemNameStart)) ||
-            RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(item) ||
-            RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(item)
-    );
-
-    const isNotBlacklisted = (item) => {
-        return !blacklistedItems.contains(item);
-    };
-
-    /* TODO find out how it comes that this works, while the commented
-       out code below is the full, 'correct' way to do this */
-    const filteredItems = allItems.filter(isNotBlacklisted);
-    // const filteredItems = allItems.filter((item) => isNotBlacklisted(item));
-
-    logBlacklistedRareIceLoot &&
-        console.log(
-            `\n\n${
-                allItems.length - filteredItems.length
-            } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
+        let blacklistedItems = allItems.filter(
+            (item) =>
+                item == 'minecraft:air' ||
+                cannotStartWith.some((itemNameStart) => item.startsWith(itemNameStart)) ||
+                RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(item) ||
+                RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(item)
         );
 
-    event.addLootTableModifier('rare-ice:chests/rare_ice').apply((ctx) => {
-        ctx.findLoot(Ingredient.all).forEach((item) => {
-            let count = item.count;
-            ctx.removeLoot(item);
-            ctx.addLoot(
-                LootEntry.of(filteredItems[Math.floor(Math.random() * filteredItems.length)]).limitCount(count)
+        let isNotBlacklisted = (item) => {
+            return !blacklistedItems.contains(item);
+        };
+
+        /* TODO find out how it comes that this works, while the commented
+       out code below is the full, 'correct' way to do this */
+        let filteredItems = allItems.filter(isNotBlacklisted);
+        // const filteredItems = allItems.filter((item) => isNotBlacklisted(item));
+
+        logBlacklistedRareIceLoot &&
+            console.log(
+                `\n\n${
+                    allItems.length - filteredItems.length
+                } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
             );
+
+        event.addLootTableModifier('rare-ice:chests/rare_ice').apply((ctx) => {
+            ctx.findLoot(Ingredient.all).forEach((item) => {
+                let count = item.count;
+                ctx.removeLoot(item);
+                ctx.addLoot(
+                    LootEntry.of(filteredItems[Math.floor(Math.random() * filteredItems.length)]).limitCount(count)
+                );
+            });
         });
-    });
+    }
 });
