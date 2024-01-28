@@ -33,13 +33,13 @@
 */
 
 const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM,
-    Collectors = Java.loadClass('java.util.stream.Collectors');
+    Collectors = Java.loadClass('java.util.stream.Collectors'),
+    Collections = Java.loadClass('java.util.Collections');
 
 const itemTags = itemReg
         .getTagNames()
         .map((key) => key.location())
-        .collect(Collectors.toList())
-        .sort(),
+        .collect(Collectors.toList()),
     nonTaggedItems = [];
 
 let isInstalled = (modId) => Platform.mods[modId] != undefined;
@@ -51,9 +51,10 @@ Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
     }
 });
 
-console.log(`${itemTags.length} minecraft:item tags found!`);
-
+Collections.sort(itemTags);
 nonTaggedItems = nonTaggedItems.sort();
+
+console.log(`${itemTags.size()} minecraft:item tags found!`);
 
 console.log(`${nonTaggedItems.length} items are currently NOT TAGGED with minecraft:item tags!`);
 
