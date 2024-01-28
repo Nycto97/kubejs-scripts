@@ -32,42 +32,32 @@
 
 */
 
-let allItemTags = [],
+const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM,
+    Collectors = Java.loadClass('java.util.stream.Collectors');
+
+const itemTags = itemReg
+        .getTagNames()
+        .map((key) => key.location())
+        .collect(Collectors.toList())
+        .sort(),
     nonTaggedItems = [];
 
 let isInstalled = (modId) => Platform.mods[modId] != undefined;
 
-/* Get all minecraft:item tags */
+/* Get items that are not tagged with minecraft:item tags */
 Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
-    /* Check if ItemStack has tags */
-    if (!stack.getTags().toList().isEmpty()) {
-        stack
-            .getTags()
-            .toList()
-            .forEach((tag) => {
-                /* 'TagKey[minecraft:item / -->namespace:tag_name<--]' */
-                let tagString = tag.toString(),
-                    tagId = tagString.substring(tagString.indexOf('/') + 2, tagString.indexOf(']'));
-
-                if (!allItemTags.includes(tagId)) allItemTags.push(tagId);
-            });
-    } else {
+    if (stack.getTags().toList().isEmpty()) {
         nonTaggedItems.push(stack.getId());
     }
 });
 
-if (allItemTags.length) {
-    allItemTags = allItemTags.sort();
+console.log(`${itemTags.length} minecraft:item tags found!`);
 
-    console.log(`${allItemTags.length} minecraft:item tags found!`);
-}
+nonTaggedItems = nonTaggedItems.sort();
 
-if (nonTaggedItems.length) {
-    nonTaggedItems = nonTaggedItems.sort();
+console.log(`${nonTaggedItems.length} items are currently NOT TAGGED with minecraft:item tags!`);
 
-    console.log(`${nonTaggedItems.length} items are currently NOT TAGGED with minecraft:item tags!`);
-    nonTaggedItems.forEach((item) => console.log(item));
-}
+nonTaggedItems.forEach((item) => console.log(item));
 
 ServerEvents.tags('block', (event) => {
     if (isInstalled('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
@@ -340,9 +330,7 @@ ServerEvents.tags('item', (event) => {
     let ingotTags = [],
         ingotsRegex = /^.*ingot$/;
 
-    allItemTags
-        .filter((tagId) => tagId.startsWith('forge:ingots/'))
-        .forEach((tagId) => ingotTags.push('#'.concat(tagId)));
+    itemTags.filter((tagId) => tagId.startsWith('forge:ingots/')).forEach((tagId) => ingotTags.push('#'.concat(tagId)));
 
     event.add('forge:ingots', [ingotTags, ingotsRegex]);
 
