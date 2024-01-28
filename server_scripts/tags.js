@@ -331,7 +331,9 @@ ServerEvents.tags('item', (event) => {
     let ingotTags = [],
         ingotsRegex = /^.*ingot$/;
 
-    itemTags.filter((tagId) => tagId.startsWith('forge:ingots/')).forEach((tagId) => ingotTags.push('#'.concat(tagId)));
+    itemTags
+        .filter((tagId) => tagId.toString().startsWith('forge:ingots/'))
+        .forEach((tagId) => ingotTags.push('#'.concat(tagId)));
 
     event.add('forge:ingots', [ingotTags, ingotsRegex]);
 
