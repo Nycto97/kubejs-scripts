@@ -32,7 +32,42 @@
 
 */
 
+let allItemTags = [],
+    nonTaggedItems = [];
+
 let isInstalled = (modId) => Platform.mods[modId] != undefined;
+
+/* Get all minecraft:item tags */
+Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
+    /* Check if ItemStack has tags */
+    if (!stack.getTags().toList().isEmpty()) {
+        stack
+            .getTags()
+            .toList()
+            .forEach((tag) => {
+                /* 'TagKey[minecraft:item / -->namespace:tag_name<--]' */
+                let tagString = tag.toString(),
+                    tagId = tagString.substring(tagString.indexOf('/') + 2, tagString.indexOf(']'));
+
+                if (!allItemTags.includes(tagId)) allItemTags.push(tagId);
+            });
+    } else {
+        nonTaggedItems.push(stack.getId());
+    }
+});
+
+if (allItemTags.length) {
+    allItemTags = allItemTags.sort();
+
+    console.log(`${allItemTags.length} minecraft:item tags found!`);
+}
+
+if (nonTaggedItems.length) {
+    nonTaggedItems = nonTaggedItems.sort();
+
+    console.log(`${nonTaggedItems.length} items are currently NOT TAGGED with minecraft:item tags!`);
+    nonTaggedItems.forEach((item) => console.log(item));
+}
 
 ServerEvents.tags('block', (event) => {
     if (isInstalled('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
