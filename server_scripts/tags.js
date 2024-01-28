@@ -336,6 +336,25 @@ ServerEvents.tags('item', (event) => {
     event.add('forge:tools/axe', [axesTaggedByMods, axesRegex]);
     event.add('forge:tools/axes', [axesTaggedByMods, axesRegex]);
 
+    /* INGOTS */
+    let ingotTags = [],
+        ingotsRegex = /^.*ingot$/;
+
+    allItemTags
+        .filter((tagId) => tagId.startsWith('forge:ingots/'))
+        .forEach((tagId) => ingotTags.push('#'.concat(tagId)));
+
+    event.add('forge:ingots', [ingotTags, ingotsRegex]);
+
+    /* MUSIC DISCS */
+    event.remove('forge:music_discs', /^.*$/);
+
+    event.add('minecraft:music_discs', /^.*:.*music_disc.*$/);
+
+    if (isInstalled('create_confectionery')) event.add('minecraft:music_discs', 'create_confectionery:the_bright_side');
+
+    if (isInstalled('wandering_bags')) event.add('minecraft:music_discs', 'wandering_bags:out_of_them_disc');
+
     /* Add PICKAXES to pickaxes tags */
     let pickaxesTaggedByMods = [
         event
