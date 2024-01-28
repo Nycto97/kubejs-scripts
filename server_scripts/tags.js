@@ -46,7 +46,7 @@ let isInstalled = (modId) => Platform.mods[modId] != undefined;
 
 /* Get items that are not tagged with minecraft:item tags */
 Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
-    if (stack.getTags().toList().isEmpty()) {
+    if (stack.getTags().toList().isEmpty() && !nonTaggedItems.includes(stack.getId())) {
         nonTaggedItems.push(stack.getId());
     }
 });
