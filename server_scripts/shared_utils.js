@@ -12,4 +12,4 @@ const allItems = Item.getTypeList();
 
 const allBlocks = Block.getTypeList();
 
-const isLoaded = (modId) => Platform.isLoaded(modId);
+const isLoaded = Platform.isLoaded;
