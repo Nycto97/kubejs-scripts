@@ -32,33 +32,34 @@
 
 */
 
-const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM,
-    Collectors = Java.loadClass('java.util.stream.Collectors'),
-    Collections = Java.loadClass('java.util.Collections');
+const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM;
 
-const itemTags = itemReg
-        .getTagNames()
-        .map((key) => key.location())
-        .collect(Collectors.toList()),
-    nonTaggedItems = [];
+const itemTagIds = itemReg
+    .getTagNames()
+    .map((tagKey) => tagKey.location().toString())
+    .toArray()
+    .sort();
+
+let nonTaggedItemIds = [];
 
 let isInstalled = (modId) => Platform.mods[modId] != undefined;
 
 /* Get items that are not tagged with minecraft:item tags */
 Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
-    if (stack.getTags().toList().isEmpty() && !nonTaggedItems.includes(stack.getId())) {
-        nonTaggedItems.push(stack.getId());
+    let stackId = stack.getId();
+
+    if (stack.getTags().toList().isEmpty() && !nonTaggedItemIds.includes(stackId)) {
+        nonTaggedItemIds.push(stackId);
     }
 });
 
-Collections.sort(itemTags);
-nonTaggedItems = nonTaggedItems.sort();
+nonTaggedItemIds = nonTaggedItemIds.sort();
 
-console.log(`${itemTags.size()} minecraft:item tags found!`);
+console.log(`${itemTagIds.length} registered minecraft:item tags found!`);
+console.log(itemTagIds);
 
-console.log(`${nonTaggedItems.length} items are currently NOT TAGGED with minecraft:item tags!`);
-
-nonTaggedItems.forEach((item) => console.log(item));
+console.log(`${nonTaggedItemIds.length} items are currently NOT TAGGED with minecraft:item tags!`);
+console.log(nonTaggedItemIds);
 
 ServerEvents.tags('block', (event) => {
     if (isInstalled('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
@@ -328,14 +329,14 @@ ServerEvents.tags('item', (event) => {
     event.add('forge:tools/axes', [axesTaggedByMods, axesRegex]);
 
     /* INGOTS */
-    let ingotTags = [],
+    let ingotTagIds = [],
         ingotsRegex = /^.*ingot$/;
 
-    itemTags
-        .filter((tagId) => tagId.toString().startsWith('forge:ingots/'))
-        .forEach((tagId) => ingotTags.push('#'.concat(tagId)));
+    itemTagIds
+        .filter((tagId) => tagId.startsWith('forge:ingots/'))
+        .forEach((tagId) => ingotTagIds.push('#'.concat(tagId)));
 
-    event.add('forge:ingots', [ingotTags, ingotsRegex]);
+    event.add('forge:ingots', [ingotTagIds, ingotsRegex]);
 
     /* MUSIC DISCS */
     event.remove('forge:music_discs', /^.*$/);
