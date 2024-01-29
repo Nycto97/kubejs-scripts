@@ -189,7 +189,7 @@ ServerEvents.recipes((event) => {
     // TODO: Check if mod != undefined check is needed, here and everywhere else!
     // TODO: change output and input to id only and remove tags if needed to remove uncrafting recipes
     // CURRENTLY THIS DELETES TOO MANY RECIPES I THINK !!!
-    if (global.isLoaded('buildersaddition'))
+    if (Platform.isLoaded('buildersaddition'))
         event.remove([
             { input: /^buildersaddition:.*vertical_slab$/ },
             { output: /^buildersaddition:.*vertical_slab$/ }
@@ -197,7 +197,7 @@ ServerEvents.recipes((event) => {
 
     /* Remove all recipes having vertical slabs from Vertical Slabs Compat - Create: Deco
        vertical slabs as input or output since Create: Deco already adds all of these */
-    if (global.isLoaded('v_slab_compat') && global.isLoaded('createdeco'))
+    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco'))
         event.remove([
             { input: /^v_slab_compat:createdeco.*vertical_slab$/ },
             { output: /^v_slab_compat:createdeco.*vertical_slab$/ }
@@ -205,7 +205,7 @@ ServerEvents.recipes((event) => {
 
     /* Remove crafting recipe for minecraft:chest with any #byg:planks
        since I'm adding a recipe with any #minecraft:planks */
-    if (global.isLoaded('byg')) event.remove([{ id: 'byg:byg_chest' }]);
+    if (Platform.isLoaded('byg')) event.remove([{ id: 'byg:byg_chest' }]);
     /* Add crafting recipe for minecraft:chest with any
        #minecraft:planks since other mods 'steal' this recipe */
     event
@@ -225,7 +225,7 @@ ServerEvents.recipes((event) => {
         .xp(0.25)
         .cookingTime(100);
 
-    if (global.isLoaded('rottencreatures')) {
+    if (Platform.isLoaded('rottencreatures')) {
         addSmeltingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 0.25, 200);
         event
             .smoking('minecraft:leather', 'rottencreatures:magma_rotten_flesh')
@@ -243,7 +243,7 @@ ServerEvents.recipes((event) => {
         })
         .id('nycto:end_portal_frame');
 
-    if (global.isLoaded('scarecrowsterritory')) {
+    if (Platform.isLoaded('scarecrowsterritory')) {
         /* Remove crafting recipe for scarecrowsterritory:primitive_scarecrow
            added by Scarecrows' Territory since I'm adding custom
            recipes that all require dye */
@@ -274,9 +274,9 @@ ServerEvents.recipes((event) => {
 
     /* Remove crafting recipe for minecraft:end_portal_frame
        added by End Portal Recipe (just because I want my own) */
-    if (global.isLoaded('endportalrecipe')) event.remove([{ id: 'endportalrecipe:craftable_end_portal' }]);
+    if (Platform.isLoaded('endportalrecipe')) event.remove([{ id: 'endportalrecipe:craftable_end_portal' }]);
 
-    if (global.isLoaded('morecraft')) {
+    if (Platform.isLoaded('morecraft')) {
         /* Remove crafting recipes for emerald armor from
            MoreCraft since Useless Swords already adds these */
         event.remove([
@@ -297,14 +297,14 @@ ServerEvents.recipes((event) => {
     }
 
     /* Allow Nether Chest to be crafted with #forge:chests/wooden */
-    if (global.isLoaded('netherchested'))
+    if (Platform.isLoaded('netherchested'))
         replaceInputUsingIdFilter('netherchested:nether_chest', 'minecraft:chest', '#forge:chests/wooden');
 
     // TODO ADD OTHER SMELTING AND BLASTING RECIPES FOR OTHER ORES OF EPIC SAMURAI
 
     /* Add smelting and blasting recipes for epicsamurai:ruby with
        epicsamurai:ruby_ore and epicsamurai:deepslate_ruby_ore */
-    if (global.isLoaded('epicsamurai')) {
+    if (Platform.isLoaded('epicsamurai')) {
         addSmeltingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 0.75, 200);
         event
             .blasting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
@@ -319,7 +319,7 @@ ServerEvents.recipes((event) => {
             .cookingTime(100);
     }
 
-    if (global.isLoaded('create')) {
+    if (Platform.isLoaded('create')) {
         /* Minecraft */
         addCrushingRecipe('ancient_debris', 600, [
             {
@@ -340,7 +340,7 @@ ServerEvents.recipes((event) => {
         ]);
 
         /* Ad Astra */
-        if (global.isLoaded('ad_astra')) {
+        if (Platform.isLoaded('ad_astra')) {
             event.remove([{ id: 'create:crushing/venus_gold_ore' }]);
             addOreCrushingRecipe('ad_astra:venus_gold_ore', 'gold', 'ad_astra:venus_cobblestone');
 
@@ -363,7 +363,7 @@ ServerEvents.recipes((event) => {
         }
 
         /* Blue Skies */
-        if (global.isLoaded('blue_skies')) {
+        if (Platform.isLoaded('blue_skies')) {
             addCrushingRecipe('blue_skies:everbright_pyrope_ore', 300, [
                 {
                     item: 'blue_skies:pyrope_gem'
@@ -401,7 +401,7 @@ ServerEvents.recipes((event) => {
         }
 
         /* Croptopia */
-        if (global.isLoaded('croptopia'))
+        if (Platform.isLoaded('croptopia'))
             addCrushingRecipe('croptopia:salt_ore', 300, [
                 {
                     item: 'croptopia:salt',
@@ -422,7 +422,7 @@ ServerEvents.recipes((event) => {
             ]);
 
         /* Darker Depths */
-        if (global.isLoaded('darkerdepths')) {
+        if (Platform.isLoaded('darkerdepths')) {
             addOreCrushingRecipe('darkerdepths:aridrock_gold_ore', 'gold', 'darkerdepths:aridrock');
             addOreCrushingRecipe('darkerdepths:aridrock_iron_ore', 'iron', 'darkerdepths:aridrock');
             addOreCrushingRecipe('darkerdepths:aridrock_coal_ore', 'coal', 'darkerdepths:aridrock');
@@ -439,7 +439,7 @@ ServerEvents.recipes((event) => {
         }
 
         /* Deeper and Darker */
-        if (global.isLoaded('deeperdarker')) {
+        if (Platform.isLoaded('deeperdarker')) {
             addOreCrushingRecipe('deeperdarker:sculk_stone_coal_ore', 'coal', 'deeperdarker:sculk_stone');
             addOreCrushingRecipe('deeperdarker:sculk_stone_iron_ore', 'iron', 'deeperdarker:sculk_stone');
             addOreCrushingRecipe('deeperdarker:sculk_stone_copper_ore', 'copper', 'deeperdarker:sculk_stone');
@@ -460,7 +460,7 @@ ServerEvents.recipes((event) => {
         }
 
         /* Epic Samurai */
-        if (global.isLoaded('epicsamurai')) {
+        if (Platform.isLoaded('epicsamurai')) {
             addOreCrushingRecipe('epicsamurai:ruby_ore', 'ruby', 'cobblestone');
             addOreCrushingRecipe('epicsamurai:jade_ore', 'jade', 'cobblestone');
             addOreCrushingRecipe('epicsamurai:aquamarine_ore', 'aquamarine', 'cobblestone');
@@ -473,7 +473,7 @@ ServerEvents.recipes((event) => {
         }
 
         /* Randomium */
-        if (global.isLoaded('randomium') && global.isLoaded('epicsamurai')) {
+        if (Platform.isLoaded('randomium') && Platform.isLoaded('epicsamurai')) {
             addCrushingRecipe('randomium:randomium_ore', 350, [
                 {
                     item: 'randomium:randomium',
@@ -550,7 +550,7 @@ ServerEvents.recipes((event) => {
     }
 
     /* The Undergarden */
-    if (global.isLoaded('undergarden')) {
+    if (Platform.isLoaded('undergarden')) {
         addSmeltingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 0.7, 200);
         event
             .blasting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
@@ -581,7 +581,7 @@ ServerEvents.recipes((event) => {
             .shapeless('9x undergarden:regalic_shard', ['undergarden:regalium_crystal'])
             .id('nycto:regalic_shard_from_regalium_crystal');
 
-        if (global.isLoaded('create')) {
+        if (Platform.isLoaded('create')) {
             addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
 
@@ -606,7 +606,7 @@ ServerEvents.recipes((event) => {
 
             addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
-            if (global.isLoaded('endermanoverhaul'))
+            if (Platform.isLoaded('endermanoverhaul'))
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
@@ -618,7 +618,7 @@ ServerEvents.recipes((event) => {
             addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
             addOreCrushingRecipe('undergarden:tremblecrust_utherium_ore', 'utherium', 'undergarden:tremblecrust');
 
-            if (global.isLoaded('projecte'))
+            if (Platform.isLoaded('projecte'))
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:utheric_shard', Item.of('projecte:red_matter').withChance(0.05)],

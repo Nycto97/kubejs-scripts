@@ -8,8 +8,6 @@
 
 // priority: 1000
 
-global.isLoaded = Platform.isLoaded;
-
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
     global.allItems = Item.getTypeList();
