@@ -33,16 +33,22 @@ Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
 
 nonTaggedItemIds = Array.from(nonTaggedItemIds).sort();
 
-console.log(`${itemTagIds.length} registered minecraft:item tags found!`);
+console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
 console.log(itemTagIds);
 
-console.log(`${nonTaggedItemIds.length} items are currently NOT TAGGED with minecraft:item tags!`);
+console.log(`\n\n${nonTaggedItemIds.length} items are currently NOT TAGGED with minecraft:item tags!\n`);
 console.log(nonTaggedItemIds);
 
 ServerEvents.tags('item', (event) => {
     /* 2 examples of adding (all) items to a tag */
     // event.add('your_namespace:your_tag_name', /^.*$/);
     // Item.getTypeList().forEach((item) => event.add('your_namespace:your_tag_name', item));
+
+    let itemsTaggedByMods;
+
+    let itemTagIdsToAdd;
+
+    let regexToAdd;
 
     if (Platform.isLoaded('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
 
@@ -98,8 +104,14 @@ ServerEvents.tags('item', (event) => {
     if (Platform.isLoaded('refinedstorage')) event.add('forge:tools/wrench', 'refinedstorage:wrench');
     if (Platform.isLoaded('simpleplanes')) event.add('forge:tools/wrench', 'simpleplanes:wrench');
 
-    /* Add SWORDS to swords tags */
-    let swordsTaggedByMods = [
+    /* 
+       TODO:
+       Check if items have block forms and if so,
+       add them to the correct block tags in blocks.js
+    */
+
+    /* SWORDS */
+    itemsTaggedByMods = [
         event
             .get('minecraft:swords')
             .getObjectIds()
@@ -107,24 +119,24 @@ ServerEvents.tags('item', (event) => {
             .concat(event.get('forge:tools/sword').getObjectIds())
             .concat(event.get('forge:tools/swords').getObjectIds())
     ];
-    let swordsRegex = /^.*(battleaxe|blade|lance|sword)$/;
+    regexToAdd = /^.*(battleaxe|blade|lance|sword)$/;
 
-    event.add('minecraft:swords', [swordsTaggedByMods, swordsRegex]);
-    event.add('forge:swords', [swordsTaggedByMods, swordsRegex]);
-    event.add('forge:tools/sword', [swordsTaggedByMods, swordsRegex]);
-    event.add('forge:tools/swords', [swordsTaggedByMods, swordsRegex]);
+    event.add('minecraft:swords', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:swords', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/sword', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/swords', [itemsTaggedByMods, regexToAdd]);
 
     /* ARMORS */
-    let armorsTagIds = [];
+    itemTagIdsToAdd = [];
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:armors/'))
-        .forEach((tagId) => armorsTagIds.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
 
-    event.add('forge:armors', armorsTagIds);
+    event.add('forge:armors', itemTagIdsToAdd);
 
-    /* Add AXES to axes tags */
-    let axesTaggedByMods = [
+    /* AXES */
+    itemsTaggedByMods = [
         event
             .get('minecraft:axes')
             .getObjectIds()
@@ -132,34 +144,32 @@ ServerEvents.tags('item', (event) => {
             .concat(event.get('forge:tools/axe').getObjectIds())
             .concat(event.get('forge:tools/axes').getObjectIds())
     ];
-    let axesRegex = /^.*(_axe|battleaxe|hatchet)$/;
+    regexToAdd = /^.*(_axe|battleaxe|hatchet)$/;
 
-    event.add('minecraft:axes', [axesTaggedByMods, axesRegex]);
-    event.add('forge:axes', [axesTaggedByMods, axesRegex]);
-    event.add('forge:tools/axe', [axesTaggedByMods, axesRegex]);
-    event.add('forge:tools/axes', [axesTaggedByMods, axesRegex]);
+    event.add('minecraft:axes', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:axes', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/axe', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/axes', [itemsTaggedByMods, regexToAdd]);
 
     /* BARRELS */
-    let barrelsTagIds = [],
-        barrelsRegex = /^.*:(?!(cannon|tnt).)*_barrel$/;
+    itemTagIdsToAdd = [];
 
-    if (Platform.isLoaded('chipped')) barrelsTagIds.push('#chipped:barrel');
+    if (Platform.isLoaded('chipped')) itemTagIdsToAdd.push('#chipped:barrel');
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:barrels/'))
-        .forEach((tagId) => barrelsTagIds.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
 
-    event.add('forge:barrels', [barrelsTagIds, barrelsRegex]);
+    event.add('forge:barrels', [itemTagIdsToAdd, /^.*:(?!(cannon|tnt).)*_barrel$/]);
 
     /* INGOTS */
-    let ingotsTagIds = [],
-        ingotsRegex = /^.*ingot$/;
+    itemTagIdsToAdd = [];
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:ingots/'))
-        .forEach((tagId) => ingotsTagIds.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
 
-    event.add('forge:ingots', [ingotsTagIds, ingotsRegex]);
+    event.add('forge:ingots', [itemTagIdsToAdd, /^.*ingot$/]);
 
     /* MUSIC DISCS */
     event.remove('forge:music_discs', /^.*$/);
@@ -171,8 +181,8 @@ ServerEvents.tags('item', (event) => {
 
     if (Platform.isLoaded('wandering_bags')) event.add('minecraft:music_discs', 'wandering_bags:out_of_them_disc');
 
-    /* Add PICKAXES to pickaxes tags */
-    let pickaxesTaggedByMods = [
+    /* PICKAXES */
+    itemsTaggedByMods = [
         event
             .get('minecraft:pickaxes')
             .getObjectIds()
@@ -180,15 +190,15 @@ ServerEvents.tags('item', (event) => {
             .concat(event.get('forge:tools/pickaxe').getObjectIds())
             .concat(event.get('forge:tools/pickaxes').getObjectIds())
     ];
-    let pickaxesRegex = /^.*(pick|pickaxe)$/;
+    regexToAdd = /^.*(pick|pickaxe)$/;
 
-    event.add('minecraft:pickaxes', [pickaxesTaggedByMods, pickaxesRegex]);
-    event.add('forge:pickaxes', [pickaxesTaggedByMods, pickaxesRegex]);
-    event.add('forge:tools/pickaxe', [pickaxesTaggedByMods, pickaxesRegex]);
-    event.add('forge:tools/pickaxes', [pickaxesTaggedByMods, pickaxesRegex]);
+    event.add('minecraft:pickaxes', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:pickaxes', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/pickaxe', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/pickaxes', [itemsTaggedByMods, regexToAdd]);
 
-    /* Add SHOVELS to shovels tags */
-    let shovelsTaggedByMods = [
+    /* SHOVELS */
+    itemsTaggedByMods = [
         event
             .get('minecraft:shovels')
             .getObjectIds()
@@ -196,15 +206,15 @@ ServerEvents.tags('item', (event) => {
             .concat(event.get('forge:tools/shovel').getObjectIds())
             .concat(event.get('forge:tools/shovels').getObjectIds())
     ];
-    let shovelsRegex = /^.*shovel$/;
+    regexToAdd = /^.*shovel$/;
 
-    event.add('minecraft:shovels', [shovelsTaggedByMods, shovelsRegex]);
-    event.add('forge:shovels', [shovelsTaggedByMods, shovelsRegex]);
-    event.add('forge:tools/shovel', [shovelsTaggedByMods, shovelsRegex]);
-    event.add('forge:tools/shovels', [shovelsTaggedByMods, shovelsRegex]);
+    event.add('minecraft:shovels', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:shovels', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/shovel', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/shovels', [itemsTaggedByMods, regexToAdd]);
 
-    /* Add HOES to hoes tags */
-    let hoesTaggedByMods = [
+    /* HOES */
+    itemsTaggedByMods = [
         event
             .get('minecraft:hoes')
             .getObjectIds()
@@ -212,68 +222,60 @@ ServerEvents.tags('item', (event) => {
             .concat(event.get('forge:tools/hoe').getObjectIds())
             .concat(event.get('forge:tools/hoes').getObjectIds())
     ];
-    let hoesRegex = /^.*hoe$/;
+    regexToAdd = /^.*hoe$/;
 
-    event.add('minecraft:hoes', [hoesTaggedByMods, hoesRegex]);
-    event.add('forge:hoes', [hoesTaggedByMods, hoesRegex]);
-    event.add('forge:tools/hoe', [hoesTaggedByMods, hoesRegex]);
-    event.add('forge:tools/hoes', [hoesTaggedByMods, hoesRegex]);
+    event.add('minecraft:hoes', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:hoes', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/hoe', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/hoes', [itemsTaggedByMods, regexToAdd]);
 
-    // TODO check block
-    /* Add DOORS to doors tags */
-    let doorsTaggedByMods = [
-        event.get('minecraft:doors').getObjectIds().concat(event.get('forge:doors').getObjectIds())
-    ];
-    let doorsRegex = /^((?!smokebox).)*_door$/;
+    /* DOORS */
+    itemsTaggedByMods = [event.get('minecraft:doors').getObjectIds().concat(event.get('forge:doors').getObjectIds())];
+    regexToAdd = /^((?!smokebox).)*_door$/;
 
-    event.add('minecraft:doors', [doorsTaggedByMods, doorsRegex]);
-    event.add('forge:doors', [doorsTaggedByMods, doorsRegex]);
+    event.add('minecraft:doors', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:doors', [itemsTaggedByMods, regexToAdd]);
 
-    /* Add BOWS to bows tags */
-    let bowsTaggedByMods = [
-        event.get('forge:bows').getObjectIds().concat(event.get('forge:tools/bows').getObjectIds())
-    ];
-    let bowsRegex = /^.*_bow$/;
+    /* BOWS */
+    itemsTaggedByMods = [event.get('forge:bows').getObjectIds().concat(event.get('forge:tools/bows').getObjectIds())];
+    regexToAdd = /^.*_bow$/;
 
-    event.add('forge:bows', [bowsTaggedByMods, bowsRegex]);
-    event.add('forge:tools/bows', [bowsTaggedByMods, bowsRegex]);
+    event.add('forge:bows', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/bows', [itemsTaggedByMods, regexToAdd]);
 
-    /* Add BONES to bones tags */
-    let bonesTaggedByMods = [
+    /* BONES */
+    itemsTaggedByMods = [
         event.get('forge:bones').getObjectIds().concat(event.get('forge:bones/wither').getObjectIds())
     ];
-    let bonesRegex = /^.*bone$/;
 
-    event.add('forge:bones', [bonesTaggedByMods, bonesRegex]);
+    event.add('forge:bones', [itemsTaggedByMods, /^.*bone$/]);
 
-    /* Add WITHER BONES to wither bones tags */
+    /* WITHER BONES */
     event.add('forge:bones/wither', /^.*wither.*_bone$/);
 
-    // TODO check block
-    /* Add BUTTONS to buttons tags */
-    let buttonsTaggedByMods = [
+    /* BUTTONS */
+    itemsTaggedByMods = [
         event.get('minecraft:buttons').getObjectIds().concat(event.get('minecraft:wooden_buttons').getObjectIds())
     ];
-    let buttonsRegex = /^.*button$/;
 
-    event.add('minecraft:buttons', [buttonsTaggedByMods, buttonsRegex]);
+    event.add('minecraft:buttons', [itemsTaggedByMods, /^.*button$/]);
 
     // TODO check mods and add their id if they add raw materials that should be tagged
     // INFO look in ATM6's kjs scripts for examples
     /* RAW MATERIALS */
-    let rawMaterialsTagIds = [];
-    // let rawMaterialsTagIds = [],
-    //     rawMaterialsRegex = /^(mod1|mod2|mod3):raw.*(include|words|here|if|needed)$/;
+    itemTagIdsToAdd = [];
+    // itemTagIdsToAdd = [];
+    //     regexToAdd = /^(mod1|mod2|mod3):raw.*(include|words|here|if|needed)$/;
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:raw_materials/'))
-        .forEach((tagId) => rawMaterialsTagIds.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
 
-    event.add('forge:raw_materials', rawMaterialsTagIds);
-    // event.add('forge:raw_materials', [rawMaterialsTagIds, rawMaterialsRegex]);
+    event.add('forge:raw_materials', itemTagIdsToAdd);
+    // event.add('forge:raw_materials', [itemTagIdsToAdd, regexToAdd]);
 
-    /* Add STAIRS to stairs tags */
-    let stairsTaggedByMods = [
+    /* STAIRS */
+    itemsTaggedByMods = [
         event
             .get('minecraft:stairs')
             .getObjectIds()
@@ -281,29 +283,27 @@ ServerEvents.tags('item', (event) => {
             .concat(event.get('minecraft:wooden_stairs').getObjectIds())
             .concat(event.get('forge:stairs/wooden').getObjectIds())
     ];
-    let stairsRegex = /^.*stairs$/;
+    regexToAdd = /^.*stairs$/;
 
-    event.add('minecraft:stairs', [stairsTaggedByMods, stairsRegex]);
-    event.add('forge:stairs', [stairsTaggedByMods, stairsRegex]);
+    event.add('minecraft:stairs', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:stairs', [itemsTaggedByMods, regexToAdd]);
 
-    /* Add SHIELDS to shields tags */
-    let shieldsTaggedByMods = [
+    /* SHIELDS */
+    itemsTaggedByMods = [
         event.get('forge:shields').getObjectIds().concat(event.get('forge:tools/shields').getObjectIds())
     ];
-    let shieldsRegex = /^((?!domestication)(?!glyph)(?!stronghold).)*(_shield|shield_)((?!upgrade).)*$/;
+    regexToAdd = /^((?!domestication)(?!glyph)(?!stronghold).)*(_shield|shield_)((?!upgrade).)*$/;
 
-    event.add('forge:shields', [shieldsTaggedByMods, shieldsRegex]);
-    event.add('forge:tools/shields', [shieldsTaggedByMods, shieldsRegex]);
+    event.add('forge:shields', [itemsTaggedByMods, regexToAdd]);
+    event.add('forge:tools/shields', [itemsTaggedByMods, regexToAdd]);
 
-    // TODO check block
-    /* Add BOATS to boats tag */
+    /* BOATS */
     event.add('minecraft:boats', /^.*boat$/);
 
-    /* Add CONCRETE to concrete tag */
+    /* CONCRETE */
     event.add('forge:concrete', /^.*concrete$/);
 
-    // TODO check block
-    /* Add CHEST BOATS to chest boats tag */
+    /* CHEST BOATS */
     event.add('minecraft:chest_boats', /^.*chest_boat$/);
 
     /* All Bark, All Bite */
