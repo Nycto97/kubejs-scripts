@@ -12,4 +12,4 @@ const allItems = Item.getTypeList();
 
 const allBlocks = Block.getTypeList();
 
-const isInstalled = (modId) => Platform.mods[modId] != undefined;
+const isInstalled = (modId) => Platform.isLoaded(modId);

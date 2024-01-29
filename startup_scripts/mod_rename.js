@@ -40,12 +40,12 @@ StartupEvents.postInit(() => {
                new String() allows to store the current name and refer to it
                later, even after the initial value (mod.name) gets updated
             */
-            let modName = new String(mod.name);
+            let modName = new String(mod.getName());
 
             /* Check if mod already has preferred name and skip rename if it does */
             if (modName != modPreferredName) {
                 /* Set mod name to preferred mod name */
-                mod.name = modPreferredName;
+                mod.setName(modPreferredName);
 
                 modRenamedMessages.push(
                     `[RENAMED] Mod has been renamed: ${modName} => ${modPreferredName} [id: ${modId}]`

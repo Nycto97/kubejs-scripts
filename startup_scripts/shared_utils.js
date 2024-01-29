@@ -8,4 +8,4 @@
 
 // priority: 1000
 
-const isInstalled = (modId) => Platform.mods[modId] != undefined;
+const isInstalled = (modId) => Platform.isLoaded(modId);
