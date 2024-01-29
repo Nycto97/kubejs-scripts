@@ -19,6 +19,28 @@
 
 /*
    INFO:
+   Tag events support adding tags to tags as well -> prefix the second tag with #
+*/
+
+/*
+   ATTENTION:
+   Some mods don't tag their stuff correctly.
+   
+   What to do: Add elements from wrongly used tags to the correct tag(s).
+               Remove elements from wrongly used tags after checking if
+               tag is used somewhere. If it is, don't forget to change/add
+               the wrong tag where it's used before removing.
+
+   What NOT to do: Add elements to wrongly used tags.
+
+   Example: Regions Unexplored ... TODO finish this example, change to BYG
+
+*/
+
+/* ----------------------------------------------------------------- */
+
+/*
+   INFO:
    Using RegEx with \/^(.)*$\/
     / -> Start and end of RegEx
     ^ -> Start of line
