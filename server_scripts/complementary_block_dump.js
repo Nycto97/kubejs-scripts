@@ -70,7 +70,7 @@ if (enableDumping) {
 ];
     const foliageVanilla =
         'grass short_grass fern oak_sapling spruce_sapling birch_sapling jungle_sapling acacia_sapling dark_oak_sapling bamboo_sapling cherry_sapling dead_bush dandelion poppy blue_orchid allium azure_bluet red_tulip orange_tulip white_tulip pink_tulip oxeye_daisy cornflower lily_of_the_valley wither_rose sweet_berry_bush wheat carrots potatoes beetroots pumpkin_stem melon_stem nether_sprouts warped_roots crimson_roots sunflower:half=lower lilac:half=lower rose_bush:half=lower peony:half=lower tall_grass:half=lower large_fern:half=lower torchflower_crop';
-    const foliageModdedFiltered = allBlocks.filter(
+    const foliageModdedFiltered = global.allBlocks.filter(
         (block) =>
             !block.startsWith('minecraft:') &&
             !block.startsWith('dtterralith:') &&
@@ -93,7 +93,7 @@ if (enableDumping) {
 
     const leavesVanilla =
         'leaves leaves2 oak_leaves spruce_leaves birch_leaves jungle_leaves acacia_leaves dark_oak_leaves azalea_leaves flowering_azalea_leaves mangrove_leaves cherry_leaves';
-    const leavesModdedFiltered = allBlocks.filter(
+    const leavesModdedFiltered = global.allBlocks.filter(
         (block) =>
             !block.startsWith('minecraft:') &&
             !block.startsWith('dtterralith:') &&
@@ -110,7 +110,7 @@ if (enableDumping) {
        (MODDED) ORES
     */
 
-    const oresModdedFiltered = allBlocks.filter(
+    const oresModdedFiltered = global.allBlocks.filter(
         (block) =>
             !block.startsWith('minecraft:') &&
             !block.startsWith('forbidden_arcanus:') &&
@@ -144,7 +144,7 @@ if (enableDumping) {
 
     // TODO look in JEI which blocks to add here
     const ironBlocksVanilla = 'iron_block iron_trapdoor heavy_weighted_pressure_plate';
-    const ironBlocksModdedFiltered = allBlocks.filter((block) =>
+    const ironBlocksModdedFiltered = global.allBlocks.filter((block) =>
         RegExp(
             /^(?!minecraft).*:(?!.*(cast|compressed|dark|industrial|rough)).*iron.*(block|fence|nub).*(?!(cast|compressed|dark|industrial|rough))$/
         ).test(block)
@@ -170,7 +170,7 @@ if (enableDumping) {
     // TODO add other stained glass blocks to array
     // INFO: Connected Glass' stained glass does not have stained in the blockId!
     // Include tinted glass?
-    const stainedGlassModdedFiltered = allBlocks.filter(
+    const stainedGlassModdedFiltered = global.allBlocks.filter(
         (block) =>
             !block.startsWith('minecraft:') &&
             !block.includes('pane') &&

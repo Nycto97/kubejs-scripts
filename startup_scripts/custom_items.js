@@ -13,7 +13,7 @@ StartupEvents.registry('item', (event) => {
        JEI shows these items along the mod's items and blocks 
     */
 
-    if (isLoaded('undergarden')) {
+    if (global.isLoaded('undergarden')) {
         event.create('undergarden:crushed_raw_cloggrum').texture('nycto:item/crushed_raw_cloggrum');
 
         event.create('undergarden:crushed_raw_froststeel').texture('nycto:item/crushed_raw_froststeel');

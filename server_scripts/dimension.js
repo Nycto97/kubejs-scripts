@@ -24,7 +24,7 @@ CommonAddedEvents.playerChangeDimension((event) => {
 
     /* Demon Realm is currently the only custom non-overworld
        dimension where everything looks better with shader */
-    isLoaded('arsomega') && dimensionWhitelistForShader.push('arsomega:demon_realm');
+    global.isLoaded('arsomega') && dimensionWhitelistForShader.push('arsomega:demon_realm');
 
     const isDimensionOldWhitelisted = dimensionWhitelistForShader.includes(dimensionOld),
         isDimensionNewWhitelisted = dimensionWhitelistForShader.includes(dimensionNew);
@@ -39,7 +39,7 @@ CommonAddedEvents.playerChangeDimension((event) => {
         subtitleEnableShaderCmd = `title ${playerName} subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]`;
 
     const messageEnableShaderInfo = `\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End${
-        isLoaded('arsomega') ? ', Demon Realm' : ''
+        global.isLoaded('arsomega') ? ', Demon Realm' : ''
     } and USW Vanilla!`;
 
     const messageShaderTip =

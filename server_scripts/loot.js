@@ -18,7 +18,9 @@
 /* Set to true to enable logging of blacklisted Rare Ice loot */
 const logBlacklistedRareIceLoot = false;
 
-console.log(`There are ${allItems.length} items and ${allBlocks.length} blocks registered in your world.`);
+console.log(
+    `There are ${global.allItems.length} items and ${global.allBlocks.length} blocks registered in your world.`
+);
 
 LootJS.modifiers((event) => {
     /* Enable the log output */
@@ -53,11 +55,11 @@ LootJS.modifiers((event) => {
 
     /* Remove all vertical slabs from Builders Crafts and Additions mod
        from the current loot pool so they don't drop their block when breaking */
-    if (isLoaded('buildersaddition')) removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
+    if (global.isLoaded('buildersaddition')) removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
 
     /* Remove all vertical slabs from Vertical Slabs Compat - Create: Deco mod
        from the current loot pool so they don't drop their block when breaking */
-    if (isLoaded('v_slab_compat') && isLoaded('createdeco'))
+    if (global.isLoaded('v_slab_compat') && global.isLoaded('createdeco'))
         removeAllBlockLoot(/^v_slab_compat:createdeco.*vertical_slab$/);
 
     /* Shulker Drops Two mod replacement
@@ -75,7 +77,7 @@ LootJS.modifiers((event) => {
 
     /* We've reset the overworld + I made a datapack to disable
        ruby ores from MoreCraft, but leave this code in just in case */
-    if (isLoaded('morecraft') && isLoaded('epicsamurai')) {
+    if (global.isLoaded('morecraft') && global.isLoaded('epicsamurai')) {
         replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
         replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby_ore', 'epicsamurai:ruby_ore');
         replaceBlockLoot('morecraft:deepslate_ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
@@ -87,11 +89,11 @@ LootJS.modifiers((event) => {
     }
 
     /* INFO: START RARE ICE LOOT */
-    if (isLoaded('rare-ice')) {
+    if (global.isLoaded('rare-ice')) {
         /* There will be many more items that need to be added! */
         let cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-        let blacklistedItems = allItems.filter(
+        let blacklistedItems = global.allItems.filter(
             (item) =>
                 item == 'minecraft:air' ||
                 cannotStartWith.some((itemNameStart) => item.startsWith(itemNameStart)) ||
@@ -105,13 +107,13 @@ LootJS.modifiers((event) => {
 
         /* TODO find out how it comes that this works, while the commented
        out code below is the full, 'correct' way to do this */
-        let filteredItems = allItems.filter(isNotBlacklisted);
-        // const filteredItems = allItems.filter((item) => isNotBlacklisted(item));
+        let filteredItems = global.allItems.filter(isNotBlacklisted);
+        // const filteredItems = global.allItems.filter((item) => isNotBlacklisted(item));
 
         logBlacklistedRareIceLoot &&
             console.log(
                 `\n\n${
-                    allItems.length - filteredItems.length
+                    global.allItems.length - filteredItems.length
                 } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
             );
 

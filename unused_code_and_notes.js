@@ -41,7 +41,7 @@
    NOTE:
    .some() can be used to avoid repetitive code:
 
-   allBlocks.filter(
+   global.allBlocks.filter(
        (block) =>
            block.endsWith('thisThing') ||
            block.endsWith('thatThing') ||

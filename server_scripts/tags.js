@@ -60,9 +60,9 @@ console.log(`${nonTaggedItemIds.length} items are currently NOT TAGGED with mine
 console.log(nonTaggedItemIds);
 
 ServerEvents.tags('block', (event) => {
-    if (isLoaded('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
+    if (global.isLoaded('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
 
-    if (isLoaded('v_slab_compat') && isLoaded('createdeco'))
+    if (global.isLoaded('v_slab_compat') && global.isLoaded('createdeco'))
         event.removeAllTagsFrom(/^v_slab_compat:createdeco.*vertical_slab$/);
 
     /* Passive Endermen mod replacement
@@ -75,22 +75,23 @@ ServerEvents.tags('block', (event) => {
 
     /* Re-add items & blocks that should stay
        tagged as #minecraft:enderman_holdable */
-    if (isLoaded('aether')) event.add('minecraft:enderman_holdable', ['aether:purple_flower', 'aether:white_flower']);
-    if (isLoaded('biomesoplenty'))
+    if (global.isLoaded('aether'))
+        event.add('minecraft:enderman_holdable', ['aether:purple_flower', 'aether:white_flower']);
+    if (global.isLoaded('biomesoplenty'))
         event.add('minecraft:enderman_holdable', ['biomesoplenty:glowshroom', 'biomesoplenty:toadstool']);
-    if (isLoaded('enderzoology'))
+    if (global.isLoaded('enderzoology'))
         event.add('minecraft:enderman_holdable', [
             'enderzoology:concussion_charge',
             'enderzoology:confusing_charge',
             'enderzoology:ender_charge'
         ]);
-    if (isLoaded('gardens_of_the_dead'))
+    if (global.isLoaded('gardens_of_the_dead'))
         event.add('minecraft:enderman_holdable', [
             'gardens_of_the_dead:blistercrown',
             'gardens_of_the_dead:soulblight_fungus',
             'gardens_of_the_dead:soulblight_sprouts'
         ]);
-    if (isLoaded('regions_unexplored'))
+    if (global.isLoaded('regions_unexplored'))
         event.add('minecraft:enderman_holdable', [
             'regions_unexplored:brimsprout',
             'regions_unexplored:cobalt_roots',
@@ -99,8 +100,8 @@ ServerEvents.tags('block', (event) => {
             'regions_unexplored:glistering_sprout',
             'regions_unexplored:mycotoxic_grass'
         ]);
-    if (isLoaded('savage_and_ravage')) event.add('minecraft:enderman_holdable', 'savage_and_ravage:spore_bomb');
-    if (isLoaded('undergarden')) event.add('minecraft:enderman_holdable', '#undergarden:mushrooms');
+    if (global.isLoaded('savage_and_ravage')) event.add('minecraft:enderman_holdable', 'savage_and_ravage:spore_bomb');
+    if (global.isLoaded('undergarden')) event.add('minecraft:enderman_holdable', '#undergarden:mushrooms');
 
     /* The Aether: Enhanced Extinguishing
        Extinguish more torches in The Aether instead of only minecraft:torch
@@ -113,49 +114,50 @@ ServerEvents.tags('block', (event) => {
        Tiki torches can't be placed on walls, so we can add this tag.
        The other Macaw's torches can be placed on walls, but will have
        offset and floating positioning, hence why we leave those out!. */
-    if (isLoaded('aether')) {
+    if (global.isLoaded('aether')) {
         event.add('nycto:aether_torches_to_extinguish', 'minecraft:torch');
-        if (isLoaded('architects_palette'))
+        if (global.isLoaded('architects_palette'))
             event.add('nycto:aether_torches_to_extinguish', 'architects_palette:nether_brass_torch');
-        if (isLoaded('endergetic')) event.add('nycto:aether_torches_to_extinguish', 'endergetic:ender_torch');
-        if (isLoaded('infernalexp')) event.add('nycto:aether_torches_to_extinguish', 'infernalexp:glow_torch');
-        if (isLoaded('nethersdelight'))
+        if (global.isLoaded('endergetic')) event.add('nycto:aether_torches_to_extinguish', 'endergetic:ender_torch');
+        if (global.isLoaded('infernalexp')) event.add('nycto:aether_torches_to_extinguish', 'infernalexp:glow_torch');
+        if (global.isLoaded('nethersdelight'))
             event.add('nycto:aether_torches_to_extinguish', 'nethersdelight:propelplant_torch');
-        if (isLoaded('additional_lights'))
+        if (global.isLoaded('additional_lights'))
             event.add('nycto:aether_torches_to_extinguish', /^additional_lights:al_torch((?!soul)(?!wall).)*$/);
-        if (isLoaded('mcwlights'))
+        if (global.isLoaded('mcwlights'))
             event.add('nycto:aether_torches_to_extinguish', /^mcwlights:((?!soul)(?!wall).)*tiki_torch$/);
-        if (isLoaded('morecraft'))
+        if (global.isLoaded('morecraft'))
             event.add('nycto:aether_torches_to_extinguish', /^morecraft:((?!soul)(?!wall).)*torch$/);
-        if (isLoaded('upgrade_aquatic'))
+        if (global.isLoaded('upgrade_aquatic'))
             event.add('nycto:aether_torches_to_extinguish', /^upgrade_aquatic:((?!soul)(?!wall).)*torch$/);
-        if (isLoaded('torchslabmod'))
+        if (global.isLoaded('torchslabmod'))
             event.add('nycto:aether_torches_to_extinguish', /^torchslabmod:((?!soul)(?!wall).)*torch$/);
-        if (isLoaded('ceilingtorch'))
+        if (global.isLoaded('ceilingtorch'))
             event.add(
                 'nycto:aether_torches_to_extinguish',
                 /^ceilingtorch:((?!soul)(?!wall)(?!projecte)(?!redstone).)*torch.*$/
             );
 
         event.add('nycto:aether_wall_torches_to_extinguish', 'minecraft:wall_torch');
-        if (isLoaded('architects_palette'))
+        if (global.isLoaded('architects_palette'))
             event.add('nycto:aether_wall_torches_to_extinguish', 'architects_palette:nether_brass_wall_torch');
-        if (isLoaded('endergetic')) event.add('nycto:aether_wall_torches_to_extinguish', 'endergetic:ender_wall_torch');
-        if (isLoaded('infernalexp'))
+        if (global.isLoaded('endergetic'))
+            event.add('nycto:aether_wall_torches_to_extinguish', 'endergetic:ender_wall_torch');
+        if (global.isLoaded('infernalexp'))
             event.add('nycto:aether_wall_torches_to_extinguish', 'infernalexp:glow_torch_wall');
-        if (isLoaded('nethersdelight'))
+        if (global.isLoaded('nethersdelight'))
             event.add('nycto:aether_wall_torches_to_extinguish', 'nethersdelight:propelplant_wall_torch');
-        if (isLoaded('additional_lights'))
+        if (global.isLoaded('additional_lights'))
             event.add('nycto:aether_wall_torches_to_extinguish', /^additional_lights:al_wall_torch((?!soul).)*$/);
-        if (isLoaded('morecraft'))
+        if (global.isLoaded('morecraft'))
             event.add('nycto:aether_wall_torches_to_extinguish', /^morecraft:((?!soul).)*wall.*torch$/);
-        if (isLoaded('upgrade_aquatic'))
+        if (global.isLoaded('upgrade_aquatic'))
             event.add('nycto:aether_wall_torches_to_extinguish', /^upgrade_aquatic:((?!soul).)*wall_torch$/);
-        if (isLoaded('torchslabmod'))
+        if (global.isLoaded('torchslabmod'))
             event.add('nycto:aether_wall_torches_to_extinguish', /^torchslabmod:wall_((?!soul).)*torch.*$/);
     }
 
-    if (isLoaded('blockrunner')) {
+    if (global.isLoaded('blockrunner')) {
         let blockRunnerTagsToClear = [
             'blockrunner:very_slow_blocks',
             'blockrunner:slow_blocks',
@@ -172,7 +174,7 @@ ServerEvents.tags('block', (event) => {
         // event.add('blockrunner:very_quick_blocks', [/^mcwpaths:.*running.*$/]);
         // TODO test if .*path has same amount of elements as .*:.*path
         event.add('blockrunner:quick_blocks', /^.*:.*path$/);
-        if (isLoaded('mcwpaths'))
+        if (global.isLoaded('mcwpaths'))
             event.add('blockrunner:quick_blocks', /^mcwpaths:.*(bond|flagstone|floor|paving|slab|weave)$/);
     }
 
@@ -186,22 +188,22 @@ ServerEvents.tags('block', (event) => {
     event.add('forge:chests/trapped', [/^ironchest:trapped.*chest$/]);
 
     /* Add blocks that aren't tagged correctly that should be mined with a pickaxe */
-    if (isLoaded('disenchanting')) event.add('minecraft:mineable/pickaxe', 'disenchanting:disenchanter');
-    if (isLoaded('elevatorid')) event.add('minecraft:mineable/pickaxe', /^elevatorid:elevator.*$/);
-    if (isLoaded('goldenhopper')) event.add('minecraft:mineable/pickaxe', 'goldenhopper:golden_hopper');
-    if (isLoaded('mcwroofs')) event.add('minecraft:mineable/pickaxe', 'mcwroofs:gutter_middle');
-    if (isLoaded('metalbarrels')) event.add('minecraft:mineable/pickaxe', /^metalbarrels:.*barrel$/);
-    if (isLoaded('torchslabmod')) event.add('minecraft:mineable/pickaxe', /^torchslabmod:.*lantern$/);
+    if (global.isLoaded('disenchanting')) event.add('minecraft:mineable/pickaxe', 'disenchanting:disenchanter');
+    if (global.isLoaded('elevatorid')) event.add('minecraft:mineable/pickaxe', /^elevatorid:elevator.*$/);
+    if (global.isLoaded('goldenhopper')) event.add('minecraft:mineable/pickaxe', 'goldenhopper:golden_hopper');
+    if (global.isLoaded('mcwroofs')) event.add('minecraft:mineable/pickaxe', 'mcwroofs:gutter_middle');
+    if (global.isLoaded('metalbarrels')) event.add('minecraft:mineable/pickaxe', /^metalbarrels:.*barrel$/);
+    if (global.isLoaded('torchslabmod')) event.add('minecraft:mineable/pickaxe', /^torchslabmod:.*lantern$/);
 
     /* Remove blocks from needs_stone_tool tag that aren't tagged correctly */
-    if (isLoaded('metalbarrels')) event.remove('minecraft:needs_stone_tool', 'metalbarrels:gold_barrel');
+    if (global.isLoaded('metalbarrels')) event.remove('minecraft:needs_stone_tool', 'metalbarrels:gold_barrel');
 
     /* Add blocks that aren't tagged correctly that need an iron tool */
-    if (isLoaded('goldenhopper')) event.add('minecraft:needs_iron_tool', 'goldenhopper:golden_hopper');
-    if (isLoaded('metalbarrels')) event.add('minecraft:needs_iron_tool', 'metalbarrels:gold_barrel');
+    if (global.isLoaded('goldenhopper')) event.add('minecraft:needs_iron_tool', 'goldenhopper:golden_hopper');
+    if (global.isLoaded('metalbarrels')) event.add('minecraft:needs_iron_tool', 'metalbarrels:gold_barrel');
 
     /* Add blocks that aren't tagged correctly that should be mined with an axe */
-    if (isLoaded('elevatorid')) event.add('minecraft:mineable/axe', /^elevatorid:elevator.*$/);
+    if (global.isLoaded('elevatorid')) event.add('minecraft:mineable/axe', /^elevatorid:elevator.*$/);
 
     /* Add bookshelves that function as vanilla bookshelves to #forge:bookshelves */
     event.add('forge:bookshelves', [/^((?!buildersaddition)(?!fantasyfurniture)(?!empty).)*bookshelf.*$/]);
@@ -209,11 +211,11 @@ ServerEvents.tags('block', (event) => {
     // TODO add other vanilla like blocks from other mods that can normally be used as beacon base blocks
     /* Add modded blocks whom vanilla counterpart can be used as
        beacon base block to #minecraft:beacon_base_blocks */
-    if (isLoaded('rechiseled'))
+    if (global.isLoaded('rechiseled'))
         event.add('minecraft:beacon_base_blocks', /^rechiseled:(diamond|emerald|gold|iron|netherite)_block.*$/);
-    if (isLoaded('epicsamurai')) event.add('minecraft:beacon_base_blocks', 'epicsamurai:ruby_block');
+    if (global.isLoaded('epicsamurai')) event.add('minecraft:beacon_base_blocks', 'epicsamurai:ruby_block');
 
-    if (isLoaded('morecraft')) event.removeAllTagsFrom('morecraft:ruby_block');
+    if (global.isLoaded('morecraft')) event.removeAllTagsFrom('morecraft:ruby_block');
 
     /* Add CONCRETE to concrete tag */
     event.add('forge:concrete', /^.*concrete$/);
@@ -238,9 +240,9 @@ ServerEvents.tags('item', (event) => {
     // event.add('your_namespace:your_tag_name', /^.*$/);
     // Item.getTypeList().forEach((item) => event.add('your_namespace:your_tag_name', item));
 
-    if (isLoaded('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
+    if (global.isLoaded('buildersaddition')) event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
 
-    if (isLoaded('v_slab_compat') && isLoaded('createdeco'))
+    if (global.isLoaded('v_slab_compat') && global.isLoaded('createdeco'))
         event.removeAllTagsFrom(/^v_slab_compat:createdeco.*vertical_slab$/);
 
     /* Add shulker boxes from Iron Shulker Boxes to #minecraft:shulker_boxes */
@@ -257,7 +259,7 @@ ServerEvents.tags('item', (event) => {
     /* Add bookshelves that function as vanilla bookshelves to #forge:bookshelves */
     event.add('forge:bookshelves', [/^((?!buildersaddition)(?!fantasyfurniture)(?!empty).)*bookshelf.*$/]);
 
-    if (isLoaded('morecraft')) {
+    if (global.isLoaded('morecraft')) {
         event.removeAllTagsFrom([
             'morecraft:emerald_helmet',
             'morecraft:emerald_chestplate',
@@ -275,11 +277,11 @@ ServerEvents.tags('item', (event) => {
 
     // TODO add more gems
     /* Add modded items to #minecraft:beacon_payment_items */
-    if (isLoaded('epicsamurai')) event.add('minecraft:beacon_payment_items', 'epicsamurai:ruby');
+    if (global.isLoaded('epicsamurai')) event.add('minecraft:beacon_payment_items', 'epicsamurai:ruby');
 
     /* The Undergarden check is redundant since I
        created and registered these items myself */
-    if (isLoaded('create') && isLoaded('undergarden'))
+    if (global.isLoaded('create') && global.isLoaded('undergarden'))
         event.add('create:crushed_raw_materials', [
             'undergarden:crushed_raw_cloggrum',
             'undergarden:crushed_raw_froststeel',
@@ -289,8 +291,8 @@ ServerEvents.tags('item', (event) => {
 
     // TODO untag refined storage's wrench as it seems like this has another functionality and if it's tagged it won't be able to use that function on let's say Create blocks because it will act as a Create wrench
     /* Add wrenches that aren't tagged as wrenches to wrench tag */
-    if (isLoaded('refinedstorage')) event.add('forge:tools/wrench', 'refinedstorage:wrench');
-    if (isLoaded('simpleplanes')) event.add('forge:tools/wrench', 'simpleplanes:wrench');
+    if (global.isLoaded('refinedstorage')) event.add('forge:tools/wrench', 'refinedstorage:wrench');
+    if (global.isLoaded('simpleplanes')) event.add('forge:tools/wrench', 'simpleplanes:wrench');
 
     /* Add SWORDS to swords tags */
     let swordsTaggedByMods = [
@@ -339,9 +341,10 @@ ServerEvents.tags('item', (event) => {
 
     event.add('minecraft:music_discs', /^.*:.*music_disc.*$/);
 
-    if (isLoaded('create_confectionery')) event.add('minecraft:music_discs', 'create_confectionery:the_bright_side');
+    if (global.isLoaded('create_confectionery'))
+        event.add('minecraft:music_discs', 'create_confectionery:the_bright_side');
 
-    if (isLoaded('wandering_bags')) event.add('minecraft:music_discs', 'wandering_bags:out_of_them_disc');
+    if (global.isLoaded('wandering_bags')) event.add('minecraft:music_discs', 'wandering_bags:out_of_them_disc');
 
     /* Add PICKAXES to pickaxes tags */
     let pickaxesTaggedByMods = [
@@ -465,14 +468,14 @@ ServerEvents.tags('item', (event) => {
     event.add('minecraft:chest_boats', /^.*chest_boat$/);
 
     /* All Bark, All Bite */
-    if (isLoaded('all_bark_all_bite')) {
+    if (global.isLoaded('all_bark_all_bite')) {
         event.add('all_bark_all_bite:dog_buries', '#forge:bones');
         event.add('all_bark_all_bite:dog_fetches', '#forge:rods/wooden');
         event.add('all_bark_all_bite:wolf_loved', '#forge:bones');
     }
 
     /* Farmer's Delight */
-    if (isLoaded('farmersdelight')) {
+    if (global.isLoaded('farmersdelight')) {
         event.add('farmersdelight:flat_on_cutting_board', '#forge:tools/tridents');
         event.add('farmersdelight:offhand_equipment', '#forge:tools/shields');
     }
@@ -480,21 +483,22 @@ ServerEvents.tags('item', (event) => {
 
 ServerEvents.tags('worldgen/biome', (event) => {
     /* Rotten Creatures */
-    if (isLoaded('rottencreatures')) {
+    if (global.isLoaded('rottencreatures')) {
         event.add('rottencreatures:burned_whitelist', '#forge:is_hot/nether');
-        if (isLoaded('byg')) event.add('rottencreatures:burned_whitelist', ['byg:crimson_gardens', 'byg:magma_wastes']);
+        if (global.isLoaded('byg'))
+            event.add('rottencreatures:burned_whitelist', ['byg:crimson_gardens', 'byg:magma_wastes']);
 
         /* Remove biomes included in #forge:is_hot/nether that don't fit the mob */
         // TODO find out why this doesn't work
         // TODO when found out, also remove these from nycto:lava_squid_spawns
         event.remove('rottencreatures:burned_whitelist', 'minecraft:soul_sand_valley');
-        if (isLoaded('biomesoplenty'))
+        if (global.isLoaded('biomesoplenty'))
             event.remove('rottencreatures:burned_whitelist', [
                 'biomesoplenty:crystalline_chasm',
                 'biomesoplenty:undergrowth',
                 'biomesoplenty:withered_abyss'
             ]);
-        if (isLoaded('gardens_of_the_dead'))
+        if (global.isLoaded('gardens_of_the_dead'))
             event.remove('rottencreatures:burned_whitelist', 'gardens_of_the_dead:soulblight_forest');
 
         event.add('rottencreatures:frostbitten_whitelist', '#forge:is_snowy');
@@ -507,16 +511,17 @@ ServerEvents.tags('worldgen/biome', (event) => {
     }
 
     /* Monster Plus */
-    if (isLoaded('monsterplus')) {
+    if (global.isLoaded('monsterplus')) {
         event.add('nycto:crystal_zombie_spawns', '#minecraft:is_overworld');
-        if (isLoaded('biomesoplenty')) event.add('nycto:crystal_zombie_spawns', 'biomesoplenty:crystalline_chasm');
+        if (global.isLoaded('biomesoplenty'))
+            event.add('nycto:crystal_zombie_spawns', 'biomesoplenty:crystalline_chasm');
 
         event.add('nycto:lava_squid_spawns', '#forge:is_hot/nether');
-        if (isLoaded('byg')) event.add('nycto:lava_squid_spawns', ['byg:crimson_gardens', 'byg:magma_wastes']);
+        if (global.isLoaded('byg')) event.add('nycto:lava_squid_spawns', ['byg:crimson_gardens', 'byg:magma_wastes']);
     }
 
     /* Creatures and Beasts */
-    if (isLoaded('cnb')) {
+    if (global.isLoaded('cnb')) {
         event.add('nycto:cactem_spawns', ['#minecraft:is_badlands', '#forge:is_desert']);
 
         // TODO check where Naturalist Lizards spawn

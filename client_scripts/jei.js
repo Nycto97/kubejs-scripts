@@ -6,26 +6,24 @@
    LICENSE file in the root directory of this source tree.
 */
 
-let isLoaded = (modId) => Platform.mods[modId] != undefined;
-
-if (isLoaded('jei')) {
+if (global.isLoaded('jei')) {
     /* Hide items in JEI interface */
     JEIEvents.hideItems((event) => {
         /* All vertical slabs from Builders Crafts and
            Additions since Quark already adds these */
-        if (isLoaded('buildersaddition')) event.hide(/buildersaddition:.*vertical_slab/);
+        if (global.isLoaded('buildersaddition')) event.hide(/buildersaddition:.*vertical_slab/);
 
         /* All vertical slabs from Vertical Slabs Compat - Create: Deco
            since Create: Deco already adds these */
-        if (isLoaded('v_slab_compat') && isLoaded('createdeco')) event.hide(/v_slab_compat:createdeco.*vertical_slab/);
+        if (global.isLoaded('v_slab_compat') && global.isLoaded('createdeco')) event.hide(/v_slab_compat:createdeco.*vertical_slab/);
 
         /* Vertical slab from Double Slabs since Quark already adds this
            and this currently is uncraftable anyway and just acts
            as air when mining double slab vertical slabs when this
            is enabled in Double Slabs config (currently disabled) */
-        if (isLoaded('doubleslabs')) event.hide('doubleslabs:vertical_slab');
+        if (global.isLoaded('doubleslabs')) event.hide('doubleslabs:vertical_slab');
 
-        if (isLoaded('morecraft')) {
+        if (global.isLoaded('morecraft')) {
             /* All emerald armor from MoreCraft since
                Useless Swords already adds these */
             event.hide([
@@ -46,7 +44,7 @@ if (isLoaded('jei')) {
         }
 
         /* Disabled items from Paraglider */
-        if (isLoaded('paraglider'))
+        if (global.isLoaded('paraglider'))
             event.hide([
                 'paraglider:heart_container',
                 'paraglider:stamina_vessel',

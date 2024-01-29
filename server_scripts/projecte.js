@@ -6,7 +6,7 @@
    LICENSE file in the root directory of this source tree.
 */
 
-if (isLoaded('projecte')) {
+if (global.isLoaded('projecte')) {
     ProjectEEvents.setEMC((event) => {
         /* Sets the absolute EMC value of an item. */
         // event.setEMC('minecraft:cobblestone', 0); // alias. setEMCAfter
@@ -15,8 +15,8 @@ if (isLoaded('projecte')) {
            This can sometimes result in this EMC value not
            being set, but also it allows for EMC values
            to be generated from this one; i.e crafting recipes */
-        if (isLoaded('architects_palette')) event.setEMCBefore('architects_palette:withered_bone', 160);
-        if (isLoaded('blue_skies')) event.setEMCBefore('blue_skies:lunar_cobblestone', 1);
+        if (global.isLoaded('architects_palette')) event.setEMCBefore('architects_palette:withered_bone', 160);
+        if (global.isLoaded('blue_skies')) event.setEMCBefore('blue_skies:lunar_cobblestone', 1);
 
         /* Prevent XP exploit */
         event.setEMCBefore('minecraft:experience_bottle', 0);
