@@ -311,6 +311,15 @@ ServerEvents.tags('item', (event) => {
     event.add('forge:tools/sword', [swordsTaggedByMods, swordsRegex]);
     event.add('forge:tools/swords', [swordsTaggedByMods, swordsRegex]);
 
+    /* ARMORS */
+    let armorsTagIds = [];
+
+    itemTagIds
+        .filter((tagId) => tagId.startsWith('forge:armors/'))
+        .forEach((tagId) => armorsTagIds.push('#'.concat(tagId)));
+
+    event.add('forge:armors', armorsTagIds);
+
     /* Add AXES to axes tags */
     let axesTaggedByMods = [
         event
@@ -326,6 +335,18 @@ ServerEvents.tags('item', (event) => {
     event.add('forge:axes', [axesTaggedByMods, axesRegex]);
     event.add('forge:tools/axe', [axesTaggedByMods, axesRegex]);
     event.add('forge:tools/axes', [axesTaggedByMods, axesRegex]);
+
+    /* BARRELS */
+    let barrelsTagIds = [],
+        barrelsRegex = /^.*:(?!(cannon|tnt).)*_barrel$/;
+
+    if (Platform.isLoaded('chipped')) barrelsTagIds.push('#chipped:barrel');
+
+    itemTagIds
+        .filter((tagId) => tagId.startsWith('forge:barrels/'))
+        .forEach((tagId) => barrelsTagIds.push('#'.concat(tagId)));
+
+    event.add('forge:barrels', [barrelsTagIds, barrelsRegex]);
 
     /* INGOTS */
     let ingotTagIds = [],
@@ -433,6 +454,20 @@ ServerEvents.tags('item', (event) => {
     let buttonsRegex = /^.*button$/;
 
     event.add('minecraft:buttons', [buttonsTaggedByMods, buttonsRegex]);
+
+    // TODO check mods and add their id if they add raw materials that should be tagged
+    // INFO look in ATM6's kjs scripts for examples
+    /* RAW MATERIALS */
+    let rawMaterialsTagIds = [];
+    // let rawMaterialsTagIds = [],
+    //     rawMaterialsRegex = /^(mod1|mod2|mod3):raw.*(include|words|here|if|needed)$/;
+
+    itemTagIds
+        .filter((tagId) => tagId.startsWith('forge:raw_materials/'))
+        .forEach((tagId) => rawMaterialsTagIds.push('#'.concat(tagId)));
+
+    event.add('forge:raw_materials', rawMaterialsTagIds);
+    // event.add('forge:raw_materials', [rawMaterialsTagIds, rawMaterialsRegex]);
 
     /* Add STAIRS to stairs tags */
     let stairsTaggedByMods = [
