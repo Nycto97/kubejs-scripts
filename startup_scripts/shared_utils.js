@@ -8,4 +8,4 @@
 
 // priority: 1000
 
-const isInstalled = (modId) => Platform.isLoaded(modId);
+const isLoaded = (modId) => Platform.isLoaded(modId);

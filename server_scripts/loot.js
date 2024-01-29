@@ -53,11 +53,11 @@ LootJS.modifiers((event) => {
 
     /* Remove all vertical slabs from Builders Crafts and Additions mod
        from the current loot pool so they don't drop their block when breaking */
-    if (isInstalled('buildersaddition')) removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
+    if (isLoaded('buildersaddition')) removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
 
     /* Remove all vertical slabs from Vertical Slabs Compat - Create: Deco mod
        from the current loot pool so they don't drop their block when breaking */
-    if (isInstalled('v_slab_compat') && isInstalled('createdeco'))
+    if (isLoaded('v_slab_compat') && isLoaded('createdeco'))
         removeAllBlockLoot(/^v_slab_compat:createdeco.*vertical_slab$/);
 
     /* Shulker Drops Two mod replacement
@@ -75,7 +75,7 @@ LootJS.modifiers((event) => {
 
     /* We've reset the overworld + I made a datapack to disable
        ruby ores from MoreCraft, but leave this code in just in case */
-    if (isInstalled('morecraft') && isInstalled('epicsamurai')) {
+    if (isLoaded('morecraft') && isLoaded('epicsamurai')) {
         replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
         replaceBlockLoot('morecraft:ruby_ore', 'morecraft:ruby_ore', 'epicsamurai:ruby_ore');
         replaceBlockLoot('morecraft:deepslate_ruby_ore', 'morecraft:ruby', 'epicsamurai:ruby');
@@ -87,7 +87,7 @@ LootJS.modifiers((event) => {
     }
 
     /* INFO: START RARE ICE LOOT */
-    if (isInstalled('rare-ice')) {
+    if (isLoaded('rare-ice')) {
         /* There will be many more items that need to be added! */
         let cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 

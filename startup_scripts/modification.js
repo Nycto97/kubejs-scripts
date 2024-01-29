@@ -49,7 +49,7 @@ ItemEvents.modification((event) => {
         maxStackSize50 = [],
         maxStackSize64 = ['minecraft:egg', 'minecraft:bucket', 'minecraft:ender_pearl'];
 
-    isInstalled('cgm') && maxStackSize50.push('cgm:missile', 'cgm:grenade');
+    isLoaded('cgm') && maxStackSize50.push('cgm:missile', 'cgm:grenade');
 
     maxStackSize5.forEach((item) => event.modify(item, (i) => (i.maxStackSize = 5)));
 

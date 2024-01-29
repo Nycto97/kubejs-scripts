@@ -34,7 +34,7 @@ StartupEvents.postInit(() => {
             modPreferredName = modInfo.modPreferredName;
 
         /* Check if mod is installed */
-        if (isInstalled(modId)) {
+        if (isLoaded(modId)) {
             let mod = Platform.mods[modId];
             /*
                new String() allows to store the current name and refer to it
