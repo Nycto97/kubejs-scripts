@@ -40,18 +40,18 @@ const itemTagIds = itemReg
     .toArray()
     .sort();
 
-let nonTaggedItemIds = [];
+let nonTaggedItemIds = new Set();
 
 /* Get items that are not tagged with minecraft:item tags */
 Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
     let stackId = stack.getId();
 
-    if (stack.getTags().toList().isEmpty() && !nonTaggedItemIds.includes(stackId)) {
-        nonTaggedItemIds.push(stackId);
+    if (!nonTaggedItemIds.has(stackId) && stack.getTags().toList().isEmpty()) {
+        nonTaggedItemIds.add(stackId);
     }
 });
 
-nonTaggedItemIds = nonTaggedItemIds.sort();
+nonTaggedItemIds = Array.from(nonTaggedItemIds).sort();
 
 console.log(`${itemTagIds.length} registered minecraft:item tags found!`);
 console.log(itemTagIds);
