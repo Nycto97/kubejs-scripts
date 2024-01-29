@@ -28,8 +28,7 @@
 const enableDumping = false;
 
 if (enableDumping) {
-    let blocks,
-        allBlocks = Block.getTypeList();
+    let blocks;
 
     const combineAndFormatBlocks = (blocksVanilla, blocksModdedFiltered, blocksModded) => {
         let blocksCombinedAndFormatted = '';

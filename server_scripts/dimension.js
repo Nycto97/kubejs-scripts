@@ -6,8 +6,6 @@
    LICENSE file in the root directory of this source tree.
 */
 
-let isInstalled = (modId) => Platform.mods[modId] != undefined;
-
 /* Show a title on screen and send a message regarding
    shaders to the player when they change dimension */
 CommonAddedEvents.playerChangeDimension((event) => {

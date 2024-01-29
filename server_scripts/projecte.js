@@ -6,8 +6,6 @@
    LICENSE file in the root directory of this source tree.
 */
 
-let isInstalled = (modId) => Platform.mods[modId] != undefined;
-
 if (isInstalled('projecte')) {
     ProjectEEvents.setEMC((event) => {
         /* Sets the absolute EMC value of an item. */

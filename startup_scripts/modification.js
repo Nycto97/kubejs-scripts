@@ -18,8 +18,6 @@
    Tags are currently unsupported.
 */
 
-let isInstalled = (modId) => Platform.mods[modId] != undefined;
-
 // TODO find out if vanilla items can be used without adding minecraft: prefix
 // TODO add all signs to 32 or 64 stacksize group (RegEx?)
 

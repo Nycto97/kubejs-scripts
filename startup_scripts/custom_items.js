@@ -6,8 +6,6 @@
    LICENSE file in the root directory of this source tree.
 */
 
-let isInstalled = (modId) => Platform.mods[modId] != undefined;
-
 /* Register custom items */
 StartupEvents.registry('item', (event) => {
     /* 

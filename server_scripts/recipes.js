@@ -15,8 +15,6 @@
    Only use input when it's certain that the blocks/items are only used in recipes from that mod !!! 
 */
 
-let isInstalled = (modId) => Platform.mods[modId] != undefined;
-
 ServerEvents.recipes((event) => {
     /*     const removeRecipesById = (recipeIds) => {
         if (typeof recipeIds === 'string') {

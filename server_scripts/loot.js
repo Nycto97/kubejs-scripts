@@ -18,9 +18,6 @@
 /* Set to true to enable logging of blacklisted Rare Ice loot */
 const logBlacklistedRareIceLoot = false;
 
-let allBlocks = Block.getTypeList(),
-    allItems = Item.getTypeList();
-
 console.log(`There are ${allItems.length} items and ${allBlocks.length} blocks registered in your world.`);
 
 LootJS.modifiers((event) => {
