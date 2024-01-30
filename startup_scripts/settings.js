@@ -6,6 +6,8 @@
    LICENSE file in the root directory of this source tree.
 */
 
+// priority: 1002
+
 /* Blocks and items */
 global['isBlockAndItemCountLogEnabled'] = true;
 

@@ -18,6 +18,8 @@
    Tags are currently unsupported.
 */
 
+// priority: 997
+
 // TODO add all signs to 32 or 64 stacksize group (RegEx?)
 
 /* Modify items */

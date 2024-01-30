@@ -6,6 +6,8 @@
    LICENSE file in the root directory of this source tree.
 */
 
+// priority: 998
+
 /* Register custom items */
 StartupEvents.registry('item', (event) => {
     /* 

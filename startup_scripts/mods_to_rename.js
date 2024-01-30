@@ -6,6 +6,8 @@
    LICENSE file in the root directory of this source tree.
 */
 
+// priority: 1001
+
 const modsToRename = [
     {
         id: 'ad_astra_giselle_addon',

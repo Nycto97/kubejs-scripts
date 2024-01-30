@@ -6,6 +6,8 @@
    LICENSE file in the root directory of this source tree.
 */
 
+// priority: 1000
+
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
     const notLoadedModLogs = [],
