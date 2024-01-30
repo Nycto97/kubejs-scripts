@@ -39,6 +39,24 @@
 
 /* ----------------------------------------------------------------- */
 
+/*  
+   NOTE TO SELF ABOUT Platform.mods[modId] AFTER SEARCHING FOR HOURS
+   HOW TO GET SOMETHING LIKE `Platform.mods.${modId}` TO WORK:
+   -> Platform.mods[modId] (which is not the same as Platform.mods.modId!)
+
+   Dot Notation
+      With dot notation, the compiler interprets the code literally.
+      Whatever is written after the dot is assumed to be a STRING;
+      the compiler then looks for an eponymous property on the object.
+
+   Bracket Notation
+      With bracket notation, on the other hand, whatever is written inside
+      the brackets will be interpreted as a VARIABLE and evaluated first.
+      Only then will the compiler look for a key corresponding to the evaluated expression.
+*/
+
+/* ----------------------------------------------------------------- */
+
 /*
    INFO:
    Using RegEx with \/^(.)*$\/
@@ -63,7 +81,7 @@
    NOTE:
    .some() can be used to avoid repetitive code:
 
-   global.allBlocks.filter(
+   global.allBlockIds.filter(
        (block) =>
            block.endsWith('thisThing') ||
            block.endsWith('thatThing') ||

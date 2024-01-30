@@ -18,7 +18,6 @@
    Tags are currently unsupported.
 */
 
-// TODO find out if vanilla items can be used without adding minecraft: prefix
 // TODO add all signs to 32 or 64 stacksize group (RegEx?)
 
 /* Modify items */

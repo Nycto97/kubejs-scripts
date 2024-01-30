@@ -6,25 +6,23 @@
    LICENSE file in the root directory of this source tree.
 */
 
-// priority: 1001
-
 /* Blocks and items */
-global['logBlockAndItemCount'] = true;
+global['isBlockAndItemCountLogEnabled'] = true;
 
 /* Items */
-global['logNonTaggedItemIds'] = true;
+global['isNonTaggedItemIdsLogEnabled'] = true;
 
 /* Loot */
-global['logBlacklistedRareIceLoot'] = false;
+global['isBlacklistedRareIceLootLogEnabled'] = false;
 
 /* Mods */
-global['logRenamedMods'] = true;
+global['isModRenameLogEnabled'] = true;
 
 /* Players */
-global['logPlayerDimensionChange'] = true;
+global['isPlayerDimensionChangeLogEnabled'] = true;
 
 /* Tags */
-global['logItemTagIds'] = true;
+global['isItemTagIdsLogEnabled'] = true;
 
 /* Shader */
-global['logShaderBlockDump'] = false;
+global['isBlockIdsForShaderLogEnabled'] = false;

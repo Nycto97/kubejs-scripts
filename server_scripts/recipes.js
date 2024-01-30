@@ -25,160 +25,166 @@ ServerEvents.recipes((event) => {
 
     // TODO make id generate function
 
-    const addSmeltingRecipe = (input, output, xp, time) => {
+    const addSmeltingRecipe = (inputItemId, outputItemId, xp, timeInTicks) => {
         // const id = ...(input, output)
         event
-            .smelting(output, input)
+            .smelting(outputItemId, inputItemId)
             .id(
-                `nycto:smelting/${output.substring(output.indexOf(':') + 1)}_from_${input.substring(
-                    input.indexOf(':') + 1
+                `nycto:smelting/${outputItemId.substring(outputItemId.indexOf(':') + 1)}_from_${inputItemId.substring(
+                    inputItemId.indexOf(':') + 1
                 )}`
             )
             .xp(xp)
-            .cookingTime(time);
+            .cookingTime(timeInTicks);
     };
 
-    const replaceInputUsingIdFilter = (id, inputToReplace, newInput) => {
-        event.replaceInput({ id: id }, inputToReplace, newInput /* can be a tag */);
+    const replaceInputUsingIdFilter = (recipeId, inputItemIdToReplace, newInputItemOrTag) => {
+        event.replaceInput({ id: recipeId }, inputItemIdToReplace, newInputItemOrTag);
     };
 
     const addScarecrowRecipe = (color) => {
+        if (color == 'purple') color = 'primitive';
+
+        let scarecrowItemId = `scarecrowsterritory:${color}_scarecrow`;
+
         event
-            .shaped(
-                Item.of(`scarecrowsterritory:${color != 'purple' ? color : 'primitive'}_scarecrow`, 1),
-                ['DP ', 'SHS', ' S '],
-                {
-                    D: `minecraft:${color}_dye`,
-                    P: 'minecraft:carved_pumpkin',
-                    S: '#forge:rods/wooden',
-                    H: 'minecraft:hay_block'
-                }
-            )
-            .id(`nycto:${color != 'purple' ? color : 'primitive'}_scarecrow`);
+            .shaped(Item.of(scarecrowItemId, 1), ['DP ', 'SHS', ' S '], {
+                D: `minecraft:${color != 'primitive' ? color : 'purple'}_dye`,
+                P: 'minecraft:carved_pumpkin',
+                S: '#forge:rods/wooden',
+                H: 'minecraft:hay_block'
+            })
+            .id(`nycto:${color}_scarecrow`);
     };
 
-    const generateFormattedArray = (items) => {
-        const output = [];
+    const generateFormattedArray = (itemInfos) => {
+        const outputItems = [];
 
-        items.forEach((item) =>
-            output.push(
-                Item.of(`${item.amount ? item.amount : 1}x ${item.item}`).withChance(item.chance ? item.chance : 1)
+        itemInfos.forEach((itemInfo) =>
+            outputItems.push(
+                Item.of(`${itemInfo.amount ? itemInfo.amount : 1}x ${itemInfo.itemId}`).withChance(
+                    itemInfo.chance ? itemInfo.chance : 1
+                )
             )
         );
 
-        return output;
+        return outputItems;
     };
 
-    const addCrushingRecipe = (input, time, items) => {
-        const output = generateFormattedArray(items);
-
+    const addCrushingRecipe = (inputItemId, timeInTicks, outputItemInfos) => {
         event.recipes.create
-            .crushing(output, input)
+            .crushing(generateFormattedArray(outputItemInfos), inputItemId)
             .id(
-                `nycto:crushing/${items[0].item.substring(items[0].item.indexOf(':') + 1)}_from_${input.substring(
-                    input.indexOf(':') + 1
-                )}`
+                `nycto:crushing/${outputItemInfos[0].itemId.substring(
+                    outputItemInfos[0].itemId.indexOf(':') + 1
+                )}_from_${inputItemId.substring(inputItemId.indexOf(':') + 1)}`
             )
-            .processingTime(time);
+            .processingTime(timeInTicks);
     };
 
-    const addOreCrushingRecipe = (input, type, mainBlock) => {
-        if (
-            type != 'coal' &&
-            type != 'iron' &&
-            type != 'copper' &&
-            type != 'gold' &&
-            type != 'redstone' &&
-            type != 'emerald' &&
-            type != 'lapis' &&
-            type != 'diamond' &&
-            type != 'ruby' &&
-            type != 'jade' &&
-            type != 'aquamarine' &&
-            type != 'onyx' &&
-            type != 'cloggrum' &&
-            type != 'froststeel' &&
-            type != 'utherium' &&
-            type != 'regalium'
-        ) {
-            console.log(
-                `ERROR: addOreCrushingRecipe: type ${type} not found! Add logic to addOreCrushingRecipe to handle this type!`
-            );
-            return;
-        }
-
-        let hasFirstItemBonus = false,
-            firstItemAmount,
-            secondItemChance,
-            time,
-            item = type,
-            items;
-
-        if (type == 'coal') {
-            time = 150;
-        } else if (type == 'froststeel' || type == 'regalium') {
-            time = 300;
-        } else if (type == 'emerald' || type == 'diamond' || type == 'ruby' || type == 'jade') {
-            time = 350;
-        } else if (type == 'utherium') {
-            time = 420;
-        } else {
-            time = 250;
-        }
-
-        if (
-            mainBlock == 'cobbled_deepslate' ||
-            mainBlock == 'undergarden:shiverstone' ||
-            mainBlock == 'undergarden:tremblecrust'
-        ) {
-            mainBlock == 'undergarden:tremblecrust' ? (time += 200) : (time += 100);
-            hasFirstItemBonus = true;
-        }
-
-        if (type == 'iron' || type == 'copper' || type == 'gold') {
-            item = `create:crushed_raw_${type}`;
-        } else if (type == 'ruby' || type == 'jade' || type == 'aquamarine' || type == 'onyx') {
-            item = `epicsamurai:${type}`;
-        } else if (type == 'lapis') {
-            item = 'lapis_lazuli';
-        } else if (type == 'cloggrum' || type == 'froststeel' || type == 'utherium' || type == 'regalium') {
-            item = `undergarden:crushed_raw_${type}`;
-        }
-
-        if (type == 'copper') {
-            firstItemAmount = hasFirstItemBonus ? 7 : 5;
-            secondItemChance = 0.25;
-        } else if (type == 'redstone' || type == 'lapis') {
-            type == 'redstone'
-                ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
-                : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
-            secondItemChance = 0.5;
-        } else {
-            firstItemAmount = hasFirstItemBonus ? 2 : 1;
-            secondItemChance = hasFirstItemBonus && mainBlock != 'undergarden:tremblecrust' ? 0.25 : 0.75;
-        }
-
-        items = [
-            {
-                item: item,
-                amount: firstItemAmount
-            },
-            {
-                item: item,
-                chance: secondItemChance
-            },
-            {
-                item: 'create:experience_nugget',
-                amount: type == 'gold' ? 2 : 1,
-                chance: 0.75
-            },
-            {
-                item: mainBlock,
-                chance: 0.125
-            }
+    const addOreCrushingRecipe = (inputItemId, oreType, mainBlockItemId) => {
+        const supportedOreTypes = [
+            'coal',
+            'iron',
+            'copper',
+            'gold',
+            'redstone',
+            'emerald',
+            'lapis',
+            'diamond',
+            'ruby',
+            'jade',
+            'aquamarine',
+            'onyx',
+            'cloggrum',
+            'froststeel',
+            'utherium',
+            'regalium'
         ];
 
-        addCrushingRecipe(input, time, items);
+        if (supportedOreTypes.includes(oreType)) {
+            let hasFirstItemBonus = false,
+                firstItemAmount,
+                secondItemChance,
+                timeInTicks,
+                itemId = oreType,
+                itemInfos;
+
+            if (oreType == 'coal') {
+                timeInTicks = 150;
+            } else if (oreType == 'froststeel' || oreType == 'regalium') {
+                timeInTicks = 300;
+            } else if (oreType == 'emerald' || oreType == 'diamond' || oreType == 'ruby' || oreType == 'jade') {
+                timeInTicks = 350;
+            } else if (oreType == 'utherium') {
+                timeInTicks = 420;
+            } else {
+                timeInTicks = 250;
+            }
+
+            if (
+                mainBlockItemId == 'cobbled_deepslate' ||
+                mainBlockItemId == 'undergarden:shiverstone' ||
+                mainBlockItemId == 'undergarden:tremblecrust'
+            ) {
+                mainBlockItemId == 'undergarden:tremblecrust' ? (timeInTicks += 200) : (timeInTicks += 100);
+                hasFirstItemBonus = true;
+            }
+
+            if (oreType == 'iron' || oreType == 'copper' || oreType == 'gold') {
+                itemId = `create:crushed_raw_${oreType}`;
+            } else if (oreType == 'ruby' || oreType == 'jade' || oreType == 'aquamarine' || oreType == 'onyx') {
+                itemId = `epicsamurai:${oreType}`;
+            } else if (oreType == 'lapis') {
+                itemId = 'lapis_lazuli';
+            } else if (
+                oreType == 'cloggrum' ||
+                oreType == 'froststeel' ||
+                oreType == 'utherium' ||
+                oreType == 'regalium'
+            ) {
+                itemId = `undergarden:crushed_raw_${oreType}`;
+            }
+
+            if (oreType == 'copper') {
+                firstItemAmount = hasFirstItemBonus ? 7 : 5;
+                secondItemChance = 0.25;
+            } else if (oreType == 'redstone' || oreType == 'lapis') {
+                oreType == 'redstone'
+                    ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
+                    : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
+                secondItemChance = 0.5;
+            } else {
+                firstItemAmount = hasFirstItemBonus ? 2 : 1;
+                secondItemChance = hasFirstItemBonus && mainBlockItemId != 'undergarden:tremblecrust' ? 0.25 : 0.75;
+            }
+
+            itemInfos = [
+                {
+                    itemId: itemId,
+                    amount: firstItemAmount
+                },
+                {
+                    itemId: itemId,
+                    chance: secondItemChance
+                },
+                {
+                    itemId: 'create:experience_nugget',
+                    amount: oreType == 'gold' ? 2 : 1,
+                    chance: 0.75
+                },
+                {
+                    itemId: mainBlockItemId,
+                    chance: 0.125
+                }
+            ];
+
+            addCrushingRecipe(inputItemId, timeInTicks, itemInfos);
+        } else {
+            console.log(
+                `[WARN] Ore type ${oreType} not supported! Add logic to addOreCrushingRecipe() in recipes.js to handle this ore type. Skipping ore crushing recipe`
+            );
+        }
     };
 
     // TODO add crushing recipes for all ores from all mods
@@ -186,7 +192,6 @@ ServerEvents.recipes((event) => {
     /* Remove all recipes having vertical slabs from Builders Crafts and
        Additions as input or output since Quark already adds all of these
        (all BC&A recipes still work with vertical slabs from Quark) */
-    // TODO: Check if mod != undefined check is needed, here and everywhere else!
     // TODO: change output and input to id only and remove tags if needed to remove uncrafting recipes
     // CURRENTLY THIS DELETES TOO MANY RECIPES I THINK !!!
     if (Platform.isLoaded('buildersaddition'))
@@ -323,18 +328,18 @@ ServerEvents.recipes((event) => {
         /* Minecraft */
         addCrushingRecipe('ancient_debris', 600, [
             {
-                item: 'netherite_scrap'
+                itemId: 'netherite_scrap'
             },
             {
-                item: 'netherite_scrap',
+                itemId: 'netherite_scrap',
                 chance: 0.25
             },
             {
-                item: 'create:experience_nugget',
+                itemId: 'create:experience_nugget',
                 amount: 2
             },
             {
-                item: 'dripstone_block',
+                itemId: 'dripstone_block',
                 chance: 0.125
             }
         ]);
@@ -366,35 +371,35 @@ ServerEvents.recipes((event) => {
         if (Platform.isLoaded('blue_skies')) {
             addCrushingRecipe('blue_skies:everbright_pyrope_ore', 300, [
                 {
-                    item: 'blue_skies:pyrope_gem'
+                    itemId: 'blue_skies:pyrope_gem'
                 },
                 {
-                    item: 'blue_skies:pyrope_gem',
+                    itemId: 'blue_skies:pyrope_gem',
                     chance: 0.75
                 },
                 {
-                    item: 'create:experience_nugget',
+                    itemId: 'create:experience_nugget',
                     chance: 0.75
                 },
                 {
-                    item: 'blue_skies:turquoise_cobblestone',
+                    itemId: 'blue_skies:turquoise_cobblestone',
                     chance: 0.125
                 }
             ]);
             addCrushingRecipe('blue_skies:everdawn_pyrope_ore', 300, [
                 {
-                    item: 'blue_skies:pyrope_gem'
+                    itemId: 'blue_skies:pyrope_gem'
                 },
                 {
-                    item: 'blue_skies:pyrope_gem',
+                    itemId: 'blue_skies:pyrope_gem',
                     chance: 0.75
                 },
                 {
-                    item: 'create:experience_nugget',
+                    itemId: 'create:experience_nugget',
                     chance: 0.75
                 },
                 {
-                    item: 'blue_skies:lunar_cobblestone',
+                    itemId: 'blue_skies:lunar_cobblestone',
                     chance: 0.125
                 }
             ]);
@@ -404,19 +409,19 @@ ServerEvents.recipes((event) => {
         if (Platform.isLoaded('croptopia'))
             addCrushingRecipe('croptopia:salt_ore', 300, [
                 {
-                    item: 'croptopia:salt',
+                    itemId: 'croptopia:salt',
                     chance: 0.75
                 },
                 {
-                    item: 'croptopia:salt',
+                    itemId: 'croptopia:salt',
                     chance: 0.25
                 },
                 {
-                    item: 'create:experience_nugget',
+                    itemId: 'create:experience_nugget',
                     chance: 0.75
                 },
                 {
-                    item: 'calcite',
+                    itemId: 'calcite',
                     chance: 0.125
                 }
             ]);
@@ -476,73 +481,73 @@ ServerEvents.recipes((event) => {
         if (Platform.isLoaded('randomium') && Platform.isLoaded('epicsamurai')) {
             addCrushingRecipe('randomium:randomium_ore', 350, [
                 {
-                    item: 'randomium:randomium',
+                    itemId: 'randomium:randomium',
                     chance: 0.5
                 },
                 {
-                    item: 'create:experience_nugget',
+                    itemId: 'create:experience_nugget',
                     chance: 0.25
                 },
                 {
-                    item: 'cobblestone',
+                    itemId: 'cobblestone',
                     chance: 0.125
                 },
                 {
-                    item: 'epicsamurai:ruby',
+                    itemId: 'epicsamurai:ruby',
                     chance: 0.09375
                 },
                 {
-                    item: 'netherite_ingot',
+                    itemId: 'netherite_ingot',
                     chance: 0.0625
                 }
             ]);
 
             addCrushingRecipe('randomium:randomium_ore_deepslate', 450, [
                 {
-                    item: 'randomium:randomium',
+                    itemId: 'randomium:randomium',
                     chance: 0.75
                 },
                 {
-                    item: 'randomium:randomium',
+                    itemId: 'randomium:randomium',
                     chance: 0.375
                 },
                 {
-                    item: 'create:experience_nugget',
+                    itemId: 'create:experience_nugget',
                     chance: 0.25
                 },
                 {
-                    item: 'cobbled_deepslate',
+                    itemId: 'cobbled_deepslate',
                     chance: 0.125
                 },
                 {
-                    item: 'epicsamurai:ruby',
+                    itemId: 'epicsamurai:ruby',
                     chance: 0.09375
                 },
                 {
-                    item: 'netherite_ingot',
+                    itemId: 'netherite_ingot',
                     chance: 0.0625
                 }
             ]);
 
             addCrushingRecipe('randomium:randomium_ore_end', 400, [
                 {
-                    item: 'randomium:randomium',
+                    itemId: 'randomium:randomium',
                     chance: 0.5
                 },
                 {
-                    item: 'create:experience_nugget',
+                    itemId: 'create:experience_nugget',
                     chance: 0.25
                 },
                 {
-                    item: 'end_stone',
+                    itemId: 'end_stone',
                     chance: 0.125
                 },
                 {
-                    item: 'epicsamurai:ruby',
+                    itemId: 'epicsamurai:ruby',
                     chance: 0.09375
                 },
                 {
-                    item: 'netherite_ingot',
+                    itemId: 'netherite_ingot',
                     chance: 0.0625
                 }
             ]);

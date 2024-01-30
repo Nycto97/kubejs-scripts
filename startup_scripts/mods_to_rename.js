@@ -8,523 +8,523 @@
 
 const modsToRename = [
     {
-        modId: 'ad_astra_giselle_addon',
-        modPreferredName: 'Ad Astra: Giselle Add-on'
+        id: 'ad_astra_giselle_addon',
+        preferredName: 'Ad Astra: Giselle Add-on'
     },
     {
-        modId: 'alexsabnormalities',
-        modPreferredName: "Alex's Mobs: Abnormalities"
+        id: 'alexsabnormalities',
+        preferredName: "Alex's Mobs: Abnormalities"
     },
     {
-        modId: 'animatica',
-        modPreferredName: 'Animatica'
+        id: 'animatica',
+        preferredName: 'Animatica'
     },
     {
-        modId: 'arseng',
-        modPreferredName: 'Applied Energistics 2: Ars Énergistique (Ars Nouveau)'
+        id: 'arseng',
+        preferredName: 'Applied Energistics 2: Ars Énergistique (Ars Nouveau)'
     },
     {
-        modId: 'merequester',
-        modPreferredName: 'Applied Energistics 2: ME Requester'
+        id: 'merequester',
+        preferredName: 'Applied Energistics 2: ME Requester'
     },
     {
-        modId: 'ae2things',
-        modPreferredName: 'Applied Energistics 2: Things'
+        id: 'ae2things',
+        preferredName: 'Applied Energistics 2: Things'
     },
     {
-        modId: 'ars_creo',
-        modPreferredName: 'Ars Nouveau: Ars Creo (Create)'
+        id: 'ars_creo',
+        preferredName: 'Ars Nouveau: Ars Creo (Create)'
     },
     {
-        modId: 'ars_elemental',
-        modPreferredName: 'Ars Nouveau: Ars Elemental'
+        id: 'ars_elemental',
+        preferredName: 'Ars Nouveau: Ars Elemental'
     },
     {
-        modId: 'ars_instrumentum',
-        modPreferredName: 'Ars Nouveau: Ars Instrumentum'
+        id: 'ars_instrumentum',
+        preferredName: 'Ars Nouveau: Ars Instrumentum'
     },
     {
-        modId: 'arsomega',
-        modPreferredName: 'Ars Nouveau: Ars Omega'
+        id: 'arsomega',
+        preferredName: 'Ars Nouveau: Ars Omega'
     },
     {
-        modId: 'ars_scalaes',
-        modPreferredName: 'Ars Nouveau: Ars Scalaes'
+        id: 'ars_scalaes',
+        preferredName: 'Ars Nouveau: Ars Scalaes'
     },
     {
-        modId: 'starbunclemania',
-        modPreferredName: 'Ars Nouveau: Starbuncle Mania'
+        id: 'starbunclemania',
+        preferredName: 'Ars Nouveau: Starbuncle Mania'
     },
     {
-        modId: 'toomanyglyphs',
-        modPreferredName: 'Ars Nouveau: Too Many Glyphs'
+        id: 'toomanyglyphs',
+        preferredName: 'Ars Nouveau: Too Many Glyphs'
     },
     {
-        modId: 'awesomedungeon',
-        modPreferredName: 'Awesome Dungeon'
+        id: 'awesomedungeon',
+        preferredName: 'Awesome Dungeon'
     },
     {
-        modId: 'awesomedungeonnether',
-        modPreferredName: 'Awesome Dungeon Nether Edition'
+        id: 'awesomedungeonnether',
+        preferredName: 'Awesome Dungeon Nether Edition'
     },
     {
-        modId: 'awesomedungeonocean',
-        modPreferredName: 'Awesome Dungeon Ocean Edition'
+        id: 'awesomedungeonocean',
+        preferredName: 'Awesome Dungeon Ocean Edition'
     },
     {
-        modId: 'awesomedungeonend',
-        modPreferredName: 'Awesome Dungeon The End Edition'
+        id: 'awesomedungeonend',
+        preferredName: 'Awesome Dungeon The End Edition'
     },
     {
-        modId: 'bagus_lib',
-        modPreferredName: 'Bagus Lib'
+        id: 'bagus_lib',
+        preferredName: 'Bagus Lib'
     },
     {
-        modId: 'bintfar',
-        modPreferredName: 'Bed Is Not Too Far Away'
+        id: 'bintfar',
+        preferredName: 'Bed Is Not Too Far Away'
     },
     {
-        modId: 'better_beacons',
-        modPreferredName: 'Better Beacons'
+        id: 'better_beacons',
+        preferredName: 'Better Beacons'
     },
     {
-        modId: 'betterfpsdist',
-        modPreferredName: 'Better FPS - Render Distance'
+        id: 'betterfpsdist',
+        preferredName: 'Better FPS - Render Distance'
     },
     {
-        modId: 'treasuredistance',
-        modPreferredName: 'Better Treasure Map'
+        id: 'treasuredistance',
+        preferredName: 'Better Treasure Map'
     },
     {
-        modId: 'biomemusic',
-        modPreferredName: 'Biome Music'
+        id: 'biomemusic',
+        preferredName: 'Biome Music'
     },
     {
-        modId: 'blockui',
-        modPreferredName: 'BlockUI Library'
+        id: 'blockui',
+        preferredName: 'BlockUI Library'
     },
     {
-        modId: 'brutalbosses',
-        modPreferredName: 'Brutal Bosses - Custom Bosses'
+        id: 'brutalbosses',
+        preferredName: 'Brutal Bosses - Custom Bosses'
     },
     {
-        modId: 'buildersaddition',
-        modPreferredName: 'Builders Crafts & Additions'
+        id: 'buildersaddition',
+        preferredName: 'Builders Crafts & Additions'
     },
     {
-        modId: 'cataclysm',
-        modPreferredName: 'Cataclysm'
+        id: 'cataclysm',
+        preferredName: 'Cataclysm'
     },
     {
-        modId: 'chunksending',
-        modPreferredName: 'Chunk Sending'
+        id: 'chunksending',
+        preferredName: 'Chunk Sending'
     },
     {
-        modId: 'clickadv',
-        modPreferredName: 'Clickable Advancements'
+        id: 'clickadv',
+        preferredName: 'Clickable Advancements'
     },
     {
-        modId: 'computercraft',
-        modPreferredName: 'ComputerCraft'
+        id: 'computercraft',
+        preferredName: 'ComputerCraft'
     },
     {
-        modId: 'advancedperipherals',
-        modPreferredName: 'ComputerCraft: Advanced Peripherals'
+        id: 'advancedperipherals',
+        preferredName: 'ComputerCraft: Advanced Peripherals'
     },
     {
-        modId: 'cccbridge',
-        modPreferredName: 'ComputerCraft: Create Compat'
+        id: 'cccbridge',
+        preferredName: 'ComputerCraft: Create Compat'
     },
     {
-        modId: 'connectivity',
-        modPreferredName: 'Connectivity'
+        id: 'connectivity',
+        preferredName: 'Connectivity'
     },
     {
-        modId: 'constructionwand',
-        modPreferredName: 'Construction Wands'
+        id: 'constructionwand',
+        preferredName: 'Construction Wands'
     },
     {
-        modId: 'createbigcannons',
-        modPreferredName: 'Create: Big Cannons'
+        id: 'createbigcannons',
+        preferredName: 'Create: Big Cannons'
     },
     {
-        modId: 'createcafe',
-        modPreferredName: 'Create: Cafe'
+        id: 'createcafe',
+        preferredName: 'Create: Cafe'
     },
     {
-        modId: 'nocubescreateexp',
-        modPreferredName: 'Create: Compact Experience'
+        id: 'nocubescreateexp',
+        preferredName: 'Create: Compact Experience'
     },
     {
-        modId: 'createaddition',
-        modPreferredName: 'Create: Crafts & Additions'
+        id: 'createaddition',
+        preferredName: 'Create: Crafts & Additions'
     },
     {
-        modId: 'davebuildingmod',
-        modPreferredName: "Create: Dave's Building Extended"
+        id: 'davebuildingmod',
+        preferredName: "Create: Dave's Building Extended"
     },
     {
-        modId: 'createdieselgenerators',
-        modPreferredName: 'Create: Diesel Generators'
+        id: 'createdieselgenerators',
+        preferredName: 'Create: Diesel Generators'
     },
     {
-        modId: 'createcasing',
-        modPreferredName: 'Create: Encased'
+        id: 'createcasing',
+        preferredName: 'Create: Encased'
     },
     {
-        modId: 'create_enchantment_industry',
-        modPreferredName: 'Create: Enchantment Industry'
+        id: 'create_enchantment_industry',
+        preferredName: 'Create: Enchantment Industry'
     },
     {
-        modId: 'garnished',
-        modPreferredName: 'Create: Garnished'
+        id: 'garnished',
+        preferredName: 'Create: Garnished'
     },
     {
-        modId: 'creategoggles',
-        modPreferredName: 'Create: Goggles'
+        id: 'creategoggles',
+        preferredName: 'Create: Goggles'
     },
     {
-        modId: 'liquidburner',
-        modPreferredName: 'Create: Liquid Burner'
+        id: 'liquidburner',
+        preferredName: 'Create: Liquid Burner'
     },
     {
-        modId: 'create_crush_everything',
-        modPreferredName: 'Create: Recycle Everything'
+        id: 'create_crush_everything',
+        preferredName: 'Create: Recycle Everything'
     },
     {
-        modId: 'create_sabers',
-        modPreferredName: 'Create: Sabers'
+        id: 'create_sabers',
+        preferredName: 'Create: Sabers'
     },
     {
-        modId: 'createindustry',
-        modPreferredName: 'Create: The Factory Must Grow'
+        id: 'createindustry',
+        preferredName: 'Create: The Factory Must Grow'
     },
     {
-        modId: 'culllessleaves',
-        modPreferredName: 'Cull Less Leaves'
+        id: 'culllessleaves',
+        preferredName: 'Cull Less Leaves'
     },
     {
-        modId: 'cupboard',
-        modPreferredName: 'Cupboard'
+        id: 'cupboard',
+        preferredName: 'Cupboard'
     },
     {
-        modId: 'darkpaintings',
-        modPreferredName: 'Dark Paintings'
+        id: 'darkpaintings',
+        preferredName: 'Dark Paintings'
     },
     {
-        modId: 'darkutils',
-        modPreferredName: 'Dark Utilities'
+        id: 'darkutils',
+        preferredName: 'Dark Utilities'
     },
     {
-        modId: 'drawerfps',
-        modPreferredName: 'DrawerFPS'
+        id: 'drawerfps',
+        preferredName: 'DrawerFPS'
     },
     {
-        modId: 'dtbop',
-        modPreferredName: "Dynamic Trees - Biomes O' Plenty"
+        id: 'dtbop',
+        preferredName: "Dynamic Trees - Biomes O' Plenty"
     },
     {
-        modId: 'dtquark',
-        modPreferredName: 'Dynamic Trees - Quark'
+        id: 'dtquark',
+        preferredName: 'Dynamic Trees - Quark'
     },
     {
-        modId: 'earthmobsmod',
-        modPreferredName: 'Earth Mobs'
+        id: 'earthmobsmod',
+        preferredName: 'Earth Mobs'
     },
     {
-        modId: 'enchantwithmob',
-        modPreferredName: 'Enchant With Mob'
+        id: 'enchantwithmob',
+        preferredName: 'Enchant With Mob'
     },
     {
-        modId: 'enchdesc',
-        modPreferredName: 'Enchantment Descriptions'
+        id: 'enchdesc',
+        preferredName: 'Enchantment Descriptions'
     },
     {
-        modId: 'endlessbiomes',
-        modPreferredName: 'Endless Biomes'
+        id: 'endlessbiomes',
+        preferredName: 'Endless Biomes'
     },
     {
-        modId: 'entityculling',
-        modPreferredName: 'Entity Culling'
+        id: 'entityculling',
+        preferredName: 'Entity Culling'
     },
     {
-        modId: 'abnormals_delight',
-        modPreferredName: "Farmer's Delight: Abnormals Delight"
+        id: 'abnormals_delight',
+        preferredName: "Farmer's Delight: Abnormals Delight"
     },
     {
-        modId: 'aetherdelight',
-        modPreferredName: "Farmer's Delight: Aether Delight"
+        id: 'aetherdelight',
+        preferredName: "Farmer's Delight: Aether Delight"
     },
     {
-        modId: 'alexsdelight',
-        modPreferredName: "Farmer's Delight: Alex's Delight"
+        id: 'alexsdelight',
+        preferredName: "Farmer's Delight: Alex's Delight"
     },
     {
-        modId: 'brewinandchewin',
-        modPreferredName: "Farmer's Delight: Brewin' And Chewin'"
+        id: 'brewinandchewin',
+        preferredName: "Farmer's Delight: Brewin' And Chewin'"
     },
     {
-        modId: 'cataclysm_delight',
-        modPreferredName: "Farmer's Delight: Cataclysm Delight"
+        id: 'cataclysm_delight',
+        preferredName: "Farmer's Delight: Cataclysm Delight"
     },
     {
-        modId: 'collectorsreap',
-        modPreferredName: "Farmer's Delight: Collector's Reap"
+        id: 'collectorsreap',
+        preferredName: "Farmer's Delight: Collector's Reap"
     },
     {
-        modId: 'culturaldelights',
-        modPreferredName: "Farmer's Delight: Cultural Delight"
+        id: 'culturaldelights',
+        preferredName: "Farmer's Delight: Cultural Delight"
     },
     {
-        modId: 'delightful',
-        modPreferredName: "Farmer's Delight: Delightful"
+        id: 'delightful',
+        preferredName: "Farmer's Delight: Delightful"
     },
     {
-        modId: 'endersdelight',
-        modPreferredName: "Farmer's Delight: Ender's Delight"
+        id: 'endersdelight',
+        preferredName: "Farmer's Delight: Ender's Delight"
     },
     {
-        modId: 'ends_delight',
-        modPreferredName: "Farmer's Delight: End's Delight"
+        id: 'ends_delight',
+        preferredName: "Farmer's Delight: End's Delight"
     },
     {
-        modId: 'farmersrespite',
-        modPreferredName: "Farmer's Delight: Farmer's Respite"
+        id: 'farmersrespite',
+        preferredName: "Farmer's Delight: Farmer's Respite"
     },
     {
-        modId: 'miners_delight',
-        modPreferredName: "Farmer's Delight: Miner's Delight"
+        id: 'miners_delight',
+        preferredName: "Farmer's Delight: Miner's Delight"
     },
     {
-        modId: 'nethersdelight',
-        modPreferredName: "Farmer's Delight: Nether's Delight"
+        id: 'nethersdelight',
+        preferredName: "Farmer's Delight: Nether's Delight"
     },
     {
-        modId: 'fastasyncworldsave',
-        modPreferredName: 'Fast Async World Save'
+        id: 'fastasyncworldsave',
+        preferredName: 'Fast Async World Save'
     },
     {
-        modId: 'create_questing',
-        modPreferredName: 'FTB Quests: Create Questing'
+        id: 'create_questing',
+        preferredName: 'FTB Quests: Create Questing'
     },
     {
-        modId: 'gpumemleakfix',
-        modPreferredName: 'GPU Memory Leak Fix'
+        id: 'gpumemleakfix',
+        preferredName: 'GPU Memory Leak Fix'
     },
     {
-        modId: 'hunterillager',
-        modPreferredName: "Hunter's Return"
+        id: 'hunterillager',
+        preferredName: "Hunter's Return"
     },
     {
-        modId: 'incontrol',
-        modPreferredName: 'In Control!'
+        id: 'incontrol',
+        preferredName: 'In Control!'
     },
     {
-        modId: 'metalbarrels',
-        modPreferredName: 'Iron Barrels'
+        id: 'metalbarrels',
+        preferredName: 'Iron Barrels'
     },
     {
-        modId: 'tieredshulkers',
-        modPreferredName: 'Iron Shulker Boxes'
+        id: 'tieredshulkers',
+        preferredName: 'Iron Shulker Boxes'
     },
     {
-        modId: 'just_enough_beacons',
-        modPreferredName: 'Just Enough Beacons'
+        id: 'just_enough_beacons',
+        preferredName: 'Just Enough Beacons'
     },
     {
-        modId: 'justenoughprofessions',
-        modPreferredName: 'Just Enough Professions'
+        id: 'justenoughprofessions',
+        preferredName: 'Just Enough Professions'
     },
     {
-        modId: 'kubejsadditions',
-        modPreferredName: 'KubeJS: Additions'
+        id: 'kubejsadditions',
+        preferredName: 'KubeJS: Additions'
     },
     {
-        modId: 'kubejs_create',
-        modPreferredName: 'KubeJS: Create'
+        id: 'kubejs_create',
+        preferredName: 'KubeJS: Create'
     },
     {
-        modId: 'kubejs_immersive_engineering',
-        modPreferredName: 'KubeJS: Immersive Engineering'
+        id: 'kubejs_immersive_engineering',
+        preferredName: 'KubeJS: Immersive Engineering'
     },
     {
-        modId: 'lootjs',
-        modPreferredName: 'KubeJS: LootJS'
+        id: 'lootjs',
+        preferredName: 'KubeJS: LootJS'
     },
     {
-        modId: 'morejs',
-        modPreferredName: 'KubeJS: MoreJS'
+        id: 'morejs',
+        preferredName: 'KubeJS: MoreJS'
     },
     {
-        modId: 'kubejsprojecte',
-        modPreferredName: 'KubeJS: ProjectE'
+        id: 'kubejsprojecte',
+        preferredName: 'KubeJS: ProjectE'
     },
     {
-        modId: 'leaky',
-        modPreferredName: 'Leaky - Farm Leak Detection'
+        id: 'leaky',
+        preferredName: 'Leaky - Farm Leak Detection'
     },
     {
-        modId: 'lootintegrations',
-        modPreferredName: 'Loot Integrations'
+        id: 'lootintegrations',
+        preferredName: 'Loot Integrations'
     },
     {
-        modId: 'macawsbridgesbop',
-        modPreferredName: "Macaw's Bridges - Biomes O' Plenty"
+        id: 'macawsbridgesbop',
+        preferredName: "Macaw's Bridges - Biomes O' Plenty"
     },
     {
-        modId: 'macawsbridgesbyg',
-        modPreferredName: "Macaw's Bridges - Oh The Biomes You'll Go"
+        id: 'macawsbridgesbyg',
+        preferredName: "Macaw's Bridges - Oh The Biomes You'll Go"
     },
     {
-        modId: 'mcwfurnituresbop',
-        modPreferredName: "Macaw's Furniture - Biomes O' Plenty"
+        id: 'mcwfurnituresbop',
+        preferredName: "Macaw's Furniture - Biomes O' Plenty"
     },
     {
-        modId: 'mcwfurnituresbyg',
-        modPreferredName: "Macaw's Furniture - Oh The Biomes You'll Go"
+        id: 'mcwfurnituresbyg',
+        preferredName: "Macaw's Furniture - Oh The Biomes You'll Go"
     },
     {
-        modId: 'macawsroofsbop',
-        modPreferredName: "Macaw's Roofs - Biomes O' Plenty"
+        id: 'macawsroofsbop',
+        preferredName: "Macaw's Roofs - Biomes O' Plenty"
     },
     {
-        modId: 'macawsroofsbyg',
-        modPreferredName: "Macaw's Roofs - Oh The Biomes You'll Go"
+        id: 'macawsroofsbyg',
+        preferredName: "Macaw's Roofs - Oh The Biomes You'll Go"
     },
     {
-        modId: 'stylecolonies',
-        modPreferredName: 'MineColonies: StyleColonies'
+        id: 'stylecolonies',
+        preferredName: 'MineColonies: StyleColonies'
     },
     {
-        modId: 'towntalk',
-        modPreferredName: 'MineColonies: TownTalk'
+        id: 'towntalk',
+        preferredName: 'MineColonies: TownTalk'
     },
     {
-        modId: 'cfm',
-        modPreferredName: "MrCrayfish's Furniture"
+        id: 'cfm',
+        preferredName: "MrCrayfish's Furniture"
     },
     {
-        modId: 'cgm',
-        modPreferredName: "MrCrayfish's Guns"
+        id: 'cgm',
+        preferredName: "MrCrayfish's Guns"
     },
     {
-        modId: 'additionalguns',
-        modPreferredName: "MrCrayfish's Guns: Additional Guns"
+        id: 'additionalguns',
+        preferredName: "MrCrayfish's Guns: Additional Guns"
     },
     {
-        modId: 'alloyedguns',
-        modPreferredName: "MrCrayfish's Guns: Alloyed Guns (Create)"
+        id: 'alloyedguns',
+        preferredName: "MrCrayfish's Guns: Alloyed Guns (Create)"
     },
     {
-        modId: 'peculiars',
-        modPreferredName: 'Neapolitan: Peculiars'
+        id: 'peculiars',
+        preferredName: 'Neapolitan: Peculiars'
     },
     {
-        modId: 'respiteful',
-        modPreferredName: 'Neapolitan: Respiteful'
+        id: 'respiteful',
+        preferredName: 'Neapolitan: Respiteful'
     },
     {
-        modId: 'seasonals',
-        modPreferredName: 'Neapolitan: Seasonals'
+        id: 'seasonals',
+        preferredName: 'Neapolitan: Seasonals'
     },
     {
-        modId: 'notenoughanimations',
-        modPreferredName: 'Not Enough Animations'
+        id: 'notenoughanimations',
+        preferredName: 'Not Enough Animations'
     },
     {
-        modId: 'elevatorid',
-        modPreferredName: 'OpenBlocks Elevator'
+        id: 'elevatorid',
+        preferredName: 'OpenBlocks Elevator'
     },
     {
-        modId: 'pneumaticcraft',
-        modPreferredName: 'PneumaticCraft'
+        id: 'pneumaticcraft',
+        preferredName: 'PneumaticCraft'
     },
     {
-        modId: 'polyeng',
-        modPreferredName: 'Polymorph: Applied Energistics 2'
+        id: 'polyeng',
+        preferredName: 'Polymorph: Applied Energistics 2'
     },
     {
-        modId: 'refinedpolymorph',
-        modPreferredName: 'Polymorph: Refined Storage'
+        id: 'refinedpolymorph',
+        preferredName: 'Polymorph: Refined Storage'
     },
     {
-        modId: 'equivadds',
-        modPreferredName: 'ProjectE: Equivalent Additions'
+        id: 'equivadds',
+        preferredName: 'ProjectE: Equivalent Additions'
     },
     {
-        modId: 'expequiv',
-        modPreferredName: 'ProjectE: Expanded Equivalence'
+        id: 'expequiv',
+        preferredName: 'ProjectE: Expanded Equivalence'
     },
     {
-        modId: 'refinedstorageaddons',
-        modPreferredName: 'Refined Storage: Add-ons'
+        id: 'refinedstorageaddons',
+        preferredName: 'Refined Storage: Add-ons'
     },
     {
-        modId: 'rsrequestify',
-        modPreferredName: 'Refined Storage: Requestify'
+        id: 'rsrequestify',
+        preferredName: 'Refined Storage: Requestify'
     },
     {
-        modId: 'revampedwolf',
-        modPreferredName: 'Revamped Wolf'
+        id: 'revampedwolf',
+        preferredName: 'Revamped Wolf'
     },
     {
-        modId: 'dragonfight',
-        modPreferredName: 'Savage Ender Dragon'
+        id: 'dragonfight',
+        preferredName: 'Savage Ender Dragon'
     },
     {
-        modId: 'servertick',
-        modPreferredName: 'Server Tick'
+        id: 'servertick',
+        preferredName: 'Server Tick'
     },
     {
-        modId: 'smoothchunk',
-        modPreferredName: 'Smooth Chunk Save'
+        id: 'smoothchunk',
+        preferredName: 'Smooth Chunk Save'
     },
     {
-        modId: 'spark',
-        modPreferredName: 'Spark'
+        id: 'spark',
+        preferredName: 'Spark'
     },
     {
-        modId: 'framedcompactdrawers',
-        modPreferredName: 'Storage Drawers: Framed Compacting Drawers'
+        id: 'framedcompactdrawers',
+        preferredName: 'Storage Drawers: Framed Compacting Drawers'
     },
     {
-        modId: 'functionalstorage',
-        modPreferredName: 'Storage Drawers: Functional Storage'
+        id: 'functionalstorage',
+        preferredName: 'Storage Drawers: Functional Storage'
     },
     {
-        modId: 'functional_storage_extra',
-        modPreferredName: 'Storage Drawers: Functional Storage Extra'
+        id: 'functional_storage_extra',
+        preferredName: 'Storage Drawers: Functional Storage Extra'
     },
     {
-        modId: 'structureessentials',
-        modPreferredName: 'Structure Essentials'
+        id: 'structureessentials',
+        preferredName: 'Structure Essentials'
     },
     {
-        modId: 'deep_aether',
-        modPreferredName: 'The Aether: Deep Aether'
+        id: 'deep_aether',
+        preferredName: 'The Aether: Deep Aether'
     },
     {
-        modId: 'aether_enhanced_extinguishing',
-        modPreferredName: 'The Aether: Enhanced Extinguishing'
+        id: 'aether_enhanced_extinguishing',
+        preferredName: 'The Aether: Enhanced Extinguishing'
     },
     {
-        modId: 'tflostblocks',
-        modPreferredName: 'The Twilight Forest: Lost Blocks'
+        id: 'tflostblocks',
+        preferredName: 'The Twilight Forest: Lost Blocks'
     },
     {
-        modId: 'upgradednetherite_items',
-        modPreferredName: 'Upgraded Netherite: Items'
+        id: 'upgradednetherite_items',
+        preferredName: 'Upgraded Netherite: Items'
     },
     {
-        modId: 'upgradednetherite_ultimate',
-        modPreferredName: 'Upgraded Netherite: Ultimerite'
+        id: 'upgradednetherite_ultimate',
+        preferredName: 'Upgraded Netherite: Ultimerite'
     },
     {
-        modId: 'useless_sword',
-        modPreferredName: 'Useless Swords'
+        id: 'useless_sword',
+        preferredName: 'Useless Swords'
     },
     {
-        modId: 'w2w2',
-        modPreferredName: "Xaero's Map - Waystones Compat"
+        id: 'w2w2',
+        preferredName: "Xaero's Map - Waystones Compat"
     }
 ];

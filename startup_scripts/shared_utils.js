@@ -6,10 +6,13 @@
    LICENSE file in the root directory of this source tree.
 */
 
-// priority: 1000
-
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
-    global.allItems = Item.getTypeList();
-    global.allBlocks = Block.getTypeList();
+    global.allItemIds = Item.getTypeList();
+    global.allBlockIds = Block.getTypeList();
+
+    if (global.isBlockAndItemCountLogEnabled)
+        console.log(
+            `There are ${global.allItemIds.length} items and ${global.allBlockIds.length} blocks registered in your world.`
+        );
 });

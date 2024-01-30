@@ -15,11 +15,6 @@
    To get all registered items, use Item.getTypeList()
 */
 
-if (global.logBlockAndItemCount)
-    console.log(
-        `There are ${global.allItems.length} items and ${global.allBlocks.length} blocks registered in your world.`
-    );
-
 LootJS.modifiers((event) => {
     /* Enable the log output */
     event.enableLogging();
@@ -91,7 +86,7 @@ LootJS.modifiers((event) => {
         /* There will be many more items that need to be added! */
         let cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-        let blacklistedItems = global.allItems.filter(
+        let blacklistedItems = global.allItemIds.filter(
             (item) =>
                 item == 'minecraft:air' ||
                 cannotStartWith.some((itemNameStart) => item.startsWith(itemNameStart)) ||
@@ -105,13 +100,13 @@ LootJS.modifiers((event) => {
 
         /* TODO find out how it comes that this works, while the commented
        out code below is the full, 'correct' way to do this */
-        let filteredItems = global.allItems.filter(isNotBlacklisted);
-        // const filteredItems = global.allItems.filter((item) => isNotBlacklisted(item));
+        let filteredItems = global.allItemIds.filter(isNotBlacklisted);
+        // const filteredItems = global.allItemIds.filter((item) => isNotBlacklisted(item));
 
-        global.logBlacklistedRareIceLoot &&
+        global.isBlacklistedRareIceLootLogEnabled &&
             console.log(
                 `\n\n${
-                    global.allItems.length - filteredItems.length
+                    global.allItemIds.length - filteredItems.length
                 } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
             );
 
