@@ -15,12 +15,10 @@
    To get all registered items, use Item.getTypeList()
 */
 
-/* Set to true to enable logging of blacklisted Rare Ice loot */
-const logBlacklistedRareIceLoot = false;
-
-console.log(
-    `There are ${global.allItems.length} items and ${global.allBlocks.length} blocks registered in your world.`
-);
+if (global.logBlockAndItemCount)
+    console.log(
+        `There are ${global.allItems.length} items and ${global.allBlocks.length} blocks registered in your world.`
+    );
 
 LootJS.modifiers((event) => {
     /* Enable the log output */
@@ -110,7 +108,7 @@ LootJS.modifiers((event) => {
         let filteredItems = global.allItems.filter(isNotBlacklisted);
         // const filteredItems = global.allItems.filter((item) => isNotBlacklisted(item));
 
-        logBlacklistedRareIceLoot &&
+        global.logBlacklistedRareIceLoot &&
             console.log(
                 `\n\n${
                     global.allItems.length - filteredItems.length

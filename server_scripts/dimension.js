@@ -45,11 +45,12 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const messageShaderTip =
         "\u00A7bTip:\u00A7f Press ESC > Options > Control Settings > Key Binds > type 'shader' in the text field > bind Toggle Shaders to F7";
 
-    console.log(
-        `${playerName} moved from ${dimensionOld.substring(dimensionOld.indexOf(':') + 1)} to ${dimensionNew.substring(
-            dimensionNew.indexOf(':') + 1
-        )}`
-    );
+    if (global.logPlayerDimensionChange)
+        console.log(
+            `${playerName} moved from ${dimensionOld.substring(
+                dimensionOld.indexOf(':') + 1
+            )} to ${dimensionNew.substring(dimensionNew.indexOf(':') + 1)}`
+        );
 
     // TODO test .notify method instead of this approach
     // NOTE Use server.scheduleInTicks(100, () => {...}) to delay execution

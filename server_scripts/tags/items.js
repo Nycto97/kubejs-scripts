@@ -12,9 +12,6 @@
    Block tags are used for controlling behavior with blocks in block form
 */
 
-const logItemTagIds = true;
-const logNonTaggedItemIds = true;
-
 const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM;
 
 const itemTagIds = itemReg
@@ -33,12 +30,12 @@ Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
     }
 });
 
-if (logItemTagIds) {
+if (global.logItemTagIds) {
     console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
     console.log(itemTagIds.sort());
 }
 
-if (logNonTaggedItemIds) {
+if (global.logNonTaggedItemIds) {
     console.log(`\n\n${nonTaggedItemIds.size} items are currently NOT TAGGED with minecraft:item tags!\n`);
     console.log(Array.from(nonTaggedItemIds).sort());
 }

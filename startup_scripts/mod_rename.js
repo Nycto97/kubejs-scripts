@@ -47,39 +47,44 @@ StartupEvents.postInit(() => {
                 /* Set mod name to preferred mod name */
                 mod.setName(modPreferredName);
 
-                modRenamedMessages.push(
-                    `[RENAMED] Mod has been renamed: ${modName} => ${modPreferredName} [id: ${modId}]`
-                );
+                if (global.logRenamedMods)
+                    renamedModLogs.push(
+                        `[RENAMED] Mod has been renamed: ${modName} => ${preferredModName} [id: ${modId}]`
+                    );
             } else {
-                modSkippedPreferredMessages.push(
-                    `[SKIPPED] Mod has preferred name, skipping rename! ${modName} [id: ${modId}]`
-                );
+                if (global.logRenamedMods)
+                    skippedModLogs.push(`[SKIPPED] Mod has preferred name, skipping rename! ${modName} [id: ${modId}]`);
             }
         } else {
-            modSkippedNotInstalledMessages.push(`[SKIPPED] Mod is not installed, skipping rename! [id: ${modId}]`);
+            if (global.logRenamedMods)
+                notInstalledModLogs.push(`[SKIPPED] Mod is not installed, skipping rename! [id: ${modId}]`);
         }
     };
 
     /* Rename mods */
     modsToRename.forEach((mod) => renameMod(mod));
 
-    /* Add all messages to 1 array after sorting
-       them and add dividers where needed */
-    modAllMessages.push(
-        modSkippedNotInstalledMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
-    );
-    modSkippedNotInstalledMessages.length > 0 &&
+    if (global.logRenamedMods) {
+        /* Add all messages to 1 array after sorting
+           them and add dividers where needed */
         modAllMessages.push(
-            '-'.repeat(modSkippedNotInstalledMessages[modSkippedNotInstalledMessages.length - 1].length)
+            modSkippedNotInstalledMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
         );
+        modSkippedNotInstalledMessages.length > 0 &&
+            modAllMessages.push(
+                '-'.repeat(modSkippedNotInstalledMessages[modSkippedNotInstalledMessages.length - 1].length)
+            );
 
-    modAllMessages.push(modSkippedPreferredMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
-    modSkippedPreferredMessages.length > 0 &&
-        modAllMessages.push('-'.repeat(modSkippedPreferredMessages[modSkippedPreferredMessages.length - 1].length));
+        modAllMessages.push(
+            modSkippedPreferredMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
+        );
+        modSkippedPreferredMessages.length > 0 &&
+            modAllMessages.push('-'.repeat(modSkippedPreferredMessages[modSkippedPreferredMessages.length - 1].length));
 
-    modAllMessages.push(modRenamedMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
+        modAllMessages.push(modRenamedMessages.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
 
-    /* Print out all messages, grouped by activity,
-       alphabetically sorted per group, ignoring case */
-    modAllMessages.forEach((message) => console.log(message));
+        /* Print out all messages, grouped by activity,
+           alphabetically sorted per group, ignoring case */
+        modAllMessages.forEach((message) => console.log(message));
+    }
 });
