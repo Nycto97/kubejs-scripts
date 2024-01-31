@@ -33,7 +33,7 @@ global['isPlayerDimensionChangeLogEnabled'] = true;
 /* Tags */
 global['isItemTagIdsLogEnabled'] = true;
 
-/* Shader */
+/* Shader (client only) */
 global['isBlockIdsForShaderLogEnabled'] = false;
 
 if (enableAllLogs && !disableAllLogs) {
