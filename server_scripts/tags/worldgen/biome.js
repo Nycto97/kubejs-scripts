@@ -10,21 +10,23 @@ ServerEvents.tags('worldgen/biome', (event) => {
     /* Rotten Creatures */
     if (Platform.isLoaded('rottencreatures')) {
         event.add('rottencreatures:burned_whitelist', '#forge:is_hot/nether');
-        if (Platform.isLoaded('byg'))
+        if (Platform.isLoaded('byg')) {
             event.add('rottencreatures:burned_whitelist', ['byg:crimson_gardens', 'byg:magma_wastes']);
-
+        }
         /* Remove biomes included in #forge:is_hot/nether that don't fit the mob */
         // TODO find out why this doesn't work
         // TODO when found out, also remove these from nycto:lava_squid_spawns
-        event.remove('rottencreatures:burned_whitelist', 'minecraft:soul_sand_valley');
-        if (Platform.isLoaded('biomesoplenty'))
+        if (Platform.isLoaded('biomesoplenty')) {
             event.remove('rottencreatures:burned_whitelist', [
                 'biomesoplenty:crystalline_chasm',
                 'biomesoplenty:undergrowth',
                 'biomesoplenty:withered_abyss'
             ]);
-        if (Platform.isLoaded('gardens_of_the_dead'))
+        }
+        if (Platform.isLoaded('gardens_of_the_dead')) {
             event.remove('rottencreatures:burned_whitelist', 'gardens_of_the_dead:soulblight_forest');
+        }
+        event.remove('rottencreatures:burned_whitelist', 'minecraft:soul_sand_valley');
 
         event.add('rottencreatures:frostbitten_whitelist', '#forge:is_snowy');
 
@@ -37,12 +39,15 @@ ServerEvents.tags('worldgen/biome', (event) => {
 
     /* Monster Plus */
     if (Platform.isLoaded('monsterplus')) {
-        event.add('nycto:crystal_zombie_spawns', '#minecraft:is_overworld');
-        if (Platform.isLoaded('biomesoplenty'))
+        if (Platform.isLoaded('biomesoplenty')) {
             event.add('nycto:crystal_zombie_spawns', 'biomesoplenty:crystalline_chasm');
+        }
+        event.add('nycto:crystal_zombie_spawns', '#minecraft:is_overworld');
 
+        if (Platform.isLoaded('byg')) {
+            event.add('nycto:lava_squid_spawns', ['byg:crimson_gardens', 'byg:magma_wastes']);
+        }
         event.add('nycto:lava_squid_spawns', '#forge:is_hot/nether');
-        if (Platform.isLoaded('byg')) event.add('nycto:lava_squid_spawns', ['byg:crimson_gardens', 'byg:magma_wastes']);
     }
 
     /* Creatures and Beasts */
@@ -56,5 +61,7 @@ ServerEvents.tags('worldgen/biome', (event) => {
     // TODO update this to just combine all tags and add elements to both tags don't hardcode the elements like now!
     /* Add BYG beaches to minecraft:is_beach tag
        since they're wrongly tagged as forge:is_beach */
-    event.add('minecraft:is_beach', ['byg:basalt_barrera', 'byg:dacite_shore', 'byg:rainbow_beach']);
+    if (Platform.isLoaded('byg')) {
+        event.add('minecraft:is_beach', ['byg:basalt_barrera', 'byg:dacite_shore', 'byg:rainbow_beach']);
+    }
 });

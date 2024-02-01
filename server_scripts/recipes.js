@@ -45,7 +45,7 @@ ServerEvents.recipes((event) => {
     const addScarecrowRecipe = (color) => {
         if (color == 'purple') color = 'primitive';
 
-        let scarecrowItemId = `scarecrowsterritory:${color}_scarecrow`;
+        const scarecrowItemId = `scarecrowsterritory:${color}_scarecrow`;
 
         event
             .shaped(Item.of(scarecrowItemId, 1), ['DP ', 'SHS', ' S '], {
@@ -60,13 +60,13 @@ ServerEvents.recipes((event) => {
     const generateFormattedArray = (itemInfos) => {
         const outputItems = [];
 
-        itemInfos.forEach((itemInfo) =>
+        itemInfos.forEach((itemInfo) => {
             outputItems.push(
                 Item.of(`${itemInfo.amount ? itemInfo.amount : 1}x ${itemInfo.itemId}`).withChance(
                     itemInfo.chance ? itemInfo.chance : 1
                 )
-            )
-        );
+            );
+        });
 
         return outputItems;
     };
@@ -103,12 +103,12 @@ ServerEvents.recipes((event) => {
         ];
 
         if (supportedOreTypes.includes(oreType)) {
-            let hasFirstItemBonus = false,
-                firstItemAmount,
-                secondItemChance,
-                timeInTicks,
-                itemId = oreType,
-                itemInfos;
+            let hasFirstItemBonus = false;
+            let firstItemAmount;
+            let secondItemChance;
+            let timeInTicks;
+            let itemId = oreType;
+            let itemInfos;
 
             if (oreType == 'coal') {
                 timeInTicks = 150;
@@ -194,23 +194,27 @@ ServerEvents.recipes((event) => {
        (all BC&A recipes still work with vertical slabs from Quark) */
     // TODO: change output and input to id only and remove tags if needed to remove uncrafting recipes
     // CURRENTLY THIS DELETES TOO MANY RECIPES I THINK !!!
-    if (Platform.isLoaded('buildersaddition'))
+    if (Platform.isLoaded('buildersaddition')) {
         event.remove([
             { input: /^buildersaddition:.*vertical_slab$/ },
             { output: /^buildersaddition:.*vertical_slab$/ }
         ]);
+    }
 
     /* Remove all recipes having vertical slabs from Vertical Slabs Compat - Create: Deco
        vertical slabs as input or output since Create: Deco already adds all of these */
-    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco'))
+    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco')) {
         event.remove([
             { input: /^v_slab_compat:createdeco.*vertical_slab$/ },
             { output: /^v_slab_compat:createdeco.*vertical_slab$/ }
         ]);
+    }
 
     /* Remove crafting recipe for minecraft:chest with any #byg:planks
        since I'm adding a recipe with any #minecraft:planks */
-    if (Platform.isLoaded('byg')) event.remove([{ id: 'byg:byg_chest' }]);
+    if (Platform.isLoaded('byg')) {
+        event.remove([{ id: 'byg:byg_chest' }]);
+    }
     /* Add crafting recipe for minecraft:chest with any
        #minecraft:planks since other mods 'steal' this recipe */
     event
@@ -274,12 +278,16 @@ ServerEvents.recipes((event) => {
             'black'
         ];
 
-        scarecrowColors.forEach((color) => addScarecrowRecipe(color));
+        scarecrowColors.forEach((color) => {
+            addScarecrowRecipe(color);
+        });
     }
 
     /* Remove crafting recipe for minecraft:end_portal_frame
        added by End Portal Recipe (just because I want my own) */
-    if (Platform.isLoaded('endportalrecipe')) event.remove([{ id: 'endportalrecipe:craftable_end_portal' }]);
+    if (Platform.isLoaded('endportalrecipe')) {
+        event.remove([{ id: 'endportalrecipe:craftable_end_portal' }]);
+    }
 
     if (Platform.isLoaded('morecraft')) {
         /* Remove crafting recipes for emerald armor from
@@ -302,8 +310,9 @@ ServerEvents.recipes((event) => {
     }
 
     /* Allow Nether Chest to be crafted with #forge:chests/wooden */
-    if (Platform.isLoaded('netherchested'))
+    if (Platform.isLoaded('netherchested')) {
         replaceInputUsingIdFilter('netherchested:nether_chest', 'minecraft:chest', '#forge:chests/wooden');
+    }
 
     // TODO ADD OTHER SMELTING AND BLASTING RECIPES FOR OTHER ORES OF EPIC SAMURAI
 
@@ -406,7 +415,7 @@ ServerEvents.recipes((event) => {
         }
 
         /* Croptopia */
-        if (Platform.isLoaded('croptopia'))
+        if (Platform.isLoaded('croptopia')) {
             addCrushingRecipe('croptopia:salt_ore', 300, [
                 {
                     itemId: 'croptopia:salt',
@@ -425,6 +434,7 @@ ServerEvents.recipes((event) => {
                     chance: 0.125
                 }
             ]);
+        }
 
         /* Darker Depths */
         if (Platform.isLoaded('darkerdepths')) {
@@ -611,25 +621,27 @@ ServerEvents.recipes((event) => {
 
             addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
-            if (Platform.isLoaded('endermanoverhaul'))
+            if (Platform.isLoaded('endermanoverhaul')) {
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
                         'undergarden:crushed_raw_froststeel'
                     )
                     .id('nycto:splashing/froststeel_nugget_from_crushed_raw_froststeel');
+            }
 
             addOreCrushingRecipe('undergarden:depthrock_utherium_ore', 'utherium', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
             addOreCrushingRecipe('undergarden:tremblecrust_utherium_ore', 'utherium', 'undergarden:tremblecrust');
 
-            if (Platform.isLoaded('projecte'))
+            if (Platform.isLoaded('projecte')) {
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:utheric_shard', Item.of('projecte:red_matter').withChance(0.05)],
                         'undergarden:crushed_raw_utherium'
                     )
                     .id('nycto:splashing/utheric_shard_from_crushed_raw_utherium');
+            }
 
             addOreCrushingRecipe('undergarden:depthrock_regalium_ore', 'regalium', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_regalium_ore', 'regalium', 'undergarden:shiverstone');

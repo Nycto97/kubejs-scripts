@@ -15,8 +15,13 @@ if (Platform.isLoaded('projecte')) {
            This can sometimes result in this EMC value not
            being set, but also it allows for EMC values
            to be generated from this one; i.e crafting recipes */
-        if (Platform.isLoaded('architects_palette')) event.setEMCBefore('architects_palette:withered_bone', 160);
-        if (Platform.isLoaded('blue_skies')) event.setEMCBefore('blue_skies:lunar_cobblestone', 1);
+        if (Platform.isLoaded('architects_palette')) {
+            event.setEMCBefore('architects_palette:withered_bone', 160);
+        }
+
+        if (Platform.isLoaded('blue_skies')) {
+            event.setEMCBefore('blue_skies:lunar_cobblestone', 1);
+        }
 
         /* Prevent XP exploit */
         event.setEMCBefore('minecraft:experience_bottle', 0);

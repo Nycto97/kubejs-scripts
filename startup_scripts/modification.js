@@ -24,39 +24,57 @@
 
 /* Modify items */
 ItemEvents.modification((event) => {
-    const maxStackSize5 = ['minecraft:enchanted_book'],
-        maxStackSize10 = [
-            'minecraft:potion',
-            'minecraft:splash_potion',
-            'minecraft:lingering_potion',
-            'minecraft:minecart',
-            'minecraft:white_bed',
-            'minecraft:orange_bed',
-            'minecraft:magenta_bed',
-            'minecraft:light_blue_bed',
-            'minecraft:yellow_bed',
-            'minecraft:lime_bed',
-            'minecraft:pink_bed',
-            'minecraft:gray_bed',
-            'minecraft:light_gray_bed',
-            'minecraft:cyan_bed',
-            'minecraft:purple_bed',
-            'minecraft:blue_bed',
-            'minecraft:brown_bed',
-            'minecraft:green_bed',
-            'minecraft:red_bed',
-            'minecraft:black_bed'
-        ],
-        maxStackSize50 = [],
-        maxStackSize64 = ['minecraft:egg', 'minecraft:bucket', 'minecraft:ender_pearl'];
+    const maxStackSize5 = ['minecraft:enchanted_book'];
+    const maxStackSize10 = [
+        'minecraft:potion',
+        'minecraft:splash_potion',
+        'minecraft:lingering_potion',
+        'minecraft:minecart',
+        'minecraft:white_bed',
+        'minecraft:orange_bed',
+        'minecraft:magenta_bed',
+        'minecraft:light_blue_bed',
+        'minecraft:yellow_bed',
+        'minecraft:lime_bed',
+        'minecraft:pink_bed',
+        'minecraft:gray_bed',
+        'minecraft:light_gray_bed',
+        'minecraft:cyan_bed',
+        'minecraft:purple_bed',
+        'minecraft:blue_bed',
+        'minecraft:brown_bed',
+        'minecraft:green_bed',
+        'minecraft:red_bed',
+        'minecraft:black_bed'
+    ];
+    const maxStackSize50 = [];
+    const maxStackSize64 = ['minecraft:egg', 'minecraft:bucket', 'minecraft:ender_pearl'];
 
-    Platform.isLoaded('cgm') && maxStackSize50.push('cgm:missile', 'cgm:grenade');
+    if (Platform.isLoaded('cgm')) {
+        maxStackSize50.push('cgm:missile', 'cgm:grenade');
+    }
 
-    maxStackSize5.forEach((item) => event.modify(item, (i) => (i.maxStackSize = 5)));
+    maxStackSize5.forEach((item) => {
+        event.modify(item, (i) => {
+            i.maxStackSize = 5;
+        });
+    });
 
-    maxStackSize10.forEach((item) => event.modify(item, (i) => (i.maxStackSize = 10)));
+    maxStackSize10.forEach((item) => {
+        event.modify(item, (i) => {
+            i.maxStackSize = 10;
+        });
+    });
 
-    maxStackSize50.forEach((item) => event.modify(item, (i) => (i.maxStackSize = 50)));
+    maxStackSize50.forEach((item) => {
+        event.modify(item, (i) => {
+            i.maxStackSize = 50;
+        });
+    });
 
-    maxStackSize64.forEach((item) => event.modify(item, (i) => (i.maxStackSize = 64)));
+    maxStackSize64.forEach((item) => {
+        event.modify(item, (i) => {
+            i.maxStackSize = 64;
+        });
+    });
 });

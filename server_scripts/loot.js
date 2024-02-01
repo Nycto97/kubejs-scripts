@@ -48,12 +48,14 @@ LootJS.modifiers((event) => {
 
     /* Remove all vertical slabs from Builders Crafts and Additions mod
        from the current loot pool so they don't drop their block when breaking */
-    if (Platform.isLoaded('buildersaddition')) removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
-
+    if (Platform.isLoaded('buildersaddition')) {
+        removeAllBlockLoot(/^buildersaddition:.*vertical_slab$/);
+    }
     /* Remove all vertical slabs from Vertical Slabs Compat - Create: Deco mod
        from the current loot pool so they don't drop their block when breaking */
-    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco'))
+    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco')) {
         removeAllBlockLoot(/^v_slab_compat:createdeco.*vertical_slab$/);
+    }
 
     /* Shulker Drops Two mod replacement
 
@@ -84,38 +86,42 @@ LootJS.modifiers((event) => {
     /* INFO: START RARE ICE LOOT */
     if (Platform.isLoaded('rare-ice')) {
         /* There will be many more items that need to be added! */
-        let cannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
+        const rareIceLootCannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-        let blacklistedItems = global.allItemIds.filter(
-            (item) =>
-                item == 'minecraft:air' ||
-                cannotStartWith.some((itemNameStart) => item.startsWith(itemNameStart)) ||
-                RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(item) ||
-                RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(item)
-        );
+        const blacklistedRareIceLootItemIds = global.allItemIds.filter((itemId) => {
+            itemId == 'minecraft:air' ||
+                rareIceLootCannotStartWith.some((itemIdStart) => {
+                    itemId.startsWith(itemIdStart);
+                }) ||
+                RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(itemId) ||
+                RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(itemId);
+        });
 
-        let isNotBlacklisted = (item) => {
-            return !blacklistedItems.contains(item);
+        const isRareIceLootItemIdNotBlacklisted = (itemId) => {
+            return !blacklistedRareIceLootItemIds.contains(itemId);
         };
 
-        /* TODO find out how it comes that this works, while the commented
-       out code below is the full, 'correct' way to do this */
-        let filteredItems = global.allItemIds.filter(isNotBlacklisted);
-        // const filteredItems = global.allItemIds.filter((item) => isNotBlacklisted(item));
+        const rareIceLootItemIds = global.allItemIds.filter((itemId) => {
+            isRareIceLootItemIdNotBlacklisted(itemId);
+        });
 
-        global.isBlacklistedRareIceLootLogEnabled &&
+        if (global.isBlacklistedRareIceLootLogEnabled) {
             console.log(
                 `\n\n${
-                    global.allItemIds.length - filteredItems.length
-                } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedItems}\n`
+                    global.allItemIds.length - rareIceLootItemIds.length
+                } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedRareIceLootItemIds}\n`
             );
+        }
 
         event.addLootTableModifier('rare-ice:chests/rare_ice').apply((ctx) => {
             ctx.findLoot(Ingredient.all).forEach((item) => {
                 let count = item.count;
+
                 ctx.removeLoot(item);
                 ctx.addLoot(
-                    LootEntry.of(filteredItems[Math.floor(Math.random() * filteredItems.length)]).limitCount(count)
+                    LootEntry.of(rareIceLootItemIds[Math.floor(Math.random() * rareIceLootItemIds.length)]).limitCount(
+                        count
+                    )
                 );
             });
         });

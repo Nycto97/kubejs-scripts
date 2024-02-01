@@ -13,8 +13,9 @@ StartupEvents.postInit(() => {
     global.allItemIds = Item.getTypeList();
     global.allBlockIds = Block.getTypeList();
 
-    if (global.isBlockAndItemCountLogEnabled)
+    if (global.isBlockAndItemCountLogEnabled) {
         console.log(
             `There are ${global.allItemIds.length} items and ${global.allBlockIds.length} blocks registered in your world.`
         );
+    }
 });

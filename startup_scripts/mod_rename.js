@@ -10,14 +10,15 @@
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
-    const notLoadedModLogs = [],
-        skippedModLogs = [],
-        renamedModLogs = [],
-        allModLogs = [];
+    const modNotLoadedLogs = [];
+    const modSkippedLogs = [];
+    const modRenamedLogs = [];
+
+    const combinedModLogs = [];
 
     const renameMod = (modInfo) => {
-        let modId = modInfo.id,
-            preferredModName = modInfo.preferredName;
+        const modId = modInfo.id;
+        const preferredModName = modInfo.preferredName;
 
         if (Platform.isLoaded(modId)) {
             let mod = Platform.mods[modId],
@@ -26,40 +27,49 @@ StartupEvents.postInit(() => {
             if (modName != preferredModName) {
                 mod.setName(preferredModName);
 
-                if (global.isModRenameLogEnabled)
-                    renamedModLogs.push(
+                if (global.isModRenameLogEnabled) {
+                    modRenamedLogs.push(
                         `[RENAMED] Mod has been renamed: ${modName} => ${preferredModName} [id: ${modId}]`
                     );
+                }
             } else {
-                if (global.isModRenameLogEnabled)
-                    skippedModLogs.push(`[SKIPPED] Mod has preferred name, skipping rename! ${modName} [id: ${modId}]`);
+                if (global.isModRenameLogEnabled) {
+                    modSkippedLogs.push(`[SKIPPED] Mod has preferred name, skipping rename! ${modName} [id: ${modId}]`);
+                }
             }
         } else {
-            if (global.isModRenameLogEnabled)
-                notLoadedModLogs.push(`[SKIPPED] Mod is not installed, skipping rename! [id: ${modId}]`);
+            if (global.isModRenameLogEnabled) {
+                modNotLoadedLogs.push(`[SKIPPED] Mod is not installed, skipping rename! [id: ${modId}]`);
+            }
         }
     };
 
-    modsToRename.forEach((mod) => renameMod(mod));
+    modsToRename.forEach((mod) => {
+        renameMod(mod);
+    });
 
     if (global.isModRenameLogEnabled) {
         /* Add all messages to 1 array after sorting
            them and add dividers where needed */
-        if (notLoadedModLogs.length) {
-            allModLogs.push(notLoadedModLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
-            allModLogs.push('-'.repeat(notLoadedModLogs[notLoadedModLogs.length - 1].length));
+        if (modNotLoadedLogs.length) {
+            combinedModLogs.push(modNotLoadedLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
+            combinedModLogs.push('-'.repeat(modNotLoadedLogs[modNotLoadedLogs.length - 1].length));
         }
 
-        if (skippedModLogs.length) {
-            allModLogs.push(skippedModLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
-            allModLogs.push('-'.repeat(skippedModLogs[skippedModLogs.length - 1].length));
+        if (modSkippedLogs.length) {
+            combinedModLogs.push(modSkippedLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
+            combinedModLogs.push('-'.repeat(modSkippedLogs[modSkippedLogs.length - 1].length));
         }
 
-        if (renamedModLogs.length)
-            allModLogs.push(renamedModLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
+        if (modRenamedLogs.length)
+            combinedModLogs.push(modRenamedLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
 
         /* Print out all messages, grouped by activity,
            alphabetically sorted per group, ignoring case */
-        if (allModLogs.length) allModLogs.forEach((message) => console.log(message));
+        if (combinedModLogs.length) {
+            combinedModLogs.forEach((log) => {
+                console.log(log);
+            });
+        }
     }
 });
