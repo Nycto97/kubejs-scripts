@@ -10,8 +10,8 @@
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
-    global.allItemIds = Item.getTypeList();
-    global.allBlockIds = Block.getTypeList();
+    global['allItemIds'] = Item.getTypeList();
+    global['allBlockIds'] = Block.getTypeList();
 
     if (global.isBlockAndItemCountLogEnabled) {
         console.log(
