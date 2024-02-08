@@ -88,7 +88,7 @@ LootJS.modifiers((event) => {
         /* There will be many more items that need to be added! */
         const rareIceLootCannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-        const blacklistedRareIceLootItemIds = global.allItemIds.filter((itemId) => {
+        const blacklistedRareIceLootItemIds = global.itemIds.filter((itemId) => {
             itemId == 'minecraft:air' ||
                 rareIceLootCannotStartWith.some((itemIdStart) => {
                     itemId.startsWith(itemIdStart);
@@ -101,14 +101,14 @@ LootJS.modifiers((event) => {
             return !blacklistedRareIceLootItemIds.contains(itemId);
         };
 
-        const rareIceLootItemIds = global.allItemIds.filter((itemId) => {
+        const rareIceLootItemIds = global.itemIds.filter((itemId) => {
             isRareIceLootItemIdNotBlacklisted(itemId);
         });
 
         if (global.isBlacklistedRareIceLootLogEnabled) {
             console.log(
                 `\n\n${
-                    global.allItemIds.length - rareIceLootItemIds.length
+                    global.itemIds.length - rareIceLootItemIds.length
                 } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedRareIceLootItemIds}\n`
             );
         }

@@ -13,9 +13,14 @@ ServerEvents.tags('worldgen/biome', (event) => {
         if (Platform.isLoaded('byg')) {
             event.add('rottencreatures:burned_whitelist', ['byg:crimson_gardens', 'byg:magma_wastes']);
         }
-        /* Remove biomes included in #forge:is_hot/nether that don't fit the mob */
-        // TODO find out why this doesn't work
-        // TODO when found out, also remove these from nycto:lava_squid_spawns
+        /* 
+           TODO
+           Remove biomes included in #forge:is_hot/nether that don't fit the mob
+
+           -> rottencreatures:burned_whitelist & nycto:lava_squid_spawns
+
+           Do this by adding the elements of the tag, rather than the tag itself
+        */
         if (Platform.isLoaded('biomesoplenty')) {
             event.remove('rottencreatures:burned_whitelist', [
                 'biomesoplenty:crystalline_chasm',

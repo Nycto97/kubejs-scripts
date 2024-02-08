@@ -9,11 +9,11 @@
 /* Show a title on screen and send a message regarding
    shaders to the player when they change dimension */
 CommonAddedEvents.playerChangeDimension((event) => {
-    const playerName = event.player.getUsername();
+    const username = event.player.username;
     const server = event.server;
 
-    const dimensionOld = event.getOldLevel().dimension.toString();
-    const dimensionNew = event.getNewLevel().dimension.toString();
+    const oldDimension = event.oldLevel.dimension.toString();
+    const newDimension = event.newLevel.dimension.toString();
 
     const dimensionWhitelistForShader = [
         'minecraft:overworld',
@@ -26,49 +26,45 @@ CommonAddedEvents.playerChangeDimension((event) => {
         dimensionWhitelistForShader.push('arsomega:demon_realm');
     }
 
-    const isDimensionOldWhitelisted = dimensionWhitelistForShader.includes(dimensionOld);
-    const isDimensionNewWhitelisted = dimensionWhitelistForShader.includes(dimensionNew);
+    const isOldDimensionWhitelisted = dimensionWhitelistForShader.includes(oldDimension);
+    const isNewDimensionWhitelisted = dimensionWhitelistForShader.includes(newDimension);
 
     if (global.isPlayerDimensionChangeLogEnabled) {
-        console.log(
-            `${playerName} moved from ${dimensionOld.substring(
-                dimensionOld.indexOf(':') + 1
-            )} to ${dimensionNew.substring(dimensionNew.indexOf(':') + 1)}`
-        );
+        console.log(`${username} moved from ${oldDimension.split(':')[1]} to ${newDimension.split(':')[1]}`);
     }
 
-    const messageShaderTip =
+    const shaderTip =
         "\u00A7bTip:\u00A7f Press ESC > Options > Control Settings > Key Binds > type 'shader' in the text field > bind Toggle Shaders to F7";
 
     // TODO test .notify method instead of this approach
-    if (!isDimensionNewWhitelisted && isDimensionOldWhitelisted) {
+    if (isOldDimensionWhitelisted && !isNewDimensionWhitelisted) {
         server.scheduleInTicks(60, () => {
-            server.runCommandSilent(`title ${playerName} times 15 125 18`);
+            server.runCommandSilent(`title ${username} times 15 125 18`);
             server.runCommandSilent(
-                `title ${playerName} subtitle [{"text":"Please ","color":"white"},{"text":"disable ","color":"red"},{"text":"your shader!","color":"white"}]`
+                `title ${username} subtitle [{"text":"Please ","color":"white"},{"text":"disable ","color":"red"},{"text":"your shader!","color":"white"}]`
             );
             server.runCommandSilent(
-                `title ${playerName} title [{"text":"Disable ","color":"red"},{"text":"Shader","color":"white"}]`
+                `title ${username} title [{"text":"Disable ","color":"red"},{"text":"Shader","color":"white"}]`
             );
             event.player.tell(
-                `\u00A7cShaders break the skybox, lightning, atmosphere and custom effects in (most) non-vanilla dimensions!\n\n${messageShaderTip}`
+                `\u00A7cShaders break the skybox, lightning, atmosphere and custom effects in (most) non-vanilla dimensions!\n\n${shaderTip}`
             );
         });
     }
 
-    if (!isDimensionOldWhitelisted && isDimensionNewWhitelisted) {
+    if (isNewDimensionWhitelisted && !isOldDimensionWhitelisted) {
         server.scheduleInTicks(60, () => {
-            server.runCommandSilent(`title ${playerName} times 15 95 18`);
+            server.runCommandSilent(`title ${username} times 15 95 18`);
             server.runCommandSilent(
-                `title ${playerName} subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]`
+                `title ${username} subtitle [{"text":"You may ","color":"white"},{"text":"re-enable ","color":"green"},{"text":"your shader :)","color":"white"}]`
             );
             server.runCommandSilent(
-                `title ${playerName} title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]`
+                `title ${username} title [{"text":"Enable ","color":"green"},{"text":"Shader","color":"white"}]`
             );
             event.player.tell(
                 `\u00A7aIt is recommended to enable shaders in The Overworld, The Nether, The End${
                     Platform.isLoaded('arsomega') ? ', Demon Realm' : ''
-                } and USW Vanilla!\n\n${messageShaderTip}`
+                } and USW Vanilla!\n\n${shaderTip}`
             );
         });
     }

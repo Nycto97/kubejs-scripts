@@ -81,7 +81,7 @@
    NOTE:
    .some() can be used to avoid repetitive code:
 
-   global.allBlockIds.filter(
+   global.blockIds.filter(
        (block) =>
            block.endsWith('thisThing') ||
            block.endsWith('thatThing') ||
