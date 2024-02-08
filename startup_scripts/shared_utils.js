@@ -13,6 +13,10 @@ StartupEvents.postInit(() => {
     global['allItemIds'] = Item.getTypeList();
     global['allBlockIds'] = Block.getTypeList();
 
+    global['logModNotLoaded'] = (modName, activityType) => {
+        console.log(`[WARN] ${modName} mod is not loaded! Skipping ${activityType}`);
+    };
+
     if (global.isBlockAndItemCountLogEnabled) {
         console.log(
             `There are ${global.allItemIds.length} items and ${global.allBlockIds.length} blocks registered in your world.`
