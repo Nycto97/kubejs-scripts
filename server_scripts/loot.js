@@ -88,22 +88,19 @@ LootJS.modifiers((event) => {
         /* There will be many more items that need to be added! */
         const rareIceLootCannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-        const blacklistedRareIceLootItemIds = global.itemIds.filter((itemId) => {
-            itemId == 'minecraft:air' ||
-                rareIceLootCannotStartWith.some((itemIdStart) => {
-                    itemId.startsWith(itemIdStart);
-                }) ||
+        const blacklistedRareIceLootItemIds = global.itemIds.filter(
+            (itemId) =>
+                itemId == 'minecraft:air' ||
+                rareIceLootCannotStartWith.some((itemIdStart) => itemId.startsWith(itemIdStart)) ||
                 RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(itemId) ||
-                RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(itemId);
-        });
+                RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(itemId)
+        );
 
         const isRareIceLootItemIdNotBlacklisted = (itemId) => {
             return !blacklistedRareIceLootItemIds.contains(itemId);
         };
 
-        const rareIceLootItemIds = global.itemIds.filter((itemId) => {
-            isRareIceLootItemIdNotBlacklisted(itemId);
-        });
+        const rareIceLootItemIds = global.itemIds.filter((itemId) => isRareIceLootItemIdNotBlacklisted(itemId));
 
         if (global.isBlacklistedRareIceLootLogEnabled) {
             console.log(

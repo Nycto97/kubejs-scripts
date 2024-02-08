@@ -41,10 +41,6 @@ if (global.isNonTaggedItemIdsLogEnabled) {
 }
 
 ServerEvents.tags('item', (event) => {
-    /* 2 examples of adding (all) items to a tag */
-    // event.add('your_namespace:your_tag_name', /^.*$/);
-    // Item.getTypeList().forEach((item) => event.add('your_namespace:your_tag_name', item));
-
     let itemIdsTaggedByMods;
 
     let itemTagIdsToAdd;

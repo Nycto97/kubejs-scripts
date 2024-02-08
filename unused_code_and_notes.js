@@ -96,6 +96,22 @@
 
 /* ----------------------------------------------------------------- */
 
+// TODO
+/*     const removeRecipesById = (recipeIds) => {
+        if (typeof recipeIds === 'string') {
+            event.remove({ id: recipeIds })
+        } else if (typeof recipeIds === 'object') {
+            recipeIds.forEach((recipeId) => event.remove({ id: recipeId }))
+    }; */
+
+/* ----------------------------------------------------------------- */
+
+/* 2 examples of adding (all) items to a tag */
+// event.add('your_namespace:your_tag_name', /^.*$/);
+// Item.getTypeList().forEach((item) => event.add('your_namespace:your_tag_name', item));
+
+/* ----------------------------------------------------------------- */
+
 /* 
    The following code can only be used to manually copy/paste the output
    from console.log to the In Control! config file, as it is not possible

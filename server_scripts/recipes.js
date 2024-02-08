@@ -16,12 +16,24 @@
 */
 
 ServerEvents.recipes((event) => {
-    /*     const removeRecipesById = (recipeIds) => {
-        if (typeof recipeIds === 'string') {
-            event.remove({ id: recipeIds })
-        } else if (typeof recipeIds === 'object') {
-            recipeIds.forEach((recipeId) => event.remove({ id: recipeId }))
-    }; */
+    const supportedOreTypes = [
+        'coal',
+        'iron',
+        'copper',
+        'gold',
+        'redstone',
+        'emerald',
+        'lapis',
+        'diamond',
+        'ruby',
+        'jade',
+        'aquamarine',
+        'onyx',
+        'cloggrum',
+        'froststeel',
+        'utherium',
+        'regalium'
+    ];
 
     // TODO make id generate function
 
@@ -57,7 +69,7 @@ ServerEvents.recipes((event) => {
             .id(`nycto:${color}_scarecrow`);
     };
 
-    const generateFormattedArray = (itemInfos) => {
+    const composeOutputItems = (itemInfos) => {
         const outputItems = [];
 
         itemInfos.forEach((itemInfo) => {
@@ -73,7 +85,7 @@ ServerEvents.recipes((event) => {
 
     const addCrushingRecipe = (inputItemId, timeInTicks, outputItemInfos) => {
         event.recipes.create
-            .crushing(generateFormattedArray(outputItemInfos), inputItemId)
+            .crushing(composeOutputItems(outputItemInfos), inputItemId)
             .id(
                 `nycto:crushing/${outputItemInfos[0].itemId.substring(
                     outputItemInfos[0].itemId.indexOf(':') + 1
@@ -83,108 +95,105 @@ ServerEvents.recipes((event) => {
     };
 
     const addOreCrushingRecipe = (inputItemId, oreType, mainBlockItemId) => {
-        const supportedOreTypes = [
-            'coal',
-            'iron',
-            'copper',
-            'gold',
-            'redstone',
-            'emerald',
-            'lapis',
-            'diamond',
-            'ruby',
-            'jade',
-            'aquamarine',
-            'onyx',
-            'cloggrum',
-            'froststeel',
-            'utherium',
-            'regalium'
-        ];
+        if (!Platform.isLoaded('create')) {
+            global.logModNotLoaded('Create', 'ore crushing recipe');
+            return;
+        }
 
-        if (supportedOreTypes.includes(oreType)) {
-            let hasFirstItemBonus = false;
-            let firstItemAmount;
-            let secondItemChance;
-            let timeInTicks;
-            let itemId = oreType;
-            let itemInfos;
-
-            if (oreType == 'coal') {
-                timeInTicks = 150;
-            } else if (oreType == 'froststeel' || oreType == 'regalium') {
-                timeInTicks = 300;
-            } else if (oreType == 'emerald' || oreType == 'diamond' || oreType == 'ruby' || oreType == 'jade') {
-                timeInTicks = 350;
-            } else if (oreType == 'utherium') {
-                timeInTicks = 420;
-            } else {
-                timeInTicks = 250;
-            }
-
-            if (
-                mainBlockItemId == 'cobbled_deepslate' ||
-                mainBlockItemId == 'undergarden:shiverstone' ||
-                mainBlockItemId == 'undergarden:tremblecrust'
-            ) {
-                mainBlockItemId == 'undergarden:tremblecrust' ? (timeInTicks += 200) : (timeInTicks += 100);
-                hasFirstItemBonus = true;
-            }
-
-            if (oreType == 'iron' || oreType == 'copper' || oreType == 'gold') {
-                itemId = `create:crushed_raw_${oreType}`;
-            } else if (oreType == 'ruby' || oreType == 'jade' || oreType == 'aquamarine' || oreType == 'onyx') {
-                itemId = `epicsamurai:${oreType}`;
-            } else if (oreType == 'lapis') {
-                itemId = 'lapis_lazuli';
-            } else if (
-                oreType == 'cloggrum' ||
-                oreType == 'froststeel' ||
-                oreType == 'utherium' ||
-                oreType == 'regalium'
-            ) {
-                itemId = `undergarden:crushed_raw_${oreType}`;
-            }
-
-            if (oreType == 'copper') {
-                firstItemAmount = hasFirstItemBonus ? 7 : 5;
-                secondItemChance = 0.25;
-            } else if (oreType == 'redstone' || oreType == 'lapis') {
-                oreType == 'redstone'
-                    ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
-                    : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
-                secondItemChance = 0.5;
-            } else {
-                firstItemAmount = hasFirstItemBonus ? 2 : 1;
-                secondItemChance = hasFirstItemBonus && mainBlockItemId != 'undergarden:tremblecrust' ? 0.25 : 0.75;
-            }
-
-            itemInfos = [
-                {
-                    itemId: itemId,
-                    amount: firstItemAmount
-                },
-                {
-                    itemId: itemId,
-                    chance: secondItemChance
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    amount: oreType == 'gold' ? 2 : 1,
-                    chance: 0.75
-                },
-                {
-                    itemId: mainBlockItemId,
-                    chance: 0.125
-                }
-            ];
-
-            addCrushingRecipe(inputItemId, timeInTicks, itemInfos);
-        } else {
+        if (!supportedOreTypes.includes(oreType)) {
             console.log(
                 `[WARN] Ore type ${oreType} not supported! Add logic to addOreCrushingRecipe() in recipes.js to handle this ore type. Skipping ore crushing recipe`
             );
+            return;
         }
+
+        let hasFirstItemBonus = false;
+        let firstItemAmount;
+        let secondItemChance;
+        let timeInTicks = 250;
+        let itemId = oreType;
+
+        switch (oreType) {
+            case 'coal':
+                timeInTicks = 150;
+                break;
+            case 'froststeel':
+            case 'regalium':
+                timeInTicks = 300;
+                break;
+            case 'emerald':
+            case 'diamond':
+            case 'ruby':
+            case 'jade':
+                timeInTicks = 350;
+                break;
+            case 'utherium':
+                timeInTicks = 420;
+        }
+
+        if (
+            mainBlockItemId == 'cobbled_deepslate' ||
+            mainBlockItemId == 'undergarden:shiverstone' ||
+            mainBlockItemId == 'undergarden:tremblecrust'
+        ) {
+            mainBlockItemId == 'undergarden:tremblecrust' ? (timeInTicks += 200) : (timeInTicks += 100);
+            hasFirstItemBonus = true;
+        }
+
+        switch (oreType) {
+            case 'iron':
+            case 'copper':
+            case 'gold':
+                itemId = `create:crushed_raw_${oreType}`;
+                break;
+            case 'ruby':
+            case 'jade':
+            case 'aquamarine':
+            case 'onyx':
+                itemId = `epicsamurai:${oreType}`;
+                break;
+            case 'lapis':
+                itemId = 'lapis_lazuli';
+                break;
+            case 'cloggrum':
+            case 'froststeel':
+            case 'utherium':
+            case 'regalium':
+                itemId = `undergarden:crushed_raw_${oreType}`;
+        }
+
+        if (oreType == 'copper') {
+            firstItemAmount = hasFirstItemBonus ? 7 : 5;
+            secondItemChance = 0.25;
+        } else if (oreType == 'redstone' || oreType == 'lapis') {
+            oreType == 'redstone'
+                ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
+                : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
+            secondItemChance = 0.5;
+        } else {
+            firstItemAmount = hasFirstItemBonus ? 2 : 1;
+            secondItemChance = hasFirstItemBonus && mainBlockItemId != 'undergarden:tremblecrust' ? 0.25 : 0.75;
+        }
+
+        addCrushingRecipe(inputItemId, timeInTicks, [
+            {
+                itemId: itemId,
+                amount: firstItemAmount
+            },
+            {
+                itemId: itemId,
+                chance: secondItemChance
+            },
+            {
+                itemId: 'create:experience_nugget',
+                amount: oreType == 'gold' ? 2 : 1,
+                chance: 0.75
+            },
+            {
+                itemId: mainBlockItemId,
+                chance: 0.125
+            }
+        ]);
     };
 
     // TODO add crushing recipes for all ores from all mods

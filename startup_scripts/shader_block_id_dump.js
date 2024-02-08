@@ -27,215 +27,191 @@
 // priority: 1
 
 StartupEvents.postInit(() => {
-    if (Platform.isClientEnvironment()) {
-        if (global.isBlockIdsForShaderLogEnabled) {
-            let blockIdsForShader;
+    if (!Platform.isClientEnvironment()) return;
 
-            const combineAndFormatBlockIdsForShader = (
-                vanillaBlockIdsForShader,
-                moddedBlockIdsForShaderFiltered,
-                moddedBlockIdsForShader
-            ) => {
-                let combinedAndFormattedBlockIdsForShaderStr = '';
+    if (!global.isBlockIdsForShaderLogEnabled) {
+        console.log('Dumping for Complementary Shader disabled!');
+        console.log("Set 'isBlockIdsForShaderLogEnabled = true' in settings.js to enable!");
+        return;
+    }
 
-                moddedBlockIdsForShaderFiltered.forEach((blockId) => {
-                    moddedBlockIdsForShader.push(blockId);
-                });
+    let blockIdsForShader;
 
-                moddedBlockIdsForShader.sort().forEach((blockId) => {
-                    combinedAndFormattedBlockIdsForShaderStr += blockId.concat(' ');
-                });
+    let composeBlockIdsForShader = (vanillaBlockIds, moddedBlockIdsFiltered, moddedBlockIds) => {
+        let composedBlockIdsStr = '';
 
-                combinedAndFormattedBlockIdsForShaderStr = vanillaBlockIdsForShader
-                    .concat(' ')
-                    .concat(combinedAndFormattedBlockIdsForShaderStr)
-                    .slice(0, vanillaBlockIdsForShader.length + combinedAndFormattedBlockIdsForShaderStr.length);
+        moddedBlockIdsFiltered.forEach((blockId) => {
+            moddedBlockIds.push(blockId);
+        });
 
-                return {
-                    moddedBlockIds: moddedBlockIdsForShader,
-                    combinedAndFormattedBlockIdsStr: combinedAndFormattedBlockIdsForShaderStr
-                };
-            };
+        moddedBlockIds.sort().forEach((blockId) => {
+            composedBlockIdsStr += blockId.concat(' ');
+        });
 
-            const printBlockIdsForShader = (
-                moddedBlockIds,
-                combinedAndFormattedBlockIdsStr,
-                blockType,
-                shaderBlockId,
-                isModdedBlockIdsOnly
-            ) => {
-                console.log(
-                    `\n\nFiltered out ${moddedBlockIds.length} modded ${blockType} block ids. ${
-                        !isModdedBlockIdsOnly ? `Merged vanilla and modded ${blockType} block ids. ` : ''
-                    }Please add these to block.${shaderBlockId} in block.properties from Complementary Reimagined.\n\n${combinedAndFormattedBlockIdsStr}\n`
-                );
-            };
+        composedBlockIdsStr = vanillaBlockIds
+            .concat(' ')
+            .concat(composedBlockIdsStr)
+            .slice(0, vanillaBlockIds.length + composedBlockIdsStr.length);
 
-            /*
-               FOLIAGE
-            */
+        return {
+            moddedBlockIds: moddedBlockIds,
+            composedBlockIdsStr: composedBlockIdsStr
+        };
+    };
 
-            // TODO: kelp, seagrass en vine en vines apart
-            // TODO: some need to get removed from here and put on another more dedicated block id!
-            // prettier-ignore
-            const foliage = [
+    let printBlockIdsForShader = (
+        moddedBlockIds,
+        composedBlockIdsStr,
+        blockType,
+        shaderBlockId,
+        isModdedBlockIdsOnly
+    ) => {
+        console.log(
+            `\n\nFiltered out ${moddedBlockIds.length} modded ${blockType} block ids. ${
+                !isModdedBlockIdsOnly ? `Merged vanilla and modded ${blockType} block ids. ` : ''
+            }Please add these to block.${shaderBlockId} in block.properties from Complementary Reimagined.\n\n${composedBlockIdsStr}\n`
+        );
+    };
+
+    /*
+       FOLIAGE
+    */
+    // TODO: kelp, seagrass en vine en vines apart
+    // TODO: some need to get removed from here and put on another more dedicated block id!
+    // prettier-ignore
+    let foliage = [
             'allium', 'amaranth', 'bird_of_paradise', 'bluebell', 'bluet', 'brush', 'bush', 'cartwheel', 'cattail', 'cattails', 'cosmos', 'crop', 'crops', 'crocus', 'bulbis_anomaly', 'bulbis_oddity', 'daisy', 'dandelion', 'delphinium', 'dianthus', 'fern', 'fiddlehead', 'flower', 'flowers', 'frond', 'grass', 'hibiscus', 'mayapple', 'orchid', 'orchids', 'poppy', 'roots', 'rose', 'roses', 'rush', 'sapling', 'saplings', 'searocket', 'sprout', 'gilia', 'sprouts', 'stem', 'shrub', 'stems', 'tulip', 'tulips', 'violet', 'weed', 'weeds', 'wheat'
 ];
-            const vanillaFoliageBlockIds =
-                'grass short_grass fern oak_sapling spruce_sapling birch_sapling jungle_sapling acacia_sapling dark_oak_sapling bamboo_sapling cherry_sapling dead_bush dandelion poppy blue_orchid allium azure_bluet red_tulip orange_tulip white_tulip pink_tulip oxeye_daisy cornflower lily_of_the_valley wither_rose sweet_berry_bush wheat carrots potatoes beetroots pumpkin_stem melon_stem nether_sprouts warped_roots crimson_roots sunflower:half=lower lilac:half=lower rose_bush:half=lower peony:half=lower tall_grass:half=lower large_fern:half=lower torchflower_crop';
-            const moddedFoliageBlockIdsFiltered = global.blockIds.filter((blockId) => {
-                !blockId.startsWith('minecraft:') &&
-                    !blockId.startsWith('dtterralith:') &&
-                    !blockId.includes('potted') &&
-                    !blockId.includes('hanging_sign') &&
-                    !blockId.includes('music_disc') &&
-                    !blockId.includes('seagrass') &&
-                    !blockId.includes('wonderful_wheat') &&
-                    (foliage.some((f) => {
-                        blockId.endsWith(f);
-                    }) ||
-                        blockId.includes('wild_'));
-            });
+    let vanillaFoliageBlockIds =
+        'grass short_grass fern oak_sapling spruce_sapling birch_sapling jungle_sapling acacia_sapling dark_oak_sapling bamboo_sapling cherry_sapling dead_bush dandelion poppy blue_orchid allium azure_bluet red_tulip orange_tulip white_tulip pink_tulip oxeye_daisy cornflower lily_of_the_valley wither_rose sweet_berry_bush wheat carrots potatoes beetroots pumpkin_stem melon_stem nether_sprouts warped_roots crimson_roots sunflower:half=lower lilac:half=lower rose_bush:half=lower peony:half=lower tall_grass:half=lower large_fern:half=lower torchflower_crop';
 
-            /* INFO: Add other block ids that should be treated as foliage to the array */
-            blockIdsForShader = combineAndFormatBlockIdsForShader(
-                vanillaFoliageBlockIds,
-                moddedFoliageBlockIdsFiltered,
-                []
-            );
+    let moddedFoliageBlockIdsFiltered = global.blockIds.filter(
+        (blockId) =>
+            !blockId.startsWith('minecraft:') &&
+            !blockId.startsWith('dtterralith:') &&
+            !blockId.includes('potted') &&
+            !blockId.includes('hanging_sign') &&
+            !blockId.includes('music_disc') &&
+            !blockId.includes('seagrass') &&
+            !blockId.includes('wonderful_wheat') &&
+            (foliage.some((f) => blockId.endsWith(f)) || blockId.includes('wild_'))
+    );
 
-            printBlockIdsForShader(
-                blockIdsForShader.moddedBlockIds,
-                blockIdsForShader.combinedAndFormattedBlockIdsStr,
-                'foliage',
-                '10004'
-            );
+    /* INFO: Add other block ids that should be treated as foliage to the array */
+    blockIdsForShader = composeBlockIdsForShader(vanillaFoliageBlockIds, moddedFoliageBlockIdsFiltered, []);
 
-            /*
-               LEAVES
-            */
+    printBlockIdsForShader(blockIdsForShader.moddedBlockIds, blockIdsForShader.composedBlockIdsStr, 'foliage', '10004');
 
-            const vanillaLeavesBlockIds =
-                'leaves leaves2 oak_leaves spruce_leaves birch_leaves jungle_leaves acacia_leaves dark_oak_leaves azalea_leaves flowering_azalea_leaves mangrove_leaves cherry_leaves';
-            const moddedLeavesBlockIdsFiltered = global.blockIds.filter((blockId) => {
-                !blockId.startsWith('minecraft:') &&
-                    !blockId.startsWith('dtterralith:') &&
-                    !blockId.includes('tea_leaves') &&
-                    blockId.endsWith('leaves');
-            });
+    /*
+       LEAVES
+    */
+    let vanillaLeavesBlockIds =
+        'leaves leaves2 oak_leaves spruce_leaves birch_leaves jungle_leaves acacia_leaves dark_oak_leaves azalea_leaves flowering_azalea_leaves mangrove_leaves cherry_leaves';
+    let moddedLeavesBlockIdsFiltered = global.blockIds.filter(
+        (blockId) =>
+            !blockId.startsWith('minecraft:') &&
+            !blockId.startsWith('dtterralith:') &&
+            !blockId.includes('tea_leaves') &&
+            blockId.endsWith('leaves')
+    );
 
-            /* INFO: Add other block ids that should be treated as leaves to the array */
-            blockIdsForShader = combineAndFormatBlockIdsForShader(
-                vanillaLeavesBlockIds,
-                moddedLeavesBlockIdsFiltered,
-                []
-            );
+    /* INFO: Add other block ids that should be treated as leaves to the array */
+    blockIdsForShader = composeBlockIdsForShader(vanillaLeavesBlockIds, moddedLeavesBlockIdsFiltered, []);
 
-            printBlockIdsForShader(
-                blockIdsForShader.moddedBlockIds,
-                blockIdsForShader.combinedAndFormattedBlockIdsStr,
-                'leaves',
-                '10008'
-            );
+    printBlockIdsForShader(blockIdsForShader.moddedBlockIds, blockIdsForShader.composedBlockIdsStr, 'leaves', '10008');
 
-            /*
-               (MODDED) ORES
-            */
+    /*
+       (MODDED) ORES
+    */
+    let moddedOreBlockIdsFiltered = global.blockIds.filter(
+        (block) =>
+            !block.startsWith('minecraft:') &&
+            !block.startsWith('forbidden_arcanus:') &&
+            !block.includes('coal') &&
+            block.endsWith('_ore')
+    );
+    /* INFO: Add other block ids that should be treated as ores to the array */
+    let moddedOreBlockIds = ['infernalexp:dimstone'];
+    moddedOreBlockIdsFiltered.forEach((blockId) => {
+        moddedOreBlockIds.push(blockId);
+    });
+    let formattedOreBlockIds = '';
+    moddedOreBlockIds.sort().forEach((blockId) => {
+        formattedOreBlockIds += blockId.concat(' ');
+    });
+    formattedOreBlockIds = formattedOreBlockIds.slice(0, formattedOreBlockIds.length - 1);
 
-            const moddedOreBlockIdsFiltered = global.blockIds.filter((block) => {
-                !block.startsWith('minecraft:') &&
-                    !block.startsWith('forbidden_arcanus:') &&
-                    !block.includes('coal') &&
-                    block.endsWith('_ore');
-            });
-            /* INFO: Add other block ids that should be treated as ores to the array */
-            const moddedOreBlockIds = ['infernalexp:dimstone'];
-            moddedOreBlockIdsFiltered.forEach((blockId) => {
-                moddedOreBlockIds.push(blockId);
-            });
-            let formattedOreBlockIds = '';
-            moddedOreBlockIds.sort().forEach((blockId) => {
-                formattedOreBlockIds += blockId.concat(' ');
-            });
-            formattedOreBlockIds = formattedOreBlockIds.slice(0, formattedOreBlockIds.length - 1);
+    printBlockIdsForShader(moddedOreBlockIds, formattedOreBlockIds, 'ore', '10024', true);
 
-            printBlockIdsForShader(moddedOreBlockIds, formattedOreBlockIds, 'ore', '10024', true);
+    /* 
+       TODO: add all dark iron block ids like cast iron, industrial iron,
+       dark iron, compressed iron, etc to correct blockId (netherite? coal?)
+    */
 
-            /*
-               IRON
-            */
-
-            /* TODO: add all dark iron block ids like cast iron, industrial iron,
-               dark iron, compressed iron, etc to correct blockId (netherite? coal?) */
-
-            /* 
-               NOTE: twilightforest:ironwood_block gets darkened but still looks good,
-               still don't know if this block id should stay added or get removed.
+    /* 
+       NOTE: twilightforest:ironwood_block gets darkened but still looks good,
+       still don't know if this block id should stay added or get removed.
    
-               additional_lights iron blocks work, but torch for example get darkened a bit
+       additional_lights iron blocks work, but torch for example get darkened a bit
    
-               Add additionallanterns ?
-            */
+       Add additionallanterns ?
+    */
 
-            // TODO look in JEI which block ids to add here
-            const vanillaIronBlockIds = 'iron_block iron_trapdoor heavy_weighted_pressure_plate';
-            const moddedIronBlockIdsFiltered = global.blockIds.filter((blockId) => {
-                RegExp(
-                    /^(?!minecraft).*:(?!.*(cast|compressed|dark|industrial|rough)).*iron.*(block|fence|nub).*(?!(cast|compressed|dark|industrial|rough))$/
-                ).test(blockId);
-            });
+    /*
+       IRON
+    */
+    let vanillaIronBlockIds = 'iron_block iron_trapdoor heavy_weighted_pressure_plate';
+    // TODO look in JEI which block ids to add to the RegEx
+    let moddedIronBlockIdsFiltered = global.blockIds.filter((blockId) =>
+        RegExp(
+            /^(?!minecraft).*:(?!.*(cast|compressed|dark|industrial|rough)).*iron.*(block|fence|nub).*(?!(cast|compressed|dark|industrial|rough))$/
+        ).test(blockId)
+    );
 
-            /* INFO: Add other block ids that should be treated as iron blocks to the array */
-            blockIdsForShader = combineAndFormatBlockIdsForShader(vanillaIronBlockIds, moddedIronBlockIdsFiltered, [
-                'buildersaddition:iron_ladder',
-                'ironbookshelves:iron_bookshelf',
-                'ironfurnaces:iron_furnace'
-            ]);
+    /* INFO: Add other block ids that should be treated as iron blocks to the array */
+    blockIdsForShader = composeBlockIdsForShader(vanillaIronBlockIds, moddedIronBlockIdsFiltered, [
+        'buildersaddition:iron_ladder',
+        'ironbookshelves:iron_bookshelf',
+        'ironfurnaces:iron_furnace'
+    ]);
 
-            printBlockIdsForShader(
-                blockIdsForShader.moddedBlockIds,
-                blockIdsForShader.combinedAndFormattedBlockIdsStr,
-                'iron block',
-                '10264'
-            );
+    printBlockIdsForShader(
+        blockIdsForShader.moddedBlockIds,
+        blockIdsForShader.composedBlockIdsStr,
+        'iron block',
+        '10264'
+    );
 
-            // TODO add modded normal glass block ids, add Easy Villagers and Easy Piglins glass block ids as well
+    /*
+       STAINED GLASS
+    */
+    /*
+       TODO add modded normal glass block ids, add Easy
+       Villagers and Easy Piglins glass block ids as well
+    */
+    let vanillaStainedGlassBlockIds =
+        'stained_glass white_stained_glass orange_stained_glass magenta_stained_glass light_blue_stained_glass yellow_stained_glass lime_stained_glass pink_stained_glass gray_stained_glass light_gray_stained_glass cyan_stained_glass purple_stained_glass blue_stained_glass brown_stained_glass green_stained_glass red_stained_glass black_stained_glass';
+    // TODO add other stained glass block ids to array
+    // INFO: Connected Glass' stained glass blocks does not have 'stained' in the block id!
+    // Include tinted glass?
+    let moddedStainedGlassBlockIdsFiltered = global.blockIds.filter(
+        (blockId) =>
+            !blockId.startsWith('minecraft:') &&
+            !blockId.includes('pane') &&
+            !blockId.includes('tinted') &&
+            (blockId.endsWith('stained_glass') ||
+                blockId.startsWith('connectedglass:borderless_glass_') ||
+                blockId.startsWith('connectedglass:clear_glass_') ||
+                blockId.startsWith('connectedglass:scratched_glass_'))
+    );
 
-            /*
-               STAINED GLASS
-            */
+    /* INFO: Add other block ids that should be treated as stained glass to the array */
+    blockIdsForShader = composeBlockIdsForShader(vanillaStainedGlassBlockIds, moddedStainedGlassBlockIdsFiltered, []);
 
-            const vanillaStainedGlassBlockIds =
-                'stained_glass white_stained_glass orange_stained_glass magenta_stained_glass light_blue_stained_glass yellow_stained_glass lime_stained_glass pink_stained_glass gray_stained_glass light_gray_stained_glass cyan_stained_glass purple_stained_glass blue_stained_glass brown_stained_glass green_stained_glass red_stained_glass black_stained_glass';
-            // TODO add other stained glass block ids to array
-            // INFO: Connected Glass' stained glass blocks does not have 'stained' in the block id!
-            // Include tinted glass?
-            const moddedStainedGlassBlockIdsFiltered = global.blockIds.filter((blockId) => {
-                !blockId.startsWith('minecraft:') &&
-                    !blockId.includes('pane') &&
-                    !blockId.includes('tinted') &&
-                    (blockId.endsWith('stained_glass') ||
-                        blockId.startsWith('connectedglass:borderless_glass_') ||
-                        blockId.startsWith('connectedglass:clear_glass_') ||
-                        blockId.startsWith('connectedglass:scratched_glass_'));
-            });
-
-            /* INFO: Add other block ids that should be treated as stained glass to the array */
-            blockIdsForShader = combineAndFormatBlockIdsForShader(
-                vanillaStainedGlassBlockIds,
-                moddedStainedGlassBlockIdsFiltered,
-                []
-            );
-
-            printBlockIdsForShader(
-                blockIdsForShader.moddedBlockIds,
-                blockIdsForShader.combinedAndFormattedBlockIdsStr,
-                'stained glass',
-                '30000'
-            );
-        } else {
-            console.log('Dumping for Complementary Shader disabled!');
-            console.log("Set 'isBlockIdsForShaderLogEnabled = true' in settings.js to enable!");
-        }
-    }
+    printBlockIdsForShader(
+        blockIdsForShader.moddedBlockIds,
+        blockIdsForShader.composedBlockIdsStr,
+        'stained glass',
+        '30000'
+    );
 });
