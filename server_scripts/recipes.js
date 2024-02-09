@@ -89,6 +89,11 @@ ServerEvents.recipes((event) => {
     };
 
     const addCrushingRecipe = (inputItemId, timeInTicks, outputItemInfos) => {
+        if (!Platform.isLoaded('create')) {
+            global.logModNotLoaded('Create', 'crushing recipe');
+            return;
+        }
+
         event.recipes.create
             .crushing(composeOutputItems(outputItemInfos), inputItemId)
             .id(composeRecipeId(inputItemId, outputItemInfos[0].itemId, 'crushing'))
@@ -343,235 +348,233 @@ ServerEvents.recipes((event) => {
             .cookingTime(100);
     }
 
-    if (Platform.isLoaded('create')) {
-        /* Minecraft */
-        addCrushingRecipe('ancient_debris', 600, [
+    /* Minecraft */
+    addCrushingRecipe('ancient_debris', 600, [
+        {
+            itemId: 'netherite_scrap'
+        },
+        {
+            itemId: 'netherite_scrap',
+            chance: 0.25
+        },
+        {
+            itemId: 'create:experience_nugget',
+            amount: 2
+        },
+        {
+            itemId: 'dripstone_block',
+            chance: 0.125
+        }
+    ]);
+
+    /* Ad Astra */
+    if (Platform.isLoaded('ad_astra')) {
+        event.remove([{ id: 'create:crushing/venus_gold_ore' }]);
+        addOreCrushingRecipe('ad_astra:venus_gold_ore', 'gold', 'ad_astra:venus_cobblestone');
+
+        addOreCrushingRecipe('ad_astra:venus_diamond_ore', 'diamond', 'ad_astra:venus_cobblestone');
+
+        event.remove([{ id: 'create:crushing/moon_iron_ore' }]);
+        addOreCrushingRecipe('ad_astra:moon_iron_ore', 'iron', 'ad_astra:moon_cobblestone');
+
+        event.remove([{ id: 'create:crushing/mars_iron_ore' }]);
+        addOreCrushingRecipe('ad_astra:mars_iron_ore', 'iron', 'ad_astra:mars_cobblestone');
+
+        event.remove([{ id: 'create:crushing/mercury_iron_ore' }]);
+        addOreCrushingRecipe('ad_astra:mercury_iron_ore', 'iron', 'ad_astra:mercury_cobblestone');
+
+        event.remove([{ id: 'create:crushing/glacio_copper_ore' }]);
+        addOreCrushingRecipe('ad_astra:glacio_copper_ore', 'copper', 'ad_astra:glacio_cobblestone');
+
+        event.remove([{ id: 'create:crushing/glacio_iron_ore' }]);
+        addOreCrushingRecipe('ad_astra:glacio_iron_ore', 'iron', 'ad_astra:glacio_cobblestone');
+    }
+
+    /* Blue Skies */
+    if (Platform.isLoaded('blue_skies')) {
+        addCrushingRecipe('blue_skies:everbright_pyrope_ore', 300, [
             {
-                itemId: 'netherite_scrap'
+                itemId: 'blue_skies:pyrope_gem'
             },
             {
-                itemId: 'netherite_scrap',
+                itemId: 'blue_skies:pyrope_gem',
+                chance: 0.75
+            },
+            {
+                itemId: 'create:experience_nugget',
+                chance: 0.75
+            },
+            {
+                itemId: 'blue_skies:turquoise_cobblestone',
+                chance: 0.125
+            }
+        ]);
+        addCrushingRecipe('blue_skies:everdawn_pyrope_ore', 300, [
+            {
+                itemId: 'blue_skies:pyrope_gem'
+            },
+            {
+                itemId: 'blue_skies:pyrope_gem',
+                chance: 0.75
+            },
+            {
+                itemId: 'create:experience_nugget',
+                chance: 0.75
+            },
+            {
+                itemId: 'blue_skies:lunar_cobblestone',
+                chance: 0.125
+            }
+        ]);
+    }
+
+    /* Croptopia */
+    if (Platform.isLoaded('croptopia')) {
+        addCrushingRecipe('croptopia:salt_ore', 300, [
+            {
+                itemId: 'croptopia:salt',
+                chance: 0.75
+            },
+            {
+                itemId: 'croptopia:salt',
                 chance: 0.25
             },
             {
                 itemId: 'create:experience_nugget',
-                amount: 2
+                chance: 0.75
             },
             {
-                itemId: 'dripstone_block',
+                itemId: 'calcite',
                 chance: 0.125
             }
         ]);
+    }
 
-        /* Ad Astra */
-        if (Platform.isLoaded('ad_astra')) {
-            event.remove([{ id: 'create:crushing/venus_gold_ore' }]);
-            addOreCrushingRecipe('ad_astra:venus_gold_ore', 'gold', 'ad_astra:venus_cobblestone');
+    /* Darker Depths */
+    if (Platform.isLoaded('darkerdepths')) {
+        addOreCrushingRecipe('darkerdepths:aridrock_gold_ore', 'gold', 'darkerdepths:aridrock');
+        addOreCrushingRecipe('darkerdepths:aridrock_iron_ore', 'iron', 'darkerdepths:aridrock');
+        addOreCrushingRecipe('darkerdepths:aridrock_coal_ore', 'coal', 'darkerdepths:aridrock');
+        addOreCrushingRecipe('darkerdepths:aridrock_lapis_ore', 'lapis', 'darkerdepths:aridrock');
+        addOreCrushingRecipe('darkerdepths:aridrock_diamond_ore', 'diamond', 'darkerdepths:aridrock');
+        addOreCrushingRecipe('darkerdepths:aridrock_redstone_ore', 'redstone', 'darkerdepths:aridrock');
 
-            addOreCrushingRecipe('ad_astra:venus_diamond_ore', 'diamond', 'ad_astra:venus_cobblestone');
+        addOreCrushingRecipe('darkerdepths:limestone_gold_ore', 'gold', 'darkerdepths:limestone');
+        addOreCrushingRecipe('darkerdepths:limestone_iron_ore', 'iron', 'darkerdepths:limestone');
+        addOreCrushingRecipe('darkerdepths:limestone_coal_ore', 'coal', 'darkerdepths:limestone');
+        addOreCrushingRecipe('darkerdepths:limestone_lapis_ore', 'lapis', 'darkerdepths:limestone');
+        addOreCrushingRecipe('darkerdepths:limestone_diamond_ore', 'diamond', 'darkerdepths:limestone');
+        addOreCrushingRecipe('darkerdepths:limestone_redstone_ore', 'redstone', 'darkerdepths:limestone');
+    }
 
-            event.remove([{ id: 'create:crushing/moon_iron_ore' }]);
-            addOreCrushingRecipe('ad_astra:moon_iron_ore', 'iron', 'ad_astra:moon_cobblestone');
+    /* Deeper and Darker */
+    if (Platform.isLoaded('deeperdarker')) {
+        addOreCrushingRecipe('deeperdarker:sculk_stone_coal_ore', 'coal', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_iron_ore', 'iron', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_copper_ore', 'copper', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_gold_ore', 'gold', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_redstone_ore', 'redstone', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_emerald_ore', 'emerald', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_lapis_ore', 'lapis', 'deeperdarker:sculk_stone');
+        addOreCrushingRecipe('deeperdarker:sculk_stone_diamond_ore', 'diamond', 'deeperdarker:sculk_stone');
 
-            event.remove([{ id: 'create:crushing/mars_iron_ore' }]);
-            addOreCrushingRecipe('ad_astra:mars_iron_ore', 'iron', 'ad_astra:mars_cobblestone');
+        addOreCrushingRecipe('deeperdarker:gloomslate_coal_ore', 'coal', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_iron_ore', 'iron', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_copper_ore', 'copper', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_gold_ore', 'gold', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_redstone_ore', 'redstone', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_emerald_ore', 'emerald', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_lapis_ore', 'lapis', 'deeperdarker:gloomslate');
+        addOreCrushingRecipe('deeperdarker:gloomslate_diamond_ore', 'diamond', 'deeperdarker:gloomslate');
+    }
 
-            event.remove([{ id: 'create:crushing/mercury_iron_ore' }]);
-            addOreCrushingRecipe('ad_astra:mercury_iron_ore', 'iron', 'ad_astra:mercury_cobblestone');
+    /* Epic Samurai */
+    if (Platform.isLoaded('epicsamurai')) {
+        addOreCrushingRecipe('epicsamurai:ruby_ore', 'ruby', 'cobblestone');
+        addOreCrushingRecipe('epicsamurai:jade_ore', 'jade', 'cobblestone');
+        addOreCrushingRecipe('epicsamurai:aquamarine_ore', 'aquamarine', 'cobblestone');
+        addOreCrushingRecipe('epicsamurai:onyx_ore', 'onyx', 'cobblestone');
 
-            event.remove([{ id: 'create:crushing/glacio_copper_ore' }]);
-            addOreCrushingRecipe('ad_astra:glacio_copper_ore', 'copper', 'ad_astra:glacio_cobblestone');
+        addOreCrushingRecipe('epicsamurai:deepslate_ruby_ore', 'ruby', 'cobbled_deepslate');
+        addOreCrushingRecipe('epicsamurai:deepslate_jade_ore', 'jade', 'cobbled_deepslate');
+        addOreCrushingRecipe('epicsamurai:deepslate_aquamarine_ore', 'aquamarine', 'cobbled_deepslate');
+        addOreCrushingRecipe('epicsamurai:deepslate_onyx_ore', 'onyx', 'cobbled_deepslate');
+    }
 
-            event.remove([{ id: 'create:crushing/glacio_iron_ore' }]);
-            addOreCrushingRecipe('ad_astra:glacio_iron_ore', 'iron', 'ad_astra:glacio_cobblestone');
-        }
+    /* Randomium */
+    if (Platform.isLoaded('randomium') && Platform.isLoaded('epicsamurai')) {
+        addCrushingRecipe('randomium:randomium_ore', 350, [
+            {
+                itemId: 'randomium:randomium',
+                chance: 0.5
+            },
+            {
+                itemId: 'create:experience_nugget',
+                chance: 0.25
+            },
+            {
+                itemId: 'cobblestone',
+                chance: 0.125
+            },
+            {
+                itemId: 'epicsamurai:ruby',
+                chance: 0.09375
+            },
+            {
+                itemId: 'netherite_ingot',
+                chance: 0.0625
+            }
+        ]);
 
-        /* Blue Skies */
-        if (Platform.isLoaded('blue_skies')) {
-            addCrushingRecipe('blue_skies:everbright_pyrope_ore', 300, [
-                {
-                    itemId: 'blue_skies:pyrope_gem'
-                },
-                {
-                    itemId: 'blue_skies:pyrope_gem',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'blue_skies:turquoise_cobblestone',
-                    chance: 0.125
-                }
-            ]);
-            addCrushingRecipe('blue_skies:everdawn_pyrope_ore', 300, [
-                {
-                    itemId: 'blue_skies:pyrope_gem'
-                },
-                {
-                    itemId: 'blue_skies:pyrope_gem',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'blue_skies:lunar_cobblestone',
-                    chance: 0.125
-                }
-            ]);
-        }
+        addCrushingRecipe('randomium:randomium_ore_deepslate', 450, [
+            {
+                itemId: 'randomium:randomium',
+                chance: 0.75
+            },
+            {
+                itemId: 'randomium:randomium',
+                chance: 0.375
+            },
+            {
+                itemId: 'create:experience_nugget',
+                chance: 0.25
+            },
+            {
+                itemId: 'cobbled_deepslate',
+                chance: 0.125
+            },
+            {
+                itemId: 'epicsamurai:ruby',
+                chance: 0.09375
+            },
+            {
+                itemId: 'netherite_ingot',
+                chance: 0.0625
+            }
+        ]);
 
-        /* Croptopia */
-        if (Platform.isLoaded('croptopia')) {
-            addCrushingRecipe('croptopia:salt_ore', 300, [
-                {
-                    itemId: 'croptopia:salt',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'croptopia:salt',
-                    chance: 0.25
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'calcite',
-                    chance: 0.125
-                }
-            ]);
-        }
-
-        /* Darker Depths */
-        if (Platform.isLoaded('darkerdepths')) {
-            addOreCrushingRecipe('darkerdepths:aridrock_gold_ore', 'gold', 'darkerdepths:aridrock');
-            addOreCrushingRecipe('darkerdepths:aridrock_iron_ore', 'iron', 'darkerdepths:aridrock');
-            addOreCrushingRecipe('darkerdepths:aridrock_coal_ore', 'coal', 'darkerdepths:aridrock');
-            addOreCrushingRecipe('darkerdepths:aridrock_lapis_ore', 'lapis', 'darkerdepths:aridrock');
-            addOreCrushingRecipe('darkerdepths:aridrock_diamond_ore', 'diamond', 'darkerdepths:aridrock');
-            addOreCrushingRecipe('darkerdepths:aridrock_redstone_ore', 'redstone', 'darkerdepths:aridrock');
-
-            addOreCrushingRecipe('darkerdepths:limestone_gold_ore', 'gold', 'darkerdepths:limestone');
-            addOreCrushingRecipe('darkerdepths:limestone_iron_ore', 'iron', 'darkerdepths:limestone');
-            addOreCrushingRecipe('darkerdepths:limestone_coal_ore', 'coal', 'darkerdepths:limestone');
-            addOreCrushingRecipe('darkerdepths:limestone_lapis_ore', 'lapis', 'darkerdepths:limestone');
-            addOreCrushingRecipe('darkerdepths:limestone_diamond_ore', 'diamond', 'darkerdepths:limestone');
-            addOreCrushingRecipe('darkerdepths:limestone_redstone_ore', 'redstone', 'darkerdepths:limestone');
-        }
-
-        /* Deeper and Darker */
-        if (Platform.isLoaded('deeperdarker')) {
-            addOreCrushingRecipe('deeperdarker:sculk_stone_coal_ore', 'coal', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_iron_ore', 'iron', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_copper_ore', 'copper', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_gold_ore', 'gold', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_redstone_ore', 'redstone', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_emerald_ore', 'emerald', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_lapis_ore', 'lapis', 'deeperdarker:sculk_stone');
-            addOreCrushingRecipe('deeperdarker:sculk_stone_diamond_ore', 'diamond', 'deeperdarker:sculk_stone');
-
-            addOreCrushingRecipe('deeperdarker:gloomslate_coal_ore', 'coal', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_iron_ore', 'iron', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_copper_ore', 'copper', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_gold_ore', 'gold', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_redstone_ore', 'redstone', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_emerald_ore', 'emerald', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_lapis_ore', 'lapis', 'deeperdarker:gloomslate');
-            addOreCrushingRecipe('deeperdarker:gloomslate_diamond_ore', 'diamond', 'deeperdarker:gloomslate');
-        }
-
-        /* Epic Samurai */
-        if (Platform.isLoaded('epicsamurai')) {
-            addOreCrushingRecipe('epicsamurai:ruby_ore', 'ruby', 'cobblestone');
-            addOreCrushingRecipe('epicsamurai:jade_ore', 'jade', 'cobblestone');
-            addOreCrushingRecipe('epicsamurai:aquamarine_ore', 'aquamarine', 'cobblestone');
-            addOreCrushingRecipe('epicsamurai:onyx_ore', 'onyx', 'cobblestone');
-
-            addOreCrushingRecipe('epicsamurai:deepslate_ruby_ore', 'ruby', 'cobbled_deepslate');
-            addOreCrushingRecipe('epicsamurai:deepslate_jade_ore', 'jade', 'cobbled_deepslate');
-            addOreCrushingRecipe('epicsamurai:deepslate_aquamarine_ore', 'aquamarine', 'cobbled_deepslate');
-            addOreCrushingRecipe('epicsamurai:deepslate_onyx_ore', 'onyx', 'cobbled_deepslate');
-        }
-
-        /* Randomium */
-        if (Platform.isLoaded('randomium') && Platform.isLoaded('epicsamurai')) {
-            addCrushingRecipe('randomium:randomium_ore', 350, [
-                {
-                    itemId: 'randomium:randomium',
-                    chance: 0.5
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    chance: 0.25
-                },
-                {
-                    itemId: 'cobblestone',
-                    chance: 0.125
-                },
-                {
-                    itemId: 'epicsamurai:ruby',
-                    chance: 0.09375
-                },
-                {
-                    itemId: 'netherite_ingot',
-                    chance: 0.0625
-                }
-            ]);
-
-            addCrushingRecipe('randomium:randomium_ore_deepslate', 450, [
-                {
-                    itemId: 'randomium:randomium',
-                    chance: 0.75
-                },
-                {
-                    itemId: 'randomium:randomium',
-                    chance: 0.375
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    chance: 0.25
-                },
-                {
-                    itemId: 'cobbled_deepslate',
-                    chance: 0.125
-                },
-                {
-                    itemId: 'epicsamurai:ruby',
-                    chance: 0.09375
-                },
-                {
-                    itemId: 'netherite_ingot',
-                    chance: 0.0625
-                }
-            ]);
-
-            addCrushingRecipe('randomium:randomium_ore_end', 400, [
-                {
-                    itemId: 'randomium:randomium',
-                    chance: 0.5
-                },
-                {
-                    itemId: 'create:experience_nugget',
-                    chance: 0.25
-                },
-                {
-                    itemId: 'end_stone',
-                    chance: 0.125
-                },
-                {
-                    itemId: 'epicsamurai:ruby',
-                    chance: 0.09375
-                },
-                {
-                    itemId: 'netherite_ingot',
-                    chance: 0.0625
-                }
-            ]);
-        }
+        addCrushingRecipe('randomium:randomium_ore_end', 400, [
+            {
+                itemId: 'randomium:randomium',
+                chance: 0.5
+            },
+            {
+                itemId: 'create:experience_nugget',
+                chance: 0.25
+            },
+            {
+                itemId: 'end_stone',
+                chance: 0.125
+            },
+            {
+                itemId: 'epicsamurai:ruby',
+                chance: 0.09375
+            },
+            {
+                itemId: 'netherite_ingot',
+                chance: 0.0625
+            }
+        ]);
     }
 
     /* The Undergarden */
@@ -606,31 +609,31 @@ ServerEvents.recipes((event) => {
             .shapeless('9x undergarden:regalic_shard', ['undergarden:regalium_crystal'])
             .id(composeRecipeId('regalium_crystal', 'regalic_shard'));
 
+        addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
+        addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
+
+        addOreCrushingRecipe('undergarden:depthrock_iron_ore', 'iron', 'undergarden:depthrock');
+        addOreCrushingRecipe('undergarden:shiverstone_iron_ore', 'iron', 'undergarden:shiverstone');
+
+        addOreCrushingRecipe('undergarden:depthrock_gold_ore', 'gold', 'undergarden:depthrock');
+
+        addOreCrushingRecipe('undergarden:depthrock_diamond_ore', 'diamond', 'undergarden:depthrock');
+        addOreCrushingRecipe('undergarden:shiverstone_diamond_ore', 'diamond', 'undergarden:shiverstone');
+
+        addOreCrushingRecipe('undergarden:depthrock_cloggrum_ore', 'cloggrum', 'undergarden:depthrock');
+        addOreCrushingRecipe('undergarden:shiverstone_cloggrum_ore', 'cloggrum', 'undergarden:shiverstone');
+
+        // TODO change crushed oreo to something better and add mod installed check
+        // event.recipes.create
+        //     .splashing(
+        //         ['9x undergarden:cloggrum_nugget', Item.of('createcafe:oreo_crushed').withChance(0.75)],
+        //         'undergarden:crushed_raw_cloggrum'
+        //     )
+        //     id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_nugget', 'splashing'));
+
+        addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
+
         if (Platform.isLoaded('create')) {
-            addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
-            addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
-
-            addOreCrushingRecipe('undergarden:depthrock_iron_ore', 'iron', 'undergarden:depthrock');
-            addOreCrushingRecipe('undergarden:shiverstone_iron_ore', 'iron', 'undergarden:shiverstone');
-
-            addOreCrushingRecipe('undergarden:depthrock_gold_ore', 'gold', 'undergarden:depthrock');
-
-            addOreCrushingRecipe('undergarden:depthrock_diamond_ore', 'diamond', 'undergarden:depthrock');
-            addOreCrushingRecipe('undergarden:shiverstone_diamond_ore', 'diamond', 'undergarden:shiverstone');
-
-            addOreCrushingRecipe('undergarden:depthrock_cloggrum_ore', 'cloggrum', 'undergarden:depthrock');
-            addOreCrushingRecipe('undergarden:shiverstone_cloggrum_ore', 'cloggrum', 'undergarden:shiverstone');
-
-            // TODO change crushed oreo to something better and add mod installed check
-            // event.recipes.create
-            //     .splashing(
-            //         ['9x undergarden:cloggrum_nugget', Item.of('createcafe:oreo_crushed').withChance(0.75)],
-            //         'undergarden:crushed_raw_cloggrum'
-            //     )
-            //     id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_nugget', 'splashing'));
-
-            addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
-
             if (Platform.isLoaded('endermanoverhaul')) {
                 event.recipes.create
                     .splashing(
