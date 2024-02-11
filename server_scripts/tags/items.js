@@ -122,7 +122,7 @@ ServerEvents.tags('item', (event) => {
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:armors/'))
-        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
 
     event.add('forge:armors', itemTagIdsToAdd);
 
@@ -151,7 +151,7 @@ ServerEvents.tags('item', (event) => {
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:barrels/'))
-        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
 
     event.add('forge:barrels', [itemTagIdsToAdd, /^.*:(?!(cannon|tnt).)*_barrel$/]);
 
@@ -216,7 +216,7 @@ ServerEvents.tags('item', (event) => {
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:ingots/'))
-        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
 
     event.add('forge:ingots', [itemTagIdsToAdd, /^.*ingot$/]);
 
@@ -258,7 +258,7 @@ ServerEvents.tags('item', (event) => {
 
     itemTagIds
         .filter((tagId) => tagId.startsWith('forge:raw_materials/'))
-        .forEach((tagId) => itemTagIdsToAdd.push('#'.concat(tagId)));
+        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
 
     event.add('forge:raw_materials', itemTagIdsToAdd);
     // event.add('forge:raw_materials', [itemTagIdsToAdd, regexToAdd]);
