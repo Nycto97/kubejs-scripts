@@ -313,26 +313,26 @@ ServerEvents.tags('item', (event) => {
 
 /* Listen to loaded event, after all server events have fired */
 ServerEvents.loaded(() => {
-    const itemTagIdsFromLoadedEvent = itemReg
-        .getTagNames()
-        .map((tagKey) => tagKey.location().toString())
-        .toArray();
-
-    let nonTaggedItemIds = new Set();
-
-    /* Get items that are not tagged with minecraft:item tags */
-    Ingredient.all.stacks.forEach((stack) => {
-        if (stack.getTags().toList().isEmpty()) {
-            nonTaggedItemIds.add(stack.getId());
-        }
-    });
-
     if (global.isItemTagIdsLogEnabled) {
+        let itemTagIdsFromLoadedEvent = itemReg
+            .getTagNames()
+            .map((tagKey) => tagKey.location().toString())
+            .toArray();
+
         console.log(`\n\n${itemTagIdsFromLoadedEvent.length} registered minecraft:item tags found!\n`);
         console.log(itemTagIdsFromLoadedEvent.sort());
     }
 
     if (global.isNonTaggedItemIdsLogEnabled) {
+        let nonTaggedItemIds = new HashSet();
+
+        /* Get ids from items that aren't tagged with minecraft:item tags */
+        Ingredient.all.stacks.forEach((itemStack) => {
+            if (itemStack.getTags().toList().isEmpty()) {
+                nonTaggedItemIds.add(itemStack.getId());
+            }
+        });
+
         console.log(`\n\n${nonTaggedItemIds.size} items are currently NOT TAGGED with minecraft:item tags!\n`);
         console.log(Array.from(nonTaggedItemIds).sort());
     }
