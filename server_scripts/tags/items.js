@@ -19,27 +19,6 @@ const itemTagIds = itemReg
     .map((tagKey) => tagKey.location().toString())
     .toArray();
 
-let nonTaggedItemIds = new Set();
-
-/* Get items that are not tagged with minecraft:item tags */
-Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
-    let stackId = stack.getId();
-
-    if (!nonTaggedItemIds.has(stackId) && stack.getTags().toList().isEmpty()) {
-        nonTaggedItemIds.add(stackId);
-    }
-});
-
-if (global.isItemTagIdsLogEnabled) {
-    console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
-    console.log(itemTagIds.sort());
-}
-
-if (global.isNonTaggedItemIdsLogEnabled) {
-    console.log(`\n\n${nonTaggedItemIds.size} items are currently NOT TAGGED with minecraft:item tags!\n`);
-    console.log(Array.from(nonTaggedItemIds).sort());
-}
-
 ServerEvents.tags('item', (event) => {
     let itemIdsTaggedByMods;
 
@@ -329,5 +308,34 @@ ServerEvents.tags('item', (event) => {
     if (Platform.isLoaded('farmersdelight')) {
         event.add('farmersdelight:flat_on_cutting_board', '#forge:tools/tridents');
         event.add('farmersdelight:offhand_equipment', '#forge:tools/shields');
+    }
+});
+
+/* Listen to loaded event, after all server events have fired */
+ServerEvents.loaded(() => {
+    const itemTagIdsFromLoadedEvent = itemReg
+        .getTagNames()
+        .map((tagKey) => tagKey.location().toString())
+        .toArray();
+
+    let nonTaggedItemIds = new Set();
+
+    /* Get items that are not tagged with minecraft:item tags */
+    Ingredient.of(Ingredient.all).stacks.forEach((stack) => {
+        let stackId = stack.getId();
+
+        if (!nonTaggedItemIds.has(stackId) && stack.getTags().toList().isEmpty()) {
+            nonTaggedItemIds.add(stackId);
+        }
+    });
+
+    if (global.isItemTagIdsLogEnabled) {
+        console.log(`\n\n${itemTagIdsFromLoadedEvent.length} registered minecraft:item tags found!\n`);
+        console.log(itemTagIdsFromLoadedEvent.sort());
+    }
+
+    if (global.isNonTaggedItemIdsLogEnabled) {
+        console.log(`\n\n${nonTaggedItemIds.size} items are currently NOT TAGGED with minecraft:item tags!\n`);
+        console.log(Array.from(nonTaggedItemIds).sort());
     }
 });
