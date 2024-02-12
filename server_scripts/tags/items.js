@@ -327,7 +327,7 @@ ServerEvents.loaded(() => {
         let nonTaggedItemIds = new HashSet();
 
         /* Get ids from items that aren't tagged with minecraft:item tags */
-        Ingredient.all.stacks.forEach((itemStack) => {
+        Item.getList().forEach((itemStack) => {
             if (itemStack.getTags().toList().isEmpty()) {
                 nonTaggedItemIds.add(itemStack.getId());
             }
