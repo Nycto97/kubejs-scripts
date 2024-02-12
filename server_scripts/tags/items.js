@@ -13,6 +13,7 @@
 */
 
 const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM;
+const HashSet = Java.loadClass('java.util.HashSet');
 
 const itemTagIds = itemReg
     .getTagNames()
@@ -333,7 +334,7 @@ ServerEvents.loaded(() => {
             }
         });
 
-        console.log(`\n\n${nonTaggedItemIds.size} items are currently NOT TAGGED with minecraft:item tags!\n`);
-        console.log(Array.from(nonTaggedItemIds).sort());
+        console.log(`\n\n${nonTaggedItemIds.size()} items are currently NOT TAGGED with minecraft:item tags!\n`);
+        console.log(nonTaggedItemIds.toArray().sort());
     }
 });
