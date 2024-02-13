@@ -17,6 +17,12 @@ StartupEvents.postInit(() => {
         console.log(`[WARN] ${modName} mod is not loaded! Skipping ${activityType}`);
     };
 
+    global['logItemIdNotFound'] = (itemId, activityType, itemType) => {
+        console.log(
+            `[WARN] ${itemType ? `${itemType} i` : 'I'}tem id ${itemId} is not found! Skipping ${activityType}`
+        );
+    };
+
     if (global.isBlockAndItemCountLogEnabled) {
         console.log(`There are ${global.itemIds.length} items and ${global.blockIds.length} blocks registered`);
     }
