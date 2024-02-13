@@ -12,15 +12,16 @@
    Block tags are used for controlling behavior with blocks in block form
 */
 
-const itemReg = Java.loadClass('net.minecraft.core.Registry').ITEM;
 const HashSet = Java.loadClass('java.util.HashSet');
 
-const itemTagIds = itemReg
-    .getTagNames()
-    .map((tagKey) => tagKey.location().toString())
-    .toArray();
+let itemTagIds;
 
 ServerEvents.tags('item', (event) => {
+    itemTagIds = event.tags
+        .values()
+        .toArray()
+        .map((tag) => tag.id.toString());
+
     let itemIdsTaggedByMods;
 
     let itemTagIdsToAdd;
@@ -315,13 +316,8 @@ ServerEvents.tags('item', (event) => {
 /* Listen to loaded event, after all server events have fired */
 ServerEvents.loaded(() => {
     if (global.isItemTagIdsLogEnabled) {
-        let itemTagIdsFromLoadedEvent = itemReg
-            .getTagNames()
-            .map((tagKey) => tagKey.location().toString())
-            .toArray();
-
-        console.log(`\n\n${itemTagIdsFromLoadedEvent.length} registered minecraft:item tags found!\n`);
-        console.log(itemTagIdsFromLoadedEvent.sort());
+        console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
+        console.log(itemTagIds.sort());
     }
 
     if (global.isNonTaggedItemIdsLogEnabled) {
