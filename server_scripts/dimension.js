@@ -24,8 +24,11 @@ CommonAddedEvents.playerChangeDimension((event) => {
         'minecraft:overworld',
         'minecraft:the_end',
         'minecraft:the_nether',
+        'ae2:spatial_storage',
         'arsomega:demon_realm',
-        'nycto:usw_vanilla'
+        'l2library:maze',
+        'nycto:usw_vanilla',
+        'tropicraft:tropics'
     ].filter((dimension) => dimensions.includes(dimension));
 
     const isOldDimensionWhitelisted = dimensionWhitelistForShader.includes(oldDimension);
