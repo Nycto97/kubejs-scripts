@@ -28,6 +28,36 @@ ServerEvents.tags('item', (event) => {
 
     let regexToAdd;
 
+    // TODO manually add exceptions
+    // TODO needs to be tested further
+    /* Add child tags to parent tag, if parent tag exists */
+    const addAllChildTagsToExistingParentTags = () => {
+        itemTagIds
+            .filter((tagId) => tagId.includes('/'))
+            .forEach((childTagId) => {
+                let tagIdParts = childTagId.split('/');
+                let parentTagId = childTagId.split('/')[0];
+
+                if (tagIdParts.length === 2 && itemTagIds.includes(parentTagId)) {
+                    event.add(parentTagId, `#${childTagId}`);
+                }
+
+                if (tagIdParts.length === 3) {
+                    let middleTagId = `${childTagId.split('/')[0]}/${childTagId.split('/')[1]}`;
+
+                    if (itemTagIds.includes(middleTagId)) {
+                        event.add(middleTagId, `#${childTagId}`);
+                    }
+
+                    if (itemTagIds.includes(parentTagId)) {
+                        event.add(parentTagId, `#${middleTagId}`);
+                    }
+                }
+            });
+    };
+
+    addAllChildTagsToExistingParentTags();
+
     if (Platform.isLoaded('buildersaddition')) {
         event.removeAllTagsFrom(/^buildersaddition:.*vertical_slab$/);
     }
@@ -99,13 +129,6 @@ ServerEvents.tags('item', (event) => {
     */
 
     /* ARMORS */
-    itemTagIdsToAdd = [];
-
-    itemTagIds
-        .filter((tagId) => tagId.startsWith('forge:armors/'))
-        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
-
-    event.add('forge:armors', itemTagIdsToAdd);
 
     /* AXES */
     itemIdsTaggedByMods = [
@@ -129,10 +152,6 @@ ServerEvents.tags('item', (event) => {
     if (Platform.isLoaded('chipped')) {
         itemTagIdsToAdd.push('#chipped:barrel');
     }
-
-    itemTagIds
-        .filter((tagId) => tagId.startsWith('forge:barrels/'))
-        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
 
     event.add('forge:barrels', [itemTagIdsToAdd, /^.*:(?!(cannon|tnt).)*_barrel$/]);
 
@@ -193,13 +212,7 @@ ServerEvents.tags('item', (event) => {
     event.add('forge:tools/hoes', [itemIdsTaggedByMods, regexToAdd]);
 
     /* INGOTS */
-    itemTagIdsToAdd = [];
-
-    itemTagIds
-        .filter((tagId) => tagId.startsWith('forge:ingots/'))
-        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
-
-    event.add('forge:ingots', [itemTagIdsToAdd, /^.*ingot$/]);
+    event.add('forge:ingots', /^.*ingot$/);
 
     /* MUSIC DISCS */
     event.remove('forge:music_discs', /^.*$/);
@@ -233,16 +246,7 @@ ServerEvents.tags('item', (event) => {
     // TODO check mods and add their id if they add raw materials that should be tagged
     // INFO look in ATM6's kjs scripts for examples
     /* RAW MATERIALS */
-    itemTagIdsToAdd = [];
-    // itemTagIdsToAdd = [];
-    //     regexToAdd = /^(mod1|mod2|mod3):raw.*(include|words|here|if|needed)$/;
-
-    itemTagIds
-        .filter((tagId) => tagId.startsWith('forge:raw_materials/'))
-        .forEach((tagId) => itemTagIdsToAdd.push(`#${tagId}`));
-
-    event.add('forge:raw_materials', itemTagIdsToAdd);
-    // event.add('forge:raw_materials', [itemTagIdsToAdd, regexToAdd]);
+    // event.add('forge:raw_materials', /^(mod1|mod2|mod3):raw.*(include|words|here|if|needed)$/);
 
     /* SHIELDS */
     itemIdsTaggedByMods = [
