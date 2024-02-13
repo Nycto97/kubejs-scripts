@@ -302,6 +302,10 @@ const modsToRename = [
         preferredName: "Farmer's Delight: Nether's Delight"
     },
     {
+        id: 'twilightdelight',
+        preferredName: "Farmer's Delight: Twilight's Delight"
+    },
+    {
         id: 'fastasyncworldsave',
         preferredName: 'Fast Async World Save'
     },
@@ -316,6 +320,10 @@ const modsToRename = [
     {
         id: 'hunterillager',
         preferredName: "Hunter's Return"
+    },
+    {
+        id: 'immersivepetroleum',
+        preferredName: 'Immersive Engineering: Petroleum'
     },
     {
         id: 'incontrol',
