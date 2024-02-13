@@ -283,6 +283,15 @@ ServerEvents.recipes((event) => {
         })
         .id(composeRecipeId(null, 'end_portal_frame'));
 
+    /* Add crafting recipe for minecraft:tuff */
+    event
+        .shaped('8x minecraft:tuff', ['ADA', 'DLD', 'ADA'], {
+            A: 'minecraft:andesite',
+            D: 'minecraft:diorite',
+            L: 'minecraft:lava_bucket'
+        })
+        .id(composeRecipeId(['andesite', 'diorite'], 'tuff'));
+
     if (Platform.isLoaded('scarecrowsterritory')) {
         /* Remove crafting recipe for scarecrowsterritory:primitive_scarecrow
            added by Scarecrows' Territory since I'm adding custom
