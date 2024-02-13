@@ -314,23 +314,25 @@ ServerEvents.tags('item', (event) => {
 });
 
 /* Listen to loaded event, after all server events have fired */
-ServerEvents.loaded(() => {
-    if (global.isItemTagsLogEnabled) {
-        console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
-        console.log(itemTagIds.map((tagId) => `#${tagId}`).sort());
-    }
+if (global.isItemTagsLogEnabled || global.isNonTaggedItemIdsLogEnabled) {
+    ServerEvents.loaded(() => {
+        if (global.isItemTagsLogEnabled) {
+            console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
+            console.log(itemTagIds.map((tagId) => `#${tagId}`).sort());
+        }
 
-    if (global.isNonTaggedItemIdsLogEnabled) {
-        let nonTaggedItemIds = new HashSet();
+        if (global.isNonTaggedItemIdsLogEnabled) {
+            let nonTaggedItemIds = new HashSet();
 
-        /* Get ids from items that aren't tagged with minecraft:item tags */
-        Item.getList().forEach((itemStack) => {
-            if (itemStack.getTags().toList().isEmpty()) {
-                nonTaggedItemIds.add(itemStack.getId());
-            }
-        });
+            /* Get ids from items that aren't tagged with minecraft:item tags */
+            Item.getList().forEach((itemStack) => {
+                if (itemStack.getTags().toList().isEmpty()) {
+                    nonTaggedItemIds.add(itemStack.getId());
+                }
+            });
 
-        console.log(`\n\n${nonTaggedItemIds.size()} items are currently NOT TAGGED with minecraft:item tags!\n`);
-        console.log(nonTaggedItemIds.toArray().sort());
-    }
-});
+            console.log(`\n\n${nonTaggedItemIds.size()} items are currently NOT TAGGED with minecraft:item tags!\n`);
+            console.log(nonTaggedItemIds.toArray().sort());
+        }
+    });
+}
