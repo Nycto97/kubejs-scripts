@@ -35,22 +35,38 @@ ServerEvents.recipes((event) => {
         'regalium'
     ];
 
-    const composeRecipeId = (inputItemOrTagId, outputItemId, recipeType) => {
-        if (inputItemOrTagId.includes(':')) {
-            inputItemOrTagId = inputItemOrTagId.substring(inputItemOrTagId.indexOf(':') + 1);
-        }
-
+    /* Compose recipe id for recipe.
+       Only the main output item id is used,
+       even when there are multiple output items. */
+    const composeRecipeId = (inputItemAndOrTagIds, outputItemId, recipeType) => {
         if (outputItemId.includes(':')) {
-            outputItemId = outputItemId.substring(outputItemId.indexOf(':') + 1);
+            outputItemId = outputItemId.split(':')[1];
         }
 
-        return `nycto:${recipeType ? `${recipeType}/` : ''}${outputItemId}_from_${inputItemOrTagId}`;
+        if (inputItemAndOrTagIds?.length) {
+            inputItemAndOrTagIds = inputItemAndOrTagIds
+                .map((itemOrTagId) => {
+                    if (itemOrTagId.includes('/')) {
+                        itemOrTagId = itemOrTagId.split('/')[1];
+                    } else if (itemOrTagId.includes(':')) {
+                        itemOrTagId = itemOrTagId.split(':')[1];
+                    } else if (itemOrTagId.startsWith('#')) {
+                        itemOrTagId = itemOrTagId.slice(1);
+                    }
+                    return itemOrTagId;
+                })
+                .join('_and_');
+        }
+
+        return `nycto:${recipeType ? `${recipeType}/` : ''}${outputItemId}${
+            inputItemAndOrTagIds ? `_from_${inputItemAndOrTagIds}` : ''
+        }`;
     };
 
     const addSmeltingRecipe = (inputItemId, outputItemId, xp, timeInTicks) => {
         event
             .smelting(outputItemId, inputItemId)
-            .id(composeRecipeId(inputItemId, outputItemId, 'smelting'))
+            .id(composeRecipeId([inputItemId], outputItemId, 'smelting'))
             .xp(xp)
             .cookingTime(timeInTicks);
     };
@@ -71,7 +87,7 @@ ServerEvents.recipes((event) => {
                 S: '#forge:rods/wooden',
                 H: 'minecraft:hay_block'
             })
-            .id(`nycto:${color}_scarecrow`);
+            .id(composeRecipeId(null, scarecrowItemId));
     };
 
     const composeOutputItems = (itemInfos) => {
@@ -96,7 +112,7 @@ ServerEvents.recipes((event) => {
 
         event.recipes.create
             .crushing(composeOutputItems(outputItemInfos), inputItemId)
-            .id(composeRecipeId(inputItemId, outputItemInfos[0].itemId, 'crushing'))
+            .id(composeRecipeId([inputItemId], outputItemInfos[0].itemId, 'crushing'))
             .processingTime(timeInTicks);
     };
 
@@ -236,7 +252,7 @@ ServerEvents.recipes((event) => {
         .shaped(Item.of('minecraft:chest', 1), ['PPP', 'P P', 'PPP'], {
             P: '#minecraft:planks'
         })
-        .id(composeRecipeId('planks', 'chest'));
+        .id(composeRecipeId(['planks'], 'chest'));
 
     /* Just Another Rotten Flesh to Leather Mod mod replacement
     
@@ -245,7 +261,7 @@ ServerEvents.recipes((event) => {
     addSmeltingRecipe('minecraft:rotten_flesh', 'minecraft:leather', 0.25, 200);
     event
         .smoking('minecraft:leather', 'minecraft:rotten_flesh')
-        .id(composeRecipeId('rotten_flesh', 'leather', 'smoking'))
+        .id(composeRecipeId(['rotten_flesh'], 'leather', 'smoking'))
         .xp(0.25)
         .cookingTime(100);
 
@@ -253,7 +269,7 @@ ServerEvents.recipes((event) => {
         addSmeltingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 0.25, 200);
         event
             .smoking('minecraft:leather', 'rottencreatures:magma_rotten_flesh')
-            .id(composeRecipeId('magma_rotten_flesh', 'leather', 'smoking'))
+            .id(composeRecipeId(['magma_rotten_flesh'], 'leather', 'smoking'))
             .xp(0.25)
             .cookingTime(100);
     }
@@ -265,7 +281,7 @@ ServerEvents.recipes((event) => {
             D: 'minecraft:dragon_egg',
             S: 'minecraft:end_stone'
         })
-        .id('nycto:end_portal_frame');
+        .id(composeRecipeId(null, 'end_portal_frame'));
 
     if (Platform.isLoaded('scarecrowsterritory')) {
         /* Remove crafting recipe for scarecrowsterritory:primitive_scarecrow
@@ -337,13 +353,13 @@ ServerEvents.recipes((event) => {
         addSmeltingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 0.75, 200);
         event
             .blasting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
-            .id(composeRecipeId('ruby_ore', 'ruby', 'blasting'))
+            .id(composeRecipeId(['ruby_ore'], 'ruby', 'blasting'))
             .xp(0.75)
             .cookingTime(100);
         addSmeltingRecipe('epicsamurai:deepslate_ruby_ore', 'epicsamurai:ruby', 0.75, 200);
         event
             .blasting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
-            .id(composeRecipeId('deepslate_ruby_ore', 'ruby', 'blasting'))
+            .id(composeRecipeId(['deepslate_ruby_ore'], 'ruby', 'blasting'))
             .xp(0.75)
             .cookingTime(100);
     }
@@ -582,21 +598,21 @@ ServerEvents.recipes((event) => {
         addSmeltingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 0.7, 200);
         event
             .blasting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
-            .id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_ingot', 'blasting'))
+            .id(composeRecipeId(['crushed_raw_cloggrum'], 'cloggrum_ingot', 'blasting'))
             .xp(0.7)
             .cookingTime(100);
 
         addSmeltingRecipe('undergarden:crushed_raw_froststeel', 'undergarden:froststeel_ingot', 0.7, 200);
         event
             .blasting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
-            .id(composeRecipeId('crushed_raw_froststeel', 'froststeel_ingot', 'blasting'))
+            .id(composeRecipeId(['crushed_raw_froststeel'], 'froststeel_ingot', 'blasting'))
             .xp(0.7)
             .cookingTime(100);
 
         addSmeltingRecipe('undergarden:crushed_raw_utherium', 'undergarden:utherium_crystal', 1, 200);
         event
             .blasting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
-            .id(composeRecipeId('crushed_raw_utherium', 'utherium_crystal', 'blasting'))
+            .id(composeRecipeId(['crushed_raw_utherium'], 'utherium_crystal', 'blasting'))
             .xp(1)
             .cookingTime(100);
 
@@ -604,10 +620,10 @@ ServerEvents.recipes((event) => {
             .shaped('1x undergarden:regalium_crystal', ['SSS', 'SSS', 'SSS'], {
                 S: 'undergarden:regalic_shard'
             })
-            .id(composeRecipeId('regalic_shard', 'regalium_crystal'));
+            .id(composeRecipeId(['regalic_shard'], 'regalium_crystal'));
         event
             .shapeless('9x undergarden:regalic_shard', ['undergarden:regalium_crystal'])
-            .id(composeRecipeId('regalium_crystal', 'regalic_shard'));
+            .id(composeRecipeId(['regalium_crystal'], 'regalic_shard'));
 
         addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
         addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
@@ -629,7 +645,7 @@ ServerEvents.recipes((event) => {
         //         ['9x undergarden:cloggrum_nugget', Item.of('createcafe:oreo_crushed').withChance(0.75)],
         //         'undergarden:crushed_raw_cloggrum'
         //     )
-        //     id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_nugget', 'splashing'));
+        //     id(composeRecipeId(['crushed_raw_cloggrum'], 'cloggrum_nugget', 'splashing'));
 
         addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
@@ -640,7 +656,7 @@ ServerEvents.recipes((event) => {
                         ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
                         'undergarden:crushed_raw_froststeel'
                     )
-                    .id(composeRecipeId('crushed_raw_froststeel', 'froststeel_nugget', 'splashing'));
+                    .id(composeRecipeId(['crushed_raw_froststeel'], 'froststeel_nugget', 'splashing'));
             }
 
             addOreCrushingRecipe('undergarden:depthrock_utherium_ore', 'utherium', 'undergarden:depthrock');
@@ -653,7 +669,7 @@ ServerEvents.recipes((event) => {
                         ['9x undergarden:utheric_shard', Item.of('projecte:red_matter').withChance(0.05)],
                         'undergarden:crushed_raw_utherium'
                     )
-                    .id(composeRecipeId('crushed_raw_utherium', 'utheric_shard', 'splashing'));
+                    .id(composeRecipeId(['crushed_raw_utherium'], 'utheric_shard', 'splashing'));
             }
 
             addOreCrushingRecipe('undergarden:depthrock_regalium_ore', 'regalium', 'undergarden:depthrock');
@@ -664,7 +680,7 @@ ServerEvents.recipes((event) => {
                     ['9x undergarden:regalic_shard', Item.of('enchanted_golden_apple').withChance(0.05)],
                     'undergarden:crushed_raw_regalium'
                 )
-                .id(composeRecipeId('crushed_raw_regalium', 'regalic_shard', 'splashing'));
+                .id(composeRecipeId(['crushed_raw_regalium'], 'regalic_shard', 'splashing'));
         }
     }
 });
