@@ -315,9 +315,9 @@ ServerEvents.tags('item', (event) => {
 
 /* Listen to loaded event, after all server events have fired */
 ServerEvents.loaded(() => {
-    if (global.isItemTagIdsLogEnabled) {
+    if (global.isItemTagsLogEnabled) {
         console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
-        console.log(itemTagIds.sort());
+        console.log(itemTagIds.map((tagId) => `#${tagId}`).sort());
     }
 
     if (global.isNonTaggedItemIdsLogEnabled) {

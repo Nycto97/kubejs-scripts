@@ -31,7 +31,7 @@ global['isModRenameLogEnabled'] = true;
 global['isPlayerDimensionChangeLogEnabled'] = true;
 
 /* Tags */
-global['isItemTagIdsLogEnabled'] = true;
+global['isItemTagsLogEnabled'] = true;
 
 /* Shader (client only) */
 global['isBlockIdsForShaderLogEnabled'] = false;
@@ -42,7 +42,7 @@ if (enableAllLogs && !disableAllLogs) {
     global.isBlacklistedRareIceLootLogEnabled = true;
     global.isModRenameLogEnabled = true;
     global.isPlayerDimensionChangeLogEnabled = true;
-    global.isItemTagIdsLogEnabled = true;
+    global.isItemTagsLogEnabled = true;
     global.isBlockIdsForShaderLogEnabled = true;
 }
 
@@ -52,6 +52,6 @@ if (!enableAllLogs && disableAllLogs) {
     global.isBlacklistedRareIceLootLogEnabled = false;
     global.isModRenameLogEnabled = false;
     global.isPlayerDimensionChangeLogEnabled = false;
-    global.isItemTagIdsLogEnabled = false;
+    global.isItemTagsLogEnabled = false;
     global.isBlockIdsForShaderLogEnabled = false;
 }
