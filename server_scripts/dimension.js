@@ -24,12 +24,9 @@ CommonAddedEvents.playerChangeDimension((event) => {
         'minecraft:overworld',
         'minecraft:the_end',
         'minecraft:the_nether',
+        'arsomega:demon_realm',
         'nycto:usw_vanilla'
-    ];
-
-    if (Platform.isLoaded('arsomega')) {
-        dimensionWhitelistForShader.push('arsomega:demon_realm');
-    }
+    ].filter((dimension) => dimensions.includes(dimension));
 
     const isOldDimensionWhitelisted = dimensionWhitelistForShader.includes(oldDimension);
     const isNewDimensionWhitelisted = dimensionWhitelistForShader.includes(newDimension);
