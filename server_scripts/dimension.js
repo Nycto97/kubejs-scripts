@@ -12,6 +12,11 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const username = event.player.username;
     const server = event.server;
 
+    const dimensions = server
+        .levelKeys()
+        .toArray()
+        .map((levelKey) => levelKey.location().toString());
+
     const oldDimension = event.oldLevel.dimension.toString();
     const newDimension = event.newLevel.dimension.toString();
 
