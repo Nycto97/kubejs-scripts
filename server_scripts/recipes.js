@@ -218,6 +218,25 @@ ServerEvents.recipes((event) => {
         ]);
     };
 
+    /* Add a Create mixing recipe */
+    const addMixingRecipe = (inputItemAndOrTagIds, outputItemInfos, requiresHeat, requiresSuperHeat) => {
+        if (!Platform.isLoaded('create')) {
+            global.logModNotLoaded('Create', 'mixing recipe');
+            return;
+        }
+
+        const outputItems = composeOutputItems(outputItemInfos);
+        const recipeId = composeRecipeId(inputItemAndOrTagIds, outputItemInfos[0].itemId, 'mixing');
+
+        if (!requiresHeat && !requiresSuperHeat) {
+            event.recipes.create.mixing(outputItems, inputItemAndOrTagIds).id(recipeId);
+        } else if (requiresHeat && !requiresSuperHeat) {
+            event.recipes.create.mixing(outputItems, inputItemAndOrTagIds).id(recipeId).heated();
+        } else {
+            event.recipes.create.mixing(outputItems, inputItemAndOrTagIds).id(recipeId).superheated();
+        }
+    };
+
     // TODO add crushing recipes for all ores from all mods
 
     /* Remove all recipes having vertical slabs from Builders Crafts and
