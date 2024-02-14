@@ -311,6 +311,18 @@ ServerEvents.recipes((event) => {
         })
         .id(composeRecipeId(['andesite', 'diorite'], 'tuff'));
 
+    /* Add mixing recipe for minecraft:tuff */
+    addMixingRecipe(
+        ['minecraft:andesite', 'minecraft:diorite'],
+        [
+            {
+                itemId: 'minecraft:tuff',
+                amount: 2
+            }
+        ],
+        true
+    );
+
     if (Platform.isLoaded('scarecrowsterritory')) {
         /* Remove crafting recipe for scarecrowsterritory:primitive_scarecrow
            added by Scarecrows' Territory since I'm adding custom
