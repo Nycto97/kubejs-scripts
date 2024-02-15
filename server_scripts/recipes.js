@@ -112,6 +112,24 @@ ServerEvents.recipes((event) => {
     };
 
     /**
+     * Adds a smoking recipe.
+     * @param {string} inputItemId - Id of the input item.
+     * @param {string} outputItemId - Id of the output item.
+     * @param {number} [timeInTicks=100] - Amount of time, in ticks, that the smoking will take. Default = 100.
+     * @param {number} [xp=0] - Amount of XP the smoking will give. Default = 0.
+     */
+    const addSmokingRecipe = (inputItemId, outputItemId, timeInTicks, xp) => {
+        timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 100;
+        xp = xp && xp > 0 ? xp : 0;
+
+        event
+            .smoking(outputItemId, inputItemId)
+            .id(composeRecipeId(inputItemId, outputItemId, 'smoking'))
+            .cookingTime(timeInTicks)
+            .xp(xp);
+    };
+
+    /**
      * Replaces an input item with an item or tag, using recipe id as filter.
      * @param {string} recipeId - Id of the recipe.
      * @param {string} inputItemIdToReplace - Id of the input item to replace.
@@ -405,19 +423,11 @@ ServerEvents.recipes((event) => {
        Add smelting and smoking recipes for minecraft:leather with
        minecraft:rotten_flesh and rottencreatures:magma_rotten_flesh */
     addSmeltingRecipe('minecraft:rotten_flesh', 'minecraft:leather', 200, 0.25);
-    event
-        .smoking('minecraft:leather', 'minecraft:rotten_flesh')
-        .id(composeRecipeId('rotten_flesh', 'leather', 'smoking'))
-        .cookingTime(100)
-        .xp(0.25);
+    addSmokingRecipe('minecraft:rotten_flesh', 'minecraft:leather', 100, 0.25);
 
     if (Platform.isLoaded('rottencreatures')) {
         addSmeltingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 200, 0.25);
-        event
-            .smoking('minecraft:leather', 'rottencreatures:magma_rotten_flesh')
-            .id(composeRecipeId('magma_rotten_flesh', 'leather', 'smoking'))
-            .cookingTime(100)
-            .xp(0.25);
+        addSmokingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 100, 0.25);
     }
 
     /* Add crafting recipe for minecraft:end_portal_frame */
