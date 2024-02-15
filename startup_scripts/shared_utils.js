@@ -10,24 +10,59 @@
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
-    global['itemIds'] = Item.getTypeList();
-    global['blockIds'] = Block.getTypeList();
+    /**
+     * All item ids.
+     *
+     * @type {Internal.List<string>}
+     * @const
+     */
+    const itemIds = Item.getTypeList();
 
-    global['logModNotLoaded'] = (modName, activityType) => {
+    /**
+     * All block ids.
+     *
+     * @type {Internal.List<string>}
+     * @const
+     */
+    const blockIds = Block.getTypeList();
+
+    /**
+     * Logs a message regarding a mod that is not loaded.
+     *
+     * @param {string} modName - The mod name.
+     * @param {string} activityType - The activity type.
+     */
+    const logModNotLoaded = (modName, activityType) =>
         console.log(`[WARN] ${modName} mod is not loaded! Skipping ${activityType}`);
-    };
 
-    global['logItemIdNotFound'] = (itemId, activityType, itemType) => {
+    /**
+     * Logs a message regarding an item id that is not found.
+     *
+     * @param {string} itemId - The item id.
+     * @param {string} activityType - The activity type.
+     * @param {string} [itemType] - The item type.
+     */
+    const logItemIdNotFound = (itemId, activityType, itemType) =>
         console.log(
             `[WARN] ${itemType ? `${itemType} i` : 'I'}tem id ${itemId} is not found! Skipping ${activityType}`
         );
-    };
 
-    global['logTagNotFound'] = (tagId, activityType, tagType) => {
+    /**
+     * Logs a message regarding a tag that is not found.
+     *
+     * @param {string} tagId - The tag id.
+     * @param {string} activityType - The activity type.
+     * @param {string} [tagType] - The tag type.
+     */
+    const logTagNotFound = (tagId, activityType, tagType) =>
         console.log(`[WARN] ${tagType ? `${tagType} t` : 'T'}ag #${tagId} is not found! Skipping ${activityType}`);
-    };
 
-    if (global.isBlockAndItemCountLogEnabled) {
+    global['itemIds'] = itemIds;
+    global['blockIds'] = blockIds;
+    global['logModNotLoaded'] = logModNotLoaded;
+    global['logItemIdNotFound'] = logItemIdNotFound;
+    global['logTagNotFound'] = logTagNotFound;
+
+    if (global.isBlockAndItemCountLogEnabled)
         console.log(`There are ${global.itemIds.length} items and ${global.blockIds.length} blocks registered`);
-    }
 });

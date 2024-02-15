@@ -8,7 +8,12 @@
 
 // priority: 1001
 
-const modsToRename = [
+/**
+ * Info about the mods to rename.
+ * @type {{id:string, preferredName:string}[]}
+ * @const
+ */
+const modsToRenameInfo = [
     {
         id: 'ad_astra_giselle_addon',
         preferredName: 'Ad Astra: Giselle Add-on'

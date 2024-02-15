@@ -10,66 +10,149 @@
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
-    const modNotLoadedLogs = [];
-    const modSkippedLogs = [];
-    const modRenamedLogs = [];
+    /**
+     * The logs of mods to rename that aren't loaded.
+     * @type {string[]}
+     * @const
+     */
+    const notLoadedModLogs = [];
+    /**
+     * The logs of mods to rename that got skipped.
+     * @type {string[]}
+     * @const
+     */
+    const skippedModLogs = [];
+    /**
+     * The logs of mods to rename that got renamed.
+     * @type {string[]}
+     * @const
+     */
+    const renamedModLogs = [];
+    /**
+     * All logs of mods to rename.
+     * @type {string[]}
+     * @const
+     */
+    const modLogs = [];
 
-    const combinedModLogs = [];
+    /**
+     * TODO:
+     * Decide if isModRenameLogEnabled checks in renameMod() are needed for performance or if
+     * it's OK to push the strings into the arrays, even when isModRenameLogEnabled is false.
+     */
 
-    const renameMod = (modInfo) => {
-        const modId = modInfo.id;
-        const preferredModName = modInfo.preferredName;
-
-        if (Platform.isLoaded(modId)) {
-            let mod = Platform.mods[modId],
-                modName = new String(mod.getName());
-
-            if (modName != preferredModName) {
-                mod.setName(preferredModName);
-
-                if (global.isModRenameLogEnabled) {
-                    modRenamedLogs.push(
-                        `[RENAMED] Mod has been renamed: ${modName} => ${preferredModName} [id: ${modId}]`
-                    );
-                }
-            } else {
-                if (global.isModRenameLogEnabled) {
-                    modSkippedLogs.push(`[SKIPPED] Mod has preferred name, skipping rename! ${modName} [id: ${modId}]`);
-                }
-            }
-        } else {
-            if (global.isModRenameLogEnabled) {
-                modNotLoadedLogs.push(`[SKIPPED] Mod is not installed, skipping rename! [id: ${modId}]`);
-            }
+    /**
+     * Renames a mod.
+     * @param {Object} modToRenameInfo - Info about the mod to rename.
+     * @param {string} modToRenameInfo.id - The id of the mod to rename.
+     * @param {string} modToRenameInfo.preferredName - The preferred name for the mod to rename.
+     */
+    const renameMod = (modToRenameInfo) => {
+        if (!modToRenameInfo.id && !modToRenameInfo.preferredName) {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push('[WARN] Mod id and mod preferred name are not defined or empty! Skipping rename');
+            return;
         }
+
+        if (!modToRenameInfo.id && modToRenameInfo.preferredName) {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push(
+                    `[WARN] Mod id is not defined or empty! Skipping renaming to ${modToRenameInfo.preferredName}`
+                );
+            return;
+        }
+
+        if (modToRenameInfo.id && !modToRenameInfo.preferredName) {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push(
+                    `[WARN] Mod preferred name is not defined or empty! Skipping rename [id: ${modToRenameInfo.id}]`
+                );
+            return;
+        }
+
+        /**
+         * The id of the mod to rename.
+         * @type {string}
+         * @const
+         */
+        const modToRenameId = modToRenameInfo.id;
+        /**
+         * The preferred name for the mod to rename.
+         * @type {string}
+         * @const
+         */
+        const modToRenamePreferredName = modToRenameInfo.preferredName;
+
+        if (!Platform.isLoaded(modToRenameId)) {
+            /* TODO: Update logModNotLoaded() and use it here. */
+            if (global.isModRenameLogEnabled)
+                notLoadedModLogs.push(`[INFO] Mod is not loaded! Skipping rename [id: ${modToRenameId}]`);
+            return;
+        }
+
+        /**
+         * Info about the mod.
+         * @type {PlatformWrapper.ModInfo}
+         * @const
+         */
+        const modInfo = Platform.mods[modToRenameId];
+        /**
+         * The mod name.
+         * @type {string}
+         * @const
+         */
+        const modName = new String(modInfo.getName());
+
+        if (modName == modToRenamePreferredName) {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push(`[INFO] Mod has preferred name! Skipping rename [id: ${modToRenameId}]`);
+            return;
+        }
+
+        modInfo.setName(modToRenamePreferredName);
+
+        if (global.isModRenameLogEnabled)
+            renamedModLogs.push(
+                `[INFO] Mod has been renamed! ${modName} => ${modToRenamePreferredName} [id: ${modToRenameId}]`
+            );
     };
 
-    modsToRename.forEach((mod) => {
-        renameMod(mod);
-    });
+    modsToRenameInfo.forEach((modInfo) => renameMod(modInfo));
 
     if (global.isModRenameLogEnabled) {
-        /* Add all messages to 1 array after sorting
-           them and add dividers where needed */
-        if (modNotLoadedLogs.length) {
-            combinedModLogs.push(modNotLoadedLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
-            combinedModLogs.push('-'.repeat(modNotLoadedLogs[modNotLoadedLogs.length - 1].length));
-        }
+        /**
+         * Sorts logs alphabetically, ignoring case.
+         * @param {string[]} logs - The logs to sort.
+         * @returns {string[]} The sorted logs.
+         */
+        let sortLogs = (logs) => logs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
 
-        if (modSkippedLogs.length) {
-            combinedModLogs.push(modSkippedLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
-            combinedModLogs.push('-'.repeat(modSkippedLogs[modSkippedLogs.length - 1].length));
-        }
+        /**
+         * Composes a divider.
+         * @param {string[]} logs - The logs to compose a divider for.
+         * @returns {string} The divider.
+         */
+        let composeDivider = (logs) => '-'.repeat(logs[logs.length - 1].length);
 
-        if (modRenamedLogs.length)
-            combinedModLogs.push(modRenamedLogs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })));
+        /**
+         * Pushes logs to combined logs after sorting them and optionally adding a divider.
+         * @param {string[]} logs - The logs to sort, optionally add a divider for and push to combined logs.
+         * @param {boolean} addDivider - Whether or not a divider should be added under the group of logs.
+         */
+        let pushLogs = (logs, addDivider) => {
+            modLogs.push(sortLogs(logs));
 
-        /* Print out all messages, grouped by activity,
+            if (addDivider) modLogs.push(composeDivider(logs));
+        };
+
+        if (notLoadedModLogs.length) pushLogs(notLoadedModLogs, true);
+
+        if (skippedModLogs.length) pushLogs(skippedModLogs, renamedModLogs.length ? true : false);
+
+        if (renamedModLogs.length) pushLogs(renamedModLogs, false);
+
+        /* Print out all logs, grouped by activity,
            alphabetically sorted per group, ignoring case */
-        if (combinedModLogs.length) {
-            combinedModLogs.forEach((log) => {
-                console.log(log);
-            });
-        }
+        if (modLogs.length) modLogs.forEach((log) => console.log(log));
     }
 });

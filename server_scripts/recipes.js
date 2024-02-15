@@ -16,6 +16,11 @@
 */
 
 ServerEvents.recipes((event) => {
+    /**
+     * Supported ore types for addOreCrushingRecipe().
+     * @type {string[]}
+     * @const
+     */
     const supportedOreTypes = [
         'coal',
         'iron',
@@ -35,87 +40,159 @@ ServerEvents.recipes((event) => {
         'regalium'
     ];
 
-    /* Compose recipe id for recipe.
-       Only the main output item id is used,
-       even when there are multiple output items. */
-    const composeRecipeId = (inputItemAndOrTagIds, outputItemId, recipeType) => {
-        if (outputItemId.includes(':')) {
-            outputItemId = outputItemId.split(':')[1];
-        }
+    /**
+     * Composes a recipe id. Only the main output item id of the recipe is used.
+     * @param {string|string[]} [inputItemOrTagIdOrInputItemAndTagIds] - Id of the input item or input tag, or ids of the input items and/or input tags.
+     * @param {string} outputItemId - Id of the output item.
+     * @param {string} [recipeType] - Type of the recipe.
+     * @returns {string} Id of the recipe.
+     */
+    const composeRecipeId = (inputItemOrTagIdOrInputItemAndTagIds, outputItemId, recipeType) => {
+        if (outputItemId.includes(':')) outputItemId = outputItemId.split(':')[1];
 
-        if (inputItemAndOrTagIds?.length) {
-            inputItemAndOrTagIds = inputItemAndOrTagIds
-                .map((itemOrTagId) => {
-                    if (itemOrTagId.includes('/')) {
-                        itemOrTagId = itemOrTagId.split('/')[1];
-                    } else if (itemOrTagId.includes(':')) {
-                        itemOrTagId = itemOrTagId.split(':')[1];
-                    } else if (itemOrTagId.startsWith('#')) {
-                        itemOrTagId = itemOrTagId.slice(1);
-                    }
-                    return itemOrTagId;
-                })
-                .join('_and_');
+        if (inputItemOrTagIdOrInputItemAndTagIds) {
+            if (!Array.isArray(inputItemOrTagIdOrInputItemAndTagIds))
+                inputItemOrTagIdOrInputItemAndTagIds = [inputItemOrTagIdOrInputItemAndTagIds];
+
+            /* In case of empty array */
+            if (inputItemOrTagIdOrInputItemAndTagIds.length)
+                inputItemOrTagIdOrInputItemAndTagIds = inputItemOrTagIdOrInputItemAndTagIds
+                    .map((itemOrTagId) => {
+                        if (itemOrTagId.includes('/')) {
+                            itemOrTagId = itemOrTagId.split('/')[1];
+                        } else if (itemOrTagId.includes(':')) {
+                            itemOrTagId = itemOrTagId.split(':')[1];
+                        } else if (itemOrTagId.startsWith('#')) {
+                            itemOrTagId = itemOrTagId.slice(1);
+                        }
+                        return itemOrTagId;
+                    })
+                    .join('_and_');
         }
 
         return `nycto:${recipeType ? `${recipeType}/` : ''}${outputItemId}${
-            inputItemAndOrTagIds ? `_from_${inputItemAndOrTagIds}` : ''
+            inputItemOrTagIdOrInputItemAndTagIds ? `_from_${inputItemOrTagIdOrInputItemAndTagIds}` : ''
         }`;
     };
 
-    const addSmeltingRecipe = (inputItemId, outputItemId, xp, timeInTicks) => {
+    /**
+     * Adds a smelting recipe.
+     * @param {string} inputItemId - Id of the input item.
+     * @param {string} outputItemId - Id of the output item.
+     * @param {number} [timeInTicks=200] - Amount of time, in ticks, that the smelting will take. Default = 200.
+     * @param {number} [xp=0] - Amount of XP the smelting will give. Default = 0.
+     */
+    const addSmeltingRecipe = (inputItemId, outputItemId, timeInTicks, xp) => {
+        timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 200;
+        xp = xp && xp > 0 ? xp : 0;
+
         event
             .smelting(outputItemId, inputItemId)
-            .id(composeRecipeId([inputItemId], outputItemId, 'smelting'))
-            .xp(xp)
-            .cookingTime(timeInTicks);
+            .id(composeRecipeId(inputItemId, outputItemId, 'smelting'))
+            .cookingTime(timeInTicks)
+            .xp(xp);
     };
 
-    const replaceInputUsingIdFilter = (recipeId, inputItemIdToReplace, newInputItemOrTag) => {
-        event.replaceInput({ id: recipeId }, inputItemIdToReplace, newInputItemOrTag);
-    };
+    /**
+     * Replaces an input item with an item or tag, using recipe id as filter.
+     * @param {string} recipeId - Id of the recipe.
+     * @param {string} inputItemIdToReplace - Id of the input item to replace.
+     * @param {string} newInputItemIdOrTag - Id of the new input item or tag to use as new input. Tags need to start with a # followed by their id.
+     */
+    const replaceInputByRecipeId = (recipeId, inputItemIdToReplace, newInputItemIdOrTag) =>
+        event.replaceInput({ id: recipeId }, inputItemIdToReplace, newInputItemIdOrTag);
 
+    /**
+     * Adds a Scarecrow's Territory scarecrow crafting recipe.
+     * @param {string} color - Color of the scarecrow.
+     */
     const addScarecrowRecipe = (color) => {
-        if (color == 'purple') color = 'primitive';
-
-        const scarecrowItemId = `scarecrowsterritory:${color}_scarecrow`;
+        /**
+         * Prefix of the scarecrow item id.
+         * @type {string}
+         * @const
+         */
+        const prefix = color == 'purple' ? 'primitive' : color;
+        /**
+         * Id of the scarecrow item.
+         * @type {string}
+         * @const
+         */
+        const itemId = `scarecrowsterritory:${prefix}_scarecrow`;
 
         event
-            .shaped(Item.of(scarecrowItemId, 1), ['DP ', 'SHS', ' S '], {
-                D: `minecraft:${color != 'primitive' ? color : 'purple'}_dye`,
+            .shaped(itemId, ['DP ', 'SHS', ' S '], {
+                D: `minecraft:${color}_dye`,
                 P: 'minecraft:carved_pumpkin',
                 S: '#forge:rods/wooden',
                 H: 'minecraft:hay_block'
             })
-            .id(composeRecipeId(null, scarecrowItemId));
+            .id(composeRecipeId(undefined, itemId));
     };
 
-    const composeOutputItems = (itemInfos) => {
+    /**
+     * Composes output items.
+     * @param {Object[]} outputItemsInfo - Info about one or more output items.
+     * @param {string} outputItemsInfo[].itemId - Id of an output item.
+     * @param {number} [outputItemsInfo[].amount=1] - Amount of an output item. Default = 1.
+     * @param {number} [outputItemsInfo[].chance=1] - Chance of an output item. Default = 1.
+     * @returns {Internal.ItemStack[]} Output items.
+     */
+    const composeOutputItems = (outputItemsInfo) => {
+        /**
+         * Output items.
+         * @type {Internal.ItemStack[]}
+         * @const
+         */
         const outputItems = [];
 
-        itemInfos.forEach((itemInfo) => {
-            outputItems.push(
-                Item.of(`${itemInfo.amount ? itemInfo.amount : 1}x ${itemInfo.itemId}`).withChance(
-                    itemInfo.chance ? itemInfo.chance : 1
-                )
-            );
+        outputItemsInfo.forEach((itemInfo) => {
+            /**
+             * Amount of the output item.
+             * @type {number}
+             */
+            let amount = itemInfo.amount ? itemInfo.amount : 1;
+            /**
+             * Chance of the output item.
+             * @type {number}
+             */
+            let chance = itemInfo.chance ? itemInfo.chance : 1;
+
+            outputItems.push(Item.of(itemInfo.itemId).withCount(amount).withChance(chance));
         });
 
         return outputItems;
     };
 
-    const addCrushingRecipe = (inputItemId, timeInTicks, outputItemInfos) => {
+    /**
+     * Adds a Create crushing recipe.
+     * @param {string} inputItemId - Id of the input item.
+     * @param {number} [timeInTicks=100] - Amount of time, in ticks, that the crushing will take. Default = 100.
+     * @param {Object[]} outputItemsInfo - Info about one or more output items.
+     * @param {string} outputItemsInfo[].itemId - Id of an output item.
+     * @param {number} [outputItemsInfo[].amount=1] - Amount of an output item. Default = 1.
+     * @param {number} [outputItemsInfo[].chance=1] - Chance of an output item. Default = 1.
+     */
+    const addCrushingRecipe = (inputItemId, timeInTicks, outputItemsInfo) => {
         if (!Platform.isLoaded('create')) {
             global.logModNotLoaded('Create', 'crushing recipe');
             return;
         }
 
+        timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 100;
+
         event.recipes.create
-            .crushing(composeOutputItems(outputItemInfos), inputItemId)
-            .id(composeRecipeId([inputItemId], outputItemInfos[0].itemId, 'crushing'))
+            .crushing(composeOutputItems(outputItemsInfo), inputItemId)
+            .id(composeRecipeId(inputItemId, outputItemsInfo[0].itemId, 'crushing'))
             .processingTime(timeInTicks);
     };
 
+    /**
+     * Adds a Create ore crushing recipe.
+     * @param {string} inputItemId - Id of the input item.
+     * @param {string} oreType - Type of the ore.
+     * @param {string} mainBlockItemId - Id of the main block item.
+     */
     const addOreCrushingRecipe = (inputItemId, oreType, mainBlockItemId) => {
         if (!Platform.isLoaded('create')) {
             global.logModNotLoaded('Create', 'ore crushing recipe');
@@ -129,11 +206,31 @@ ServerEvents.recipes((event) => {
             return;
         }
 
-        let hasFirstItemBonus = false;
-        let firstItemAmount;
-        let secondItemChance;
+        /**
+         * If the first output item has an amount bonus.
+         * @type {boolean}
+         */
+        let hasFirstOutputItemBonus = false;
+        /**
+         * Amount of the first output item.
+         * @type {number}
+         */
+        let firstOutputItemAmount;
+        /**
+         * Chance of the second output item.
+         * @type {number}
+         */
+        let secondOutputItemChance;
+        /**
+         * Amount of time, in ticks, that the crushing will take.
+         * @type {number}
+         */
         let timeInTicks = 250;
-        let itemId = oreType;
+        /**
+         * Id of the output item.
+         * @type {string}
+         */
+        let outputItemId = oreType;
 
         switch (oreType) {
             case 'coal':
@@ -159,52 +256,53 @@ ServerEvents.recipes((event) => {
             mainBlockItemId == 'undergarden:tremblecrust'
         ) {
             mainBlockItemId == 'undergarden:tremblecrust' ? (timeInTicks += 200) : (timeInTicks += 100);
-            hasFirstItemBonus = true;
+            hasFirstOutputItemBonus = true;
         }
 
         switch (oreType) {
             case 'iron':
             case 'copper':
             case 'gold':
-                itemId = `create:crushed_raw_${oreType}`;
+                outputItemId = `create:crushed_raw_${oreType}`;
                 break;
             case 'ruby':
             case 'jade':
             case 'aquamarine':
             case 'onyx':
-                itemId = `epicsamurai:${oreType}`;
+                outputItemId = `epicsamurai:${oreType}`;
                 break;
             case 'lapis':
-                itemId = 'lapis_lazuli';
+                outputItemId = 'lapis_lazuli';
                 break;
             case 'cloggrum':
             case 'froststeel':
             case 'utherium':
             case 'regalium':
-                itemId = `undergarden:crushed_raw_${oreType}`;
+                outputItemId = `undergarden:crushed_raw_${oreType}`;
         }
 
         if (oreType == 'copper') {
-            firstItemAmount = hasFirstItemBonus ? 7 : 5;
-            secondItemChance = 0.25;
+            firstOutputItemAmount = hasFirstOutputItemBonus ? 7 : 5;
+            secondOutputItemChance = 0.25;
         } else if (oreType == 'redstone' || oreType == 'lapis') {
             oreType == 'redstone'
-                ? (firstItemAmount = hasFirstItemBonus ? 7 : 6)
-                : (firstItemAmount = hasFirstItemBonus ? 12 : 10);
-            secondItemChance = 0.5;
+                ? (firstOutputItemAmount = hasFirstOutputItemBonus ? 7 : 6)
+                : (firstOutputItemAmount = hasFirstOutputItemBonus ? 12 : 10);
+            secondOutputItemChance = 0.5;
         } else {
-            firstItemAmount = hasFirstItemBonus ? 2 : 1;
-            secondItemChance = hasFirstItemBonus && mainBlockItemId != 'undergarden:tremblecrust' ? 0.25 : 0.75;
+            firstOutputItemAmount = hasFirstOutputItemBonus ? 2 : 1;
+            secondOutputItemChance =
+                hasFirstOutputItemBonus && mainBlockItemId != 'undergarden:tremblecrust' ? 0.25 : 0.75;
         }
 
         addCrushingRecipe(inputItemId, timeInTicks, [
             {
-                itemId: itemId,
-                amount: firstItemAmount
+                itemId: outputItemId,
+                amount: firstOutputItemAmount
             },
             {
-                itemId: itemId,
-                chance: secondItemChance
+                itemId: outputItemId,
+                chance: secondOutputItemChance
             },
             {
                 itemId: 'create:experience_nugget',
@@ -218,22 +316,36 @@ ServerEvents.recipes((event) => {
         ]);
     };
 
-    /* Add a Create mixing recipe */
-    const addMixingRecipe = (inputItemAndOrTagIds, outputItemInfos, requiresHeat, requiresSuperHeat) => {
+    /**
+     * Adds a Create mixing recipe.
+     * @param {string|string[]} inputItemOrTagIdOrInputItemAndTagIds - Id of the input item or input tag, or ids of the input items and/or input tags.
+     * @param {Object[]} outputItemsInfo - Info about one or more output items.
+     * @param {string} outputItemsInfo[].itemId - Id of an output item.
+     * @param {number} [outputItemsInfo[].amount=1] - Amount of an output item. Default = 1.
+     * @param {number} [outputItemsInfo[].chance=1] - Chance of an output item. Default = 1.
+     * @param {boolean} [requiresHeat=false] - If the recipe requires heat. Default = false.
+     * @param {boolean} [requiresSuperHeat=false] - If the recipe requires super heat. Default = false.
+     */
+    const addMixingRecipe = (
+        inputItemOrTagIdOrInputItemAndTagIds,
+        outputItemsInfo,
+        requiresHeat,
+        requiresSuperHeat
+    ) => {
         if (!Platform.isLoaded('create')) {
             global.logModNotLoaded('Create', 'mixing recipe');
             return;
         }
 
-        const outputItems = composeOutputItems(outputItemInfos);
-        const recipeId = composeRecipeId(inputItemAndOrTagIds, outputItemInfos[0].itemId, 'mixing');
+        const outputItems = composeOutputItems(outputItemsInfo);
+        const recipeId = composeRecipeId(inputItemOrTagIdOrInputItemAndTagIds, outputItemsInfo[0].itemId, 'mixing');
 
         if (!requiresHeat && !requiresSuperHeat) {
-            event.recipes.create.mixing(outputItems, inputItemAndOrTagIds).id(recipeId);
+            event.recipes.create.mixing(outputItems, inputItemOrTagIdOrInputItemAndTagIds).id(recipeId);
         } else if (requiresHeat && !requiresSuperHeat) {
-            event.recipes.create.mixing(outputItems, inputItemAndOrTagIds).id(recipeId).heated();
+            event.recipes.create.mixing(outputItems, inputItemOrTagIdOrInputItemAndTagIds).id(recipeId).heated();
         } else {
-            event.recipes.create.mixing(outputItems, inputItemAndOrTagIds).id(recipeId).superheated();
+            event.recipes.create.mixing(outputItems, inputItemOrTagIdOrInputItemAndTagIds).id(recipeId).superheated();
         }
     };
 
@@ -244,53 +356,50 @@ ServerEvents.recipes((event) => {
        (all BC&A recipes still work with vertical slabs from Quark) */
     // TODO: change output and input to id only and remove tags if needed to remove uncrafting recipes
     // CURRENTLY THIS DELETES TOO MANY RECIPES I THINK !!!
-    if (Platform.isLoaded('buildersaddition')) {
+    if (Platform.isLoaded('buildersaddition'))
         event.remove([
             { input: /^buildersaddition:.*vertical_slab$/ },
             { output: /^buildersaddition:.*vertical_slab$/ }
         ]);
-    }
 
     /* Remove all recipes having vertical slabs from Vertical Slabs Compat - Create: Deco
        vertical slabs as input or output since Create: Deco already adds all of these */
-    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco')) {
+    if (Platform.isLoaded('v_slab_compat') && Platform.isLoaded('createdeco'))
         event.remove([
             { input: /^v_slab_compat:createdeco.*vertical_slab$/ },
             { output: /^v_slab_compat:createdeco.*vertical_slab$/ }
         ]);
-    }
 
     /* Remove crafting recipe for minecraft:chest with any #byg:planks
        since I'm adding a recipe with any #minecraft:planks */
-    if (Platform.isLoaded('byg')) {
-        event.remove([{ id: 'byg:byg_chest' }]);
-    }
+    if (Platform.isLoaded('byg')) event.remove([{ id: 'byg:byg_chest' }]);
+
     /* Add crafting recipe for minecraft:chest with any
        #minecraft:planks since other mods 'steal' this recipe */
     event
         .shaped(Item.of('minecraft:chest', 1), ['PPP', 'P P', 'PPP'], {
             P: '#minecraft:planks'
         })
-        .id(composeRecipeId(['planks'], 'chest'));
+        .id(composeRecipeId('planks', 'chest'));
 
     /* Just Another Rotten Flesh to Leather Mod mod replacement
     
        Add smelting and smoking recipes for minecraft:leather with
        minecraft:rotten_flesh and rottencreatures:magma_rotten_flesh */
-    addSmeltingRecipe('minecraft:rotten_flesh', 'minecraft:leather', 0.25, 200);
+    addSmeltingRecipe('minecraft:rotten_flesh', 'minecraft:leather', 200, 0.25);
     event
         .smoking('minecraft:leather', 'minecraft:rotten_flesh')
-        .id(composeRecipeId(['rotten_flesh'], 'leather', 'smoking'))
-        .xp(0.25)
-        .cookingTime(100);
+        .id(composeRecipeId('rotten_flesh', 'leather', 'smoking'))
+        .cookingTime(100)
+        .xp(0.25);
 
     if (Platform.isLoaded('rottencreatures')) {
-        addSmeltingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 0.25, 200);
+        addSmeltingRecipe('rottencreatures:magma_rotten_flesh', 'minecraft:leather', 200, 0.25);
         event
             .smoking('minecraft:leather', 'rottencreatures:magma_rotten_flesh')
-            .id(composeRecipeId(['magma_rotten_flesh'], 'leather', 'smoking'))
-            .xp(0.25)
-            .cookingTime(100);
+            .id(composeRecipeId('magma_rotten_flesh', 'leather', 'smoking'))
+            .cookingTime(100)
+            .xp(0.25);
     }
 
     /* Add crafting recipe for minecraft:end_portal_frame */
@@ -300,7 +409,7 @@ ServerEvents.recipes((event) => {
             D: 'minecraft:dragon_egg',
             S: 'minecraft:end_stone'
         })
-        .id(composeRecipeId(null, 'end_portal_frame'));
+        .id(composeRecipeId(undefined, 'end_portal_frame'));
 
     /* Add crafting recipe for minecraft:tuff */
     event
@@ -330,7 +439,7 @@ ServerEvents.recipes((event) => {
         event.remove({ id: 'scarecrowsterritory:scarecrow' });
 
         /* Add crafting recipes for Scarecrows' Territory's scarecrows */
-        let scarecrowColors = [
+        [
             'white',
             'orange',
             'magenta',
@@ -347,18 +456,12 @@ ServerEvents.recipes((event) => {
             'green',
             'red',
             'black'
-        ];
-
-        scarecrowColors.forEach((color) => {
-            addScarecrowRecipe(color);
-        });
+        ].forEach((color) => addScarecrowRecipe(color));
     }
 
     /* Remove crafting recipe for minecraft:end_portal_frame
        added by End Portal Recipe (just because I want my own) */
-    if (Platform.isLoaded('endportalrecipe')) {
-        event.remove([{ id: 'endportalrecipe:craftable_end_portal' }]);
-    }
+    if (Platform.isLoaded('endportalrecipe')) event.remove([{ id: 'endportalrecipe:craftable_end_portal' }]);
 
     if (Platform.isLoaded('morecraft')) {
         /* Remove crafting recipes for emerald armor from
@@ -381,27 +484,26 @@ ServerEvents.recipes((event) => {
     }
 
     /* Allow Nether Chest to be crafted with #forge:chests/wooden */
-    if (Platform.isLoaded('netherchested')) {
-        replaceInputUsingIdFilter('netherchested:nether_chest', 'minecraft:chest', '#forge:chests/wooden');
-    }
+    if (Platform.isLoaded('netherchested'))
+        replaceInputByRecipeId('netherchested:nether_chest', 'minecraft:chest', '#forge:chests/wooden');
 
     // TODO ADD OTHER SMELTING AND BLASTING RECIPES FOR OTHER ORES OF EPIC SAMURAI
 
     /* Add smelting and blasting recipes for epicsamurai:ruby with
        epicsamurai:ruby_ore and epicsamurai:deepslate_ruby_ore */
     if (Platform.isLoaded('epicsamurai')) {
-        addSmeltingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 0.75, 200);
+        addSmeltingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 200, 0.75);
         event
             .blasting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
-            .id(composeRecipeId(['ruby_ore'], 'ruby', 'blasting'))
-            .xp(0.75)
-            .cookingTime(100);
-        addSmeltingRecipe('epicsamurai:deepslate_ruby_ore', 'epicsamurai:ruby', 0.75, 200);
+            .id(composeRecipeId('ruby_ore', 'ruby', 'blasting'))
+            .cookingTime(100)
+            .xp(0.75);
+        addSmeltingRecipe('epicsamurai:deepslate_ruby_ore', 'epicsamurai:ruby', 200, 0.75);
         event
             .blasting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
-            .id(composeRecipeId(['deepslate_ruby_ore'], 'ruby', 'blasting'))
-            .xp(0.75)
-            .cookingTime(100);
+            .id(composeRecipeId('deepslate_ruby_ore', 'ruby', 'blasting'))
+            .cookingTime(100)
+            .xp(0.75);
     }
 
     /* Minecraft */
@@ -485,7 +587,7 @@ ServerEvents.recipes((event) => {
     }
 
     /* Croptopia */
-    if (Platform.isLoaded('croptopia')) {
+    if (Platform.isLoaded('croptopia'))
         addCrushingRecipe('croptopia:salt_ore', 300, [
             {
                 itemId: 'croptopia:salt',
@@ -504,7 +606,6 @@ ServerEvents.recipes((event) => {
                 chance: 0.125
             }
         ]);
-    }
 
     /* Darker Depths */
     if (Platform.isLoaded('darkerdepths')) {
@@ -635,35 +736,35 @@ ServerEvents.recipes((event) => {
 
     /* The Undergarden */
     if (Platform.isLoaded('undergarden')) {
-        addSmeltingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 0.7, 200);
+        addSmeltingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 200, 0.7);
         event
             .blasting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
-            .id(composeRecipeId(['crushed_raw_cloggrum'], 'cloggrum_ingot', 'blasting'))
-            .xp(0.7)
-            .cookingTime(100);
+            .id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_ingot', 'blasting'))
+            .cookingTime(100)
+            .xp(0.7);
 
-        addSmeltingRecipe('undergarden:crushed_raw_froststeel', 'undergarden:froststeel_ingot', 0.7, 200);
+        addSmeltingRecipe('undergarden:crushed_raw_froststeel', 'undergarden:froststeel_ingot', 200, 0.7);
         event
             .blasting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
-            .id(composeRecipeId(['crushed_raw_froststeel'], 'froststeel_ingot', 'blasting'))
-            .xp(0.7)
-            .cookingTime(100);
+            .id(composeRecipeId('crushed_raw_froststeel', 'froststeel_ingot', 'blasting'))
+            .cookingTime(100)
+            .xp(0.7);
 
-        addSmeltingRecipe('undergarden:crushed_raw_utherium', 'undergarden:utherium_crystal', 1, 200);
+        addSmeltingRecipe('undergarden:crushed_raw_utherium', 'undergarden:utherium_crystal', 200, 1);
         event
             .blasting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
-            .id(composeRecipeId(['crushed_raw_utherium'], 'utherium_crystal', 'blasting'))
-            .xp(1)
-            .cookingTime(100);
+            .id(composeRecipeId('crushed_raw_utherium', 'utherium_crystal', 'blasting'))
+            .cookingTime(100)
+            .xp(1);
 
         event
             .shaped('1x undergarden:regalium_crystal', ['SSS', 'SSS', 'SSS'], {
                 S: 'undergarden:regalic_shard'
             })
-            .id(composeRecipeId(['regalic_shard'], 'regalium_crystal'));
+            .id(composeRecipeId('regalic_shard', 'regalium_crystal'));
         event
             .shapeless('9x undergarden:regalic_shard', ['undergarden:regalium_crystal'])
-            .id(composeRecipeId(['regalium_crystal'], 'regalic_shard'));
+            .id(composeRecipeId('regalium_crystal', 'regalic_shard'));
 
         addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
         addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
@@ -685,32 +786,30 @@ ServerEvents.recipes((event) => {
         //         ['9x undergarden:cloggrum_nugget', Item.of('createcafe:oreo_crushed').withChance(0.75)],
         //         'undergarden:crushed_raw_cloggrum'
         //     )
-        //     id(composeRecipeId(['crushed_raw_cloggrum'], 'cloggrum_nugget', 'splashing'));
+        //     id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_nugget', 'splashing'));
 
         addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
         if (Platform.isLoaded('create')) {
-            if (Platform.isLoaded('endermanoverhaul')) {
+            if (Platform.isLoaded('endermanoverhaul'))
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
                         'undergarden:crushed_raw_froststeel'
                     )
-                    .id(composeRecipeId(['crushed_raw_froststeel'], 'froststeel_nugget', 'splashing'));
-            }
+                    .id(composeRecipeId('crushed_raw_froststeel', 'froststeel_nugget', 'splashing'));
 
             addOreCrushingRecipe('undergarden:depthrock_utherium_ore', 'utherium', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
             addOreCrushingRecipe('undergarden:tremblecrust_utherium_ore', 'utherium', 'undergarden:tremblecrust');
 
-            if (Platform.isLoaded('projecte')) {
+            if (Platform.isLoaded('projecte'))
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:utheric_shard', Item.of('projecte:red_matter').withChance(0.05)],
                         'undergarden:crushed_raw_utherium'
                     )
-                    .id(composeRecipeId(['crushed_raw_utherium'], 'utheric_shard', 'splashing'));
-            }
+                    .id(composeRecipeId('crushed_raw_utherium', 'utheric_shard', 'splashing'));
 
             addOreCrushingRecipe('undergarden:depthrock_regalium_ore', 'regalium', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_regalium_ore', 'regalium', 'undergarden:shiverstone');
@@ -720,7 +819,7 @@ ServerEvents.recipes((event) => {
                     ['9x undergarden:regalic_shard', Item.of('enchanted_golden_apple').withChance(0.05)],
                     'undergarden:crushed_raw_regalium'
                 )
-                .id(composeRecipeId(['crushed_raw_regalium'], 'regalic_shard', 'splashing'));
+                .id(composeRecipeId('crushed_raw_regalium', 'regalic_shard', 'splashing'));
         }
     }
 });
