@@ -94,6 +94,24 @@ ServerEvents.recipes((event) => {
     };
 
     /**
+     * Adds a blasting recipe.
+     * @param {string} inputItemId - Id of the input item.
+     * @param {string} outputItemId - Id of the output item.
+     * @param {number} [timeInTicks=100] - Amount of time, in ticks, that the blasting will take. Default = 100.
+     * @param {number} [xp=0] - Amount of XP the blasting will give. Default = 0.
+     */
+    const addBlastingRecipe = (inputItemId, outputItemId, timeInTicks, xp) => {
+        timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 100;
+        xp = xp && xp > 0 ? xp : 0;
+
+        event
+            .blasting(outputItemId, inputItemId)
+            .id(composeRecipeId(inputItemId, outputItemId, 'blasting'))
+            .cookingTime(timeInTicks)
+            .xp(xp);
+    };
+
+    /**
      * Replaces an input item with an item or tag, using recipe id as filter.
      * @param {string} recipeId - Id of the recipe.
      * @param {string} inputItemIdToReplace - Id of the input item to replace.
@@ -493,17 +511,9 @@ ServerEvents.recipes((event) => {
        epicsamurai:ruby_ore and epicsamurai:deepslate_ruby_ore */
     if (Platform.isLoaded('epicsamurai')) {
         addSmeltingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 200, 0.75);
-        event
-            .blasting('epicsamurai:ruby', 'epicsamurai:ruby_ore')
-            .id(composeRecipeId('ruby_ore', 'ruby', 'blasting'))
-            .cookingTime(100)
-            .xp(0.75);
+        addBlastingRecipe('epicsamurai:ruby_ore', 'epicsamurai:ruby', 100, 0.75);
         addSmeltingRecipe('epicsamurai:deepslate_ruby_ore', 'epicsamurai:ruby', 200, 0.75);
-        event
-            .blasting('epicsamurai:ruby', 'epicsamurai:deepslate_ruby_ore')
-            .id(composeRecipeId('deepslate_ruby_ore', 'ruby', 'blasting'))
-            .cookingTime(100)
-            .xp(0.75);
+        addBlastingRecipe('epicsamurai:deepslate_ruby_ore', 'epicsamurai:ruby', 100, 0.75);
     }
 
     /* Minecraft */
@@ -737,25 +747,13 @@ ServerEvents.recipes((event) => {
     /* The Undergarden */
     if (Platform.isLoaded('undergarden')) {
         addSmeltingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 200, 0.7);
-        event
-            .blasting('undergarden:cloggrum_ingot', 'undergarden:crushed_raw_cloggrum')
-            .id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_ingot', 'blasting'))
-            .cookingTime(100)
-            .xp(0.7);
+        addBlastingRecipe('undergarden:crushed_raw_cloggrum', 'undergarden:cloggrum_ingot', 100, 0.7);
 
         addSmeltingRecipe('undergarden:crushed_raw_froststeel', 'undergarden:froststeel_ingot', 200, 0.7);
-        event
-            .blasting('undergarden:froststeel_ingot', 'undergarden:crushed_raw_froststeel')
-            .id(composeRecipeId('crushed_raw_froststeel', 'froststeel_ingot', 'blasting'))
-            .cookingTime(100)
-            .xp(0.7);
+        addBlastingRecipe('undergarden:crushed_raw_froststeel', 'undergarden:froststeel_ingot', 100, 0.7);
 
         addSmeltingRecipe('undergarden:crushed_raw_utherium', 'undergarden:utherium_crystal', 200, 1);
-        event
-            .blasting('undergarden:utherium_crystal', 'undergarden:crushed_raw_utherium')
-            .id(composeRecipeId('crushed_raw_utherium', 'utherium_crystal', 'blasting'))
-            .cookingTime(100)
-            .xp(1);
+        addBlastingRecipe('undergarden:crushed_raw_utherium', 'undergarden:utherium_crystal', 100, 1);
 
         event
             .shaped('1x undergarden:regalium_crystal', ['SSS', 'SSS', 'SSS'], {
