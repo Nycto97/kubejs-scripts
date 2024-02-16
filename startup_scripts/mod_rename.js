@@ -142,6 +142,27 @@ StartupEvents.postInit(() => {
             );
     };
 
+    if (typeof modsToRenameInfo === 'undefined') {
+        if (global.isModRenameLogEnabled) console.log('[WARN] modsToRenameInfo is not defined! Skipping mod rename');
+        return;
+    }
+
+    if (!Array.isArray(modsToRenameInfo)) {
+        if (global.isModRenameLogEnabled) console.log('[WARN] modsToRenameInfo is not an array! Skipping mod rename');
+        return;
+    }
+
+    if (!modsToRenameInfo.length) {
+        if (global.isModRenameLogEnabled) console.log('[WARN] modsToRenameInfo is empty! Skipping mod rename');
+        return;
+    }
+
+    if (!modsToRenameInfo.every((modInfo) => typeof modInfo === 'object')) {
+        if (global.isModRenameLogEnabled)
+            console.log('[WARN] modsToRenameInfo contains non-object elements! Skipping mod rename');
+        return;
+    }
+
     modsToRenameInfo.forEach((modInfo) => renameMod(modInfo));
 
     if (global.isModRenameLogEnabled) {
