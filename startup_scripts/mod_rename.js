@@ -48,6 +48,19 @@ StartupEvents.postInit(() => {
      * @param {string} modToRenameInfo.preferredName - The preferred name for the mod to rename.
      */
     const renameMod = (modToRenameInfo) => {
+        if (typeof modToRenameInfo.id === 'undefined' || typeof modToRenameInfo.preferredName === 'undefined') {
+            if (global.isModRenameLogEnabled) {
+                if (typeof modToRenameInfo.id === 'undefined' && typeof modToRenameInfo.preferredName === 'undefined') {
+                    skippedModLogs.push('[WARN] Mod id and mod preferred name are undefined! Skipping rename');
+                } else if (typeof modToRenameInfo.id === 'undefined') {
+                    skippedModLogs.push('[WARN] Mod id is undefined! Skipping rename');
+                } else {
+                    skippedModLogs.push('[WARN] Mod preferred name is undefined! Skipping rename');
+                }
+            }
+            return;
+        }
+
         if (typeof modToRenameInfo.id !== 'string' || typeof modToRenameInfo.preferredName !== 'string') {
             if (global.isModRenameLogEnabled) {
                 if (typeof modToRenameInfo.id !== 'string' && typeof modToRenameInfo.preferredName !== 'string') {
@@ -71,11 +84,11 @@ StartupEvents.postInit(() => {
                     skippedModLogs.push('[WARN] Mod id and mod preferred name are empty! Skipping rename');
                 } else if (modToRenameInfo.id.trim().length === 0) {
                     skippedModLogs.push(
-                        `[WARN] Mod id is not defined or empty! Skipping renaming to ${modToRenameInfo.preferredName}`
+                        `[WARN] Mod id is empty! Skipping renaming to ${modToRenameInfo.preferredName}`
                     );
                 } else {
                     skippedModLogs.push(
-                        `[WARN] Mod preferred name is not defined or empty! Skipping rename [id: ${modToRenameInfo.id}]`
+                        `[WARN] Mod preferred name is empty! Skipping rename [id: ${modToRenameInfo.id}]`
                     );
                 }
             }
