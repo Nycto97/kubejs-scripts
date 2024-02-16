@@ -48,6 +48,28 @@ StartupEvents.postInit(() => {
      * @param {string} modToRenameInfo.preferredName - The preferred name for the mod to rename.
      */
     const renameMod = (modToRenameInfo) => {
+        if (typeof modToRenameInfo.id !== 'string' && typeof modToRenameInfo.preferredName !== 'string') {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push('[WARN] Mod id and mod preferred name are not strings! Skipping rename');
+            return;
+        }
+
+        if (typeof modToRenameInfo.id !== 'string' && typeof modToRenameInfo.preferredName === 'string') {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push(
+                    `[WARN] Mod id is not a string! Skipping rename [preferred name: ${modToRenameInfo.preferredName}]`
+                );
+            return;
+        }
+
+        if (typeof modToRenameInfo.id === 'string' && typeof modToRenameInfo.preferredName !== 'string') {
+            if (global.isModRenameLogEnabled)
+                skippedModLogs.push(
+                    `[WARN] Mod preferred name is not a string! Skipping rename [id: ${modToRenameInfo.id}]`
+                );
+            return;
+        }
+
         if (!modToRenameInfo.id && !modToRenameInfo.preferredName) {
             if (global.isModRenameLogEnabled)
                 skippedModLogs.push('[WARN] Mod id and mod preferred name are not defined or empty! Skipping rename');
