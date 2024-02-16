@@ -23,6 +23,10 @@ StartupEvents.postInit(() => {
         );
     };
 
+    global['logTagNotFound'] = (tagId, activityType, tagType) => {
+        console.log(`[WARN] ${tagType ? `${tagType} t` : 'T'}ag #${tagId} is not found! Skipping ${activityType}`);
+    };
+
     if (global.isBlockAndItemCountLogEnabled) {
         console.log(`There are ${global.itemIds.length} items and ${global.blockIds.length} blocks registered`);
     }
