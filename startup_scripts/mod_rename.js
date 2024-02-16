@@ -48,47 +48,37 @@ StartupEvents.postInit(() => {
      * @param {string} modToRenameInfo.preferredName - The preferred name for the mod to rename.
      */
     const renameMod = (modToRenameInfo) => {
-        if (typeof modToRenameInfo.id !== 'string' && typeof modToRenameInfo.preferredName !== 'string') {
-            if (global.isModRenameLogEnabled)
-                skippedModLogs.push('[WARN] Mod id and mod preferred name are not strings! Skipping rename');
+        if (typeof modToRenameInfo.id !== 'string' || typeof modToRenameInfo.preferredName !== 'string') {
+            if (global.isModRenameLogEnabled) {
+                if (typeof modToRenameInfo.id !== 'string' && typeof modToRenameInfo.preferredName !== 'string') {
+                    skippedModLogs.push('[WARN] Mod id and mod preferred name are not strings! Skipping rename');
+                } else if (typeof modToRenameInfo.id !== 'string') {
+                    skippedModLogs.push(
+                        `[WARN] Mod id is not a string! Skipping rename [preferred name: ${modToRenameInfo.preferredName}]`
+                    );
+                } else {
+                    skippedModLogs.push(
+                        `[WARN] Mod preferred name is not a string! Skipping rename [id: ${modToRenameInfo.id}]`
+                    );
+                }
+            }
             return;
         }
 
-        if (typeof modToRenameInfo.id !== 'string' && typeof modToRenameInfo.preferredName === 'string') {
-            if (global.isModRenameLogEnabled)
-                skippedModLogs.push(
-                    `[WARN] Mod id is not a string! Skipping rename [preferred name: ${modToRenameInfo.preferredName}]`
-                );
-            return;
-        }
-
-        if (typeof modToRenameInfo.id === 'string' && typeof modToRenameInfo.preferredName !== 'string') {
-            if (global.isModRenameLogEnabled)
-                skippedModLogs.push(
-                    `[WARN] Mod preferred name is not a string! Skipping rename [id: ${modToRenameInfo.id}]`
-                );
-            return;
-        }
-
-        if (!modToRenameInfo.id && !modToRenameInfo.preferredName) {
-            if (global.isModRenameLogEnabled)
-                skippedModLogs.push('[WARN] Mod id and mod preferred name are not defined or empty! Skipping rename');
-            return;
-        }
-
-        if (!modToRenameInfo.id && modToRenameInfo.preferredName) {
-            if (global.isModRenameLogEnabled)
-                skippedModLogs.push(
-                    `[WARN] Mod id is not defined or empty! Skipping renaming to ${modToRenameInfo.preferredName}`
-                );
-            return;
-        }
-
-        if (modToRenameInfo.id && !modToRenameInfo.preferredName) {
-            if (global.isModRenameLogEnabled)
-                skippedModLogs.push(
-                    `[WARN] Mod preferred name is not defined or empty! Skipping rename [id: ${modToRenameInfo.id}]`
-                );
+        if (modToRenameInfo.id.trim().length === 0 || modToRenameInfo.preferredName.trim().length === 0) {
+            if (global.isModRenameLogEnabled) {
+                if (modToRenameInfo.id.trim().length === 0 && modToRenameInfo.preferredName.trim().length === 0) {
+                    skippedModLogs.push('[WARN] Mod id and mod preferred name are empty! Skipping rename');
+                } else if (modToRenameInfo.id.trim().length === 0) {
+                    skippedModLogs.push(
+                        `[WARN] Mod id is not defined or empty! Skipping renaming to ${modToRenameInfo.preferredName}`
+                    );
+                } else {
+                    skippedModLogs.push(
+                        `[WARN] Mod preferred name is not defined or empty! Skipping rename [id: ${modToRenameInfo.id}]`
+                    );
+                }
+            }
             return;
         }
 
