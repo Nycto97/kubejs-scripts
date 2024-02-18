@@ -68,3 +68,40 @@ StartupEvents.postInit(() => {
     if (global.isBlockAndItemCountLogEnabled)
         console.log(`There are ${global.itemIds.length} items and ${global.blockIds.length} blocks registered`);
 });
+
+/**
+ * Checks if the provided value is an Array.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is an Array, false otherwise.
+ */
+const isArray = Array.isArray;
+
+/**
+ * Checks if the provided value is of type 'boolean'.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is of type 'boolean', false otherwise.
+ */
+const isBoolean = (value) => typeof value === 'boolean';
+
+/**
+ * Checks if the provided value is defined.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is defined, false otherwise.
+ */
+const isDefined = (value) => typeof value !== 'undefined';
+
+/**
+ * Checks if the provided value is of type 'undefined'.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is of type 'undefined', false otherwise.
+ */
+const isUndefined = (value) => !isDefined(value);
+
