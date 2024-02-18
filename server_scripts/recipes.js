@@ -19,7 +19,8 @@
 
 ServerEvents.recipes((event) => {
     /**
-     * Supported ore types for addOreCrushingRecipe().
+     * The supported ore types for addOreCrushingRecipe().
+     *
      * @type {string[]}
      * @const
      */
@@ -79,10 +80,16 @@ ServerEvents.recipes((event) => {
 
     /**
      * Adds a smelting recipe.
-     * @param {string} inputItemId - Id of the input item.
-     * @param {string} outputItemId - Id of the output item.
-     * @param {number} [timeInTicks=200] - Amount of time, in ticks, that the smelting will take. Default = 200.
-     * @param {number} [xp=0] - Amount of XP the smelting will give. Default = 0.
+     *
+     * @param {string} inputItemId - The input item id.
+     *
+     * @param {string} outputItemId - The output item id.
+     *
+     * @param {number} [timeInTicks=200] - The amount of time, in ticks, that the smelting will take. Default = 200.
+     *
+     * @param {number} [xp=0] - The amount of XP that the smelting will grant. Default = 0.
+     *
+     * @returns {void}
      */
     const addSmeltingRecipe = (inputItemId, outputItemId, timeInTicks, xp) => {
         timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 200;
@@ -97,10 +104,16 @@ ServerEvents.recipes((event) => {
 
     /**
      * Adds a blasting recipe.
-     * @param {string} inputItemId - Id of the input item.
-     * @param {string} outputItemId - Id of the output item.
-     * @param {number} [timeInTicks=100] - Amount of time, in ticks, that the blasting will take. Default = 100.
-     * @param {number} [xp=0] - Amount of XP the blasting will give. Default = 0.
+     *
+     * @param {string} inputItemId - The input item id.
+     *
+     * @param {string} outputItemId - The output item id.
+     *
+     * @param {number} [timeInTicks=100] - The amount of time, in ticks, that the blasting will take. Default = 100.
+     *
+     * @param {number} [xp=0] - The amount of XP that the blasting will grant. Default = 0.
+     *
+     * @returns {void}
      */
     const addBlastingRecipe = (inputItemId, outputItemId, timeInTicks, xp) => {
         timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 100;
@@ -115,10 +128,16 @@ ServerEvents.recipes((event) => {
 
     /**
      * Adds a smoking recipe.
-     * @param {string} inputItemId - Id of the input item.
-     * @param {string} outputItemId - Id of the output item.
-     * @param {number} [timeInTicks=100] - Amount of time, in ticks, that the smoking will take. Default = 100.
-     * @param {number} [xp=0] - Amount of XP the smoking will give. Default = 0.
+     *
+     * @param {string} inputItemId - The input item id.
+     *
+     * @param {string} outputItemId - The output item id.
+     *
+     * @param {number} [timeInTicks=100] - The amount of time, in ticks, that the smoking will take. Default = 100.
+     *
+     * @param {number} [xp=0] - The amount of XP that the smoking will grant. Default = 0.
+     *
+     * @returns {void}
      */
     const addSmokingRecipe = (inputItemId, outputItemId, timeInTicks, xp) => {
         timeInTicks = timeInTicks && timeInTicks > 0 ? timeInTicks : 100;
@@ -133,26 +152,37 @@ ServerEvents.recipes((event) => {
 
     /**
      * Replaces an input item with an item or tag, using recipe id as filter.
-     * @param {string} recipeId - Id of the recipe.
-     * @param {string} inputItemIdToReplace - Id of the input item to replace.
-     * @param {string} newInputItemIdOrTag - Id of the new input item or tag to use as new input. Tags need to start with a # followed by their id.
+     *
+     * @param {string} recipeId - The recipe id.
+     *
+     * @param {string} inputItemId - The input item id to replace.
+     *
+     * @param {string} newInput - The new input item id or tag.
+     *     Note: Tags need to start with a # followed by their id.
+     *
+     * @returns {void}
      */
-    const replaceInputByRecipeId = (recipeId, inputItemIdToReplace, newInputItemIdOrTag) =>
-        event.replaceInput({ id: recipeId }, inputItemIdToReplace, newInputItemIdOrTag);
+    const replaceInputByRecipeId = (recipeId, inputItemId, newInput) =>
+        event.replaceInput({ id: recipeId }, inputItemId, newInput);
 
     /**
      * Adds a Scarecrow's Territory scarecrow crafting recipe.
-     * @param {string} color - Color of the scarecrow.
+     *
+     * @param {string} color - The scarecrow color.
+     *
+     * @returns {void}
      */
     const addScarecrowRecipe = (color) => {
         /**
-         * Prefix of the scarecrow item id.
+         * The scarecrow item id prefix.
+         *
          * @type {string}
          * @const
          */
         const prefix = color == 'purple' ? 'primitive' : color;
         /**
-         * Id of the scarecrow item.
+         * The scarecrow item id.
+         *
          * @type {string}
          * @const
          */
@@ -170,28 +200,36 @@ ServerEvents.recipes((event) => {
 
     /**
      * Composes output items.
+     *
      * @param {Object[]} outputItemsInfo - Info about one or more output items.
-     * @param {string} outputItemsInfo[].itemId - Id of an output item.
-     * @param {number} [outputItemsInfo[].amount=1] - Amount of an output item. Default = 1.
-     * @param {number} [outputItemsInfo[].chance=1] - Chance of an output item. Default = 1.
-     * @returns {Internal.ItemStack[]} Output items.
+     *
+     * @param {string} outputItemsInfo[].itemId - The output item id.
+     *
+     * @param {number} [outputItemsInfo[].amount=1] - The output item amount. Default = 1.
+     *
+     * @param {number} [outputItemsInfo[].chance=1] - The output item chance. Default = 1.
+     *
+     * @returns {ItemStack[]|undefined} The output items, or undefined if 'outputItemsInfo' is invalid.
      */
     const composeOutputItems = (outputItemsInfo) => {
         /**
-         * Output items.
-         * @type {Internal.ItemStack[]}
+         * The output items.
+         *
+         * @type {ItemStack[]}
          * @const
          */
         const outputItems = [];
 
         outputItemsInfo.forEach((itemInfo) => {
             /**
-             * Amount of the output item.
+             * The output item amount.
+             *
              * @type {number}
              */
             let amount = itemInfo.amount ? itemInfo.amount : 1;
             /**
-             * Chance of the output item.
+             * The output item chance.
+             *
              * @type {number}
              */
             let chance = itemInfo.chance ? itemInfo.chance : 1;
@@ -204,12 +242,20 @@ ServerEvents.recipes((event) => {
 
     /**
      * Adds a Create crushing recipe.
-     * @param {string} inputItemId - Id of the input item.
-     * @param {number} [timeInTicks=100] - Amount of time, in ticks, that the crushing will take. Default = 100.
+     *
+     * @param {string} inputItemId - The input item id.
+     *
+     * @param {number} [timeInTicks=100] - The amount of time, in ticks, that the crushing will take. Default = 100.
+     *
      * @param {Object[]} outputItemsInfo - Info about one or more output items.
-     * @param {string} outputItemsInfo[].itemId - Id of an output item.
-     * @param {number} [outputItemsInfo[].amount=1] - Amount of an output item. Default = 1.
-     * @param {number} [outputItemsInfo[].chance=1] - Chance of an output item. Default = 1.
+     *
+     * @param {string} outputItemsInfo[].itemId - The output item id.
+     *
+     * @param {number} [outputItemsInfo[].amount=1] - The output item amount. Default = 1.
+     *
+     * @param {number} [outputItemsInfo[].chance=1] - The output item chance. Default = 1.
+     *
+     * @returns {void}
      */
     const addCrushingRecipe = (inputItemId, timeInTicks, outputItemsInfo) => {
         if (!Platform.isLoaded('create')) {
@@ -227,9 +273,14 @@ ServerEvents.recipes((event) => {
 
     /**
      * Adds a Create ore crushing recipe.
-     * @param {string} inputItemId - Id of the input item.
-     * @param {string} oreType - Type of the ore.
-     * @param {string} mainBlockItemId - Id of the main block item.
+     *
+     * @param {string} inputItemId - The input item id.
+     *
+     * @param {string} oreType - The type of ore.
+     *
+     * @param {string} mainBlockItemId - The main block item id.
+     *
+     * @returns {void}
      */
     const addOreCrushingRecipe = (inputItemId, oreType, mainBlockItemId) => {
         if (!Platform.isLoaded('create')) {
@@ -245,27 +296,32 @@ ServerEvents.recipes((event) => {
         }
 
         /**
-         * If the first output item has an amount bonus.
+         * Whether the first output item has an amount bonus.
+         *
          * @type {boolean}
          */
         let hasFirstOutputItemBonus = false;
         /**
-         * Amount of the first output item.
+         * The first output item amount.
+         *
          * @type {number}
          */
         let firstOutputItemAmount;
         /**
-         * Chance of the second output item.
+         * The second output item chance.
+         *
          * @type {number}
          */
         let secondOutputItemChance;
         /**
-         * Amount of time, in ticks, that the crushing will take.
+         * The amount of time, in ticks, that the crushing will take.
+         *
          * @type {number}
          */
         let timeInTicks = 250;
         /**
-         * Id of the output item.
+         * The output item id.
+         *
          * @type {string}
          */
         let outputItemId = oreType;
@@ -356,34 +412,40 @@ ServerEvents.recipes((event) => {
 
     /**
      * Adds a Create mixing recipe.
-     * @param {string|string[]} inputItemOrTagIdOrInputItemAndTagIds - Id of the input item or input tag, or ids of the input items and/or input tags.
+     *
+     * @param {string|string[]} input - The input item id,
+     *     or input tag, or input item ids, and/or input tags.
+     *     Note: Tags need to start with a # followed by their id.
+     *
      * @param {Object[]} outputItemsInfo - Info about one or more output items.
-     * @param {string} outputItemsInfo[].itemId - Id of an output item.
-     * @param {number} [outputItemsInfo[].amount=1] - Amount of an output item. Default = 1.
-     * @param {number} [outputItemsInfo[].chance=1] - Chance of an output item. Default = 1.
-     * @param {boolean} [requiresHeat=false] - If the recipe requires heat. Default = false.
-     * @param {boolean} [requiresSuperHeat=false] - If the recipe requires super heat. Default = false.
+     *
+     * @param {string} outputItemsInfo[].itemId - The output item id.
+     *
+     * @param {number} [outputItemsInfo[].amount=1] - The output item amount. Default = 1.
+     *
+     * @param {number} [outputItemsInfo[].chance=1] - The output item chance. Default = 1.
+     *
+     * @param {boolean} [requiresHeat=false] - Whether the recipe requires heat. Default = false.
+     *
+     * @param {boolean} [requiresSuperHeat=false] - Whether the recipe requires super heat. Default = false.
+     *
+     * @returns {void}
      */
-    const addMixingRecipe = (
-        inputItemOrTagIdOrInputItemAndTagIds,
-        outputItemsInfo,
-        requiresHeat,
-        requiresSuperHeat
-    ) => {
+    const addMixingRecipe = (input, outputItemsInfo, requiresHeat, requiresSuperHeat) => {
         if (!Platform.isLoaded('create')) {
             global.logModNotLoaded('Create', 'mixing recipe');
             return;
         }
 
         const outputItems = composeOutputItems(outputItemsInfo);
-        const recipeId = composeRecipeId(inputItemOrTagIdOrInputItemAndTagIds, outputItemsInfo[0].itemId, 'mixing');
+        const recipeId = composeRecipeId(input, outputItemsInfo[0].itemId, 'mixing');
 
         if (!requiresHeat && !requiresSuperHeat) {
-            event.recipes.create.mixing(outputItems, inputItemOrTagIdOrInputItemAndTagIds).id(recipeId);
+            event.recipes.create.mixing(outputItems, input).id(recipeId);
         } else if (requiresHeat && !requiresSuperHeat) {
-            event.recipes.create.mixing(outputItems, inputItemOrTagIdOrInputItemAndTagIds).id(recipeId).heated();
+            event.recipes.create.mixing(outputItems, input).id(recipeId).heated();
         } else {
-            event.recipes.create.mixing(outputItems, inputItemOrTagIdOrInputItemAndTagIds).id(recipeId).superheated();
+            event.recipes.create.mixing(outputItems, input).id(recipeId).superheated();
         }
     };
 
@@ -801,7 +863,7 @@ ServerEvents.recipes((event) => {
         addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
         if (Platform.isLoaded('create')) {
-            if (Platform.isLoaded('endermanoverhaul'))
+            if (Item.exists('endermanoverhaul:icy_pearl'))
                 event.recipes.create
                     .splashing(
                         ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
@@ -813,10 +875,13 @@ ServerEvents.recipes((event) => {
             addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
             addOreCrushingRecipe('undergarden:tremblecrust_utherium_ore', 'utherium', 'undergarden:tremblecrust');
 
-            if (Platform.isLoaded('projecte'))
+            if (Item.exists('projecte:red_matter'))
                 event.recipes.create
                     .splashing(
-                        ['9x undergarden:utheric_shard', Item.of('projecte:red_matter').withChance(0.05)],
+                        composeOutputItems([
+                            { itemId: 'undergarden:utheric_shard', amount: 9 },
+                            { itemId: 'projecte:red_matter', chance: 0.05 }
+                        ]),
                         'undergarden:crushed_raw_utherium'
                     )
                     .id(composeRecipeId('crushed_raw_utherium', 'utheric_shard', 'splashing'));

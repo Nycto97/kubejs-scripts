@@ -13,17 +13,17 @@
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
     /**
-     * All item ids.
+     * The item ids of all items.
      *
-     * @type {Internal.List<string>}
+     * @type {List<string>}
      * @const
      */
     const itemIds = Item.getTypeList();
 
     /**
-     * All block ids.
+     * The block ids of all blocks.
      *
-     * @type {Internal.List<string>}
+     * @type {List<string>}
      * @const
      */
     const blockIds = Block.getTypeList();

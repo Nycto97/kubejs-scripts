@@ -32,7 +32,9 @@ ServerEvents.tags('item', (event) => {
 
     // TODO manually add exceptions
     // TODO needs to be tested further
-    /* Add child tags to parent tag, if parent tag exists */
+    /**
+     * Adds all child tags to their parent tag(s), if parent tag(s) exist(s).
+     */
     const addAllChildTagsToExistingParentTags = () => {
         itemTagIds
             .filter((tagId) => tagId.includes('/'))
@@ -151,9 +153,7 @@ ServerEvents.tags('item', (event) => {
     /* BARRELS */
     itemTagIdsToAdd = [];
 
-    if (Platform.isLoaded('chipped')) {
-        itemTagIdsToAdd.push('#chipped:barrel');
-    }
+    if (Platform.isLoaded('chipped')) itemTagIdsToAdd.push('#chipped:barrel');
 
     event.add('forge:barrels', [itemTagIdsToAdd, /^.*:(?!(cannon|tnt).)*_barrel$/]);
 
@@ -330,11 +330,9 @@ if (global.isItemTagsLogEnabled || global.isNonTaggedItemIdsLogEnabled) {
         if (global.isNonTaggedItemIdsLogEnabled) {
             let nonTaggedItemIds = new HashSet();
 
-            /* Get ids from items that aren't tagged with minecraft:item tags */
+            /* Get ids of items that aren't tagged with minecraft:item tags */
             Item.getList().forEach((itemStack) => {
-                if (itemStack.getTags().toList().isEmpty()) {
-                    nonTaggedItemIds.add(itemStack.getId());
-                }
+                if (itemStack.getTags().toList().isEmpty()) nonTaggedItemIds.add(itemStack.getId());
             });
 
             console.log(`\n\n${nonTaggedItemIds.size()} items are currently NOT TAGGED with minecraft:item tags!\n`);

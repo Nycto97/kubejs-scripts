@@ -14,24 +14,28 @@
 StartupEvents.postInit(() => {
     /**
      * The logs of mods to rename that aren't loaded.
+     *
      * @type {string[]}
      * @const
      */
     const notLoadedModLogs = [];
     /**
      * The logs of mods to rename that got skipped.
+     *
      * @type {string[]}
      * @const
      */
     const skippedModLogs = [];
     /**
      * The logs of mods to rename that got renamed.
+     *
      * @type {string[]}
      * @const
      */
     const renamedModLogs = [];
     /**
      * All logs of mods to rename.
+     *
      * @type {string[]}
      * @const
      */
@@ -45,6 +49,7 @@ StartupEvents.postInit(() => {
 
     /**
      * Renames a mod.
+     *
      * @param {Object} modToRenameInfo - Info about the mod to rename.
      * @param {string} modToRenameInfo.id - The id of the mod to rename.
      * @param {string} modToRenameInfo.preferredName - The preferred name for the mod to rename.
@@ -99,12 +104,14 @@ StartupEvents.postInit(() => {
 
         /**
          * The id of the mod to rename.
+         *
          * @type {string}
          * @const
          */
         const modToRenameId = modToRenameInfo.id;
         /**
          * The preferred name for the mod to rename.
+         *
          * @type {string}
          * @const
          */
@@ -119,12 +126,14 @@ StartupEvents.postInit(() => {
 
         /**
          * Info about the mod.
+         *
          * @type {PlatformWrapper.ModInfo}
          * @const
          */
         const modInfo = Platform.mods[modToRenameId];
         /**
          * The mod name.
+         *
          * @type {string}
          * @const
          */
@@ -170,22 +179,28 @@ StartupEvents.postInit(() => {
     if (global.isModRenameLogEnabled) {
         /**
          * Sorts logs alphabetically, ignoring case.
+         *
          * @param {string[]} logs - The logs to sort.
+         *
          * @returns {string[]} The sorted logs.
          */
         let sortLogs = (logs) => logs.sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
 
         /**
          * Composes a divider.
+         *
          * @param {string[]} logs - The logs to compose a divider for.
+         *
          * @returns {string} The divider.
          */
         let composeDivider = (logs) => '-'.repeat(logs[logs.length - 1].length);
 
         /**
          * Pushes logs to combined logs after sorting them and optionally adding a divider.
+         *
          * @param {string[]} logs - The logs to sort, optionally add a divider for and push to combined logs.
          * @param {boolean} addDivider - Whether or not a divider should be added under the group of logs.
+         * @param {boolean} addDivider - Whether a divider should be added under the group of logs.
          */
         let pushLogs = (logs, addDivider) => {
             modLogs.push(sortLogs(logs));
