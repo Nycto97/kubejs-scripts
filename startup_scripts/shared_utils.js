@@ -97,6 +97,56 @@ const isBoolean = (value) => typeof value === 'boolean';
 const isDefined = (value) => typeof value !== 'undefined';
 
 /**
+ * Checks if the provided 'value' is a non-empty array.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if 'value' is a non-empty array, false otherwise.
+ */
+const isNonEmptyArray = (value) => {
+    if (!isArray(value)) {
+        console.warn(`[WARN] Expected 'value' to be an array, got ${typeof value}`);
+        return false;
+    }
+
+    return value.length > 0;
+};
+
+/**
+ * Checks if the provided 'value' is a non-empty string.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if 'value' is a non-empty string, false otherwise.
+ */
+const isNonEmptyString = (value) => {
+    if (!isString(value)) {
+        console.warn(`[WARN] Expected 'value' to be a string, got ${typeof value}`);
+        return false;
+    }
+
+    return value.trim().length > 0;
+};
+
+/**
+ * Checks if the provided value is of instance RegExp.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is of instance RegExp, false otherwise.
+ */
+const isRegExp = (value) => value instanceof RegExp;
+
+/**
+ * Checks if the provided value is of type 'string'.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is of type 'string', false otherwise.
+ */
+const isString = (value) => typeof value === 'string';
+
+/**
  * Checks if the provided value is of type 'undefined'.
  *
  * @param {*} value - The value to check.
