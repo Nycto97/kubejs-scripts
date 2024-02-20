@@ -8,7 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-ServerEvents.tags('worldgen/biome', (event) => {
+ServerEvents.tags(WORLDGEN_BIOME_TAG_TYPE, (event) => {
     /* Rotten Creatures */
     if (Platform.isLoaded('rottencreatures')) {
         event.add('rottencreatures:burned_whitelist', '#forge:is_hot/nether');

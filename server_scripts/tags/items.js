@@ -18,7 +18,7 @@ const HashSet = Java.loadClass('java.util.HashSet');
 
 let itemTagIds;
 
-ServerEvents.tags('item', (event) => {
+ServerEvents.tags(ITEM_TAG_TYPE, (event) => {
     itemTagIds = event.tags
         .values()
         .toArray()

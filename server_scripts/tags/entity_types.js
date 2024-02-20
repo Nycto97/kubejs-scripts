@@ -8,6 +8,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-ServerEvents.tags('entity_type', (event) => {
+ServerEvents.tags(ENTITY_TYPE_TAG_TYPE, (event) => {
     event.add('minecraft:skeletons', /^((?!summon).)*skeleton.*$/);
 });
