@@ -28,42 +28,8 @@ StartupEvents.postInit(() => {
      */
     const blockIds = Block.getTypeList();
 
-    /**
-     * Logs a message regarding a mod that is not loaded.
-     *
-     * @param {string} modName - The mod name.
-     * @param {string} activityType - The activity type.
-     */
-    const logModNotLoaded = (modName, activityType) =>
-        console.log(`[WARN] ${modName} mod is not loaded! Skipping ${activityType}`);
-
-    /**
-     * Logs a message regarding an item id that is not found.
-     *
-     * @param {string} itemId - The item id.
-     * @param {string} activityType - The activity type.
-     * @param {string} [itemType] - The item type.
-     */
-    const logItemIdNotFound = (itemId, activityType, itemType) =>
-        console.log(
-            `[WARN] ${itemType ? `${itemType} i` : 'I'}tem id ${itemId} is not found! Skipping ${activityType}`
-        );
-
-    /**
-     * Logs a message regarding a tag that is not found.
-     *
-     * @param {string} tagId - The tag id.
-     * @param {string} activityType - The activity type.
-     * @param {string} [tagType] - The tag type.
-     */
-    const logTagNotFound = (tagId, activityType, tagType) =>
-        console.log(`[WARN] ${tagType ? `${tagType} t` : 'T'}ag #${tagId} is not found! Skipping ${activityType}`);
-
     global['itemIds'] = itemIds;
     global['blockIds'] = blockIds;
-    global['logModNotLoaded'] = logModNotLoaded;
-    global['logItemIdNotFound'] = logItemIdNotFound;
-    global['logTagNotFound'] = logTagNotFound;
 
     if (global.isBlockAndItemCountLogEnabled)
         console.log(`There are ${global.itemIds.length} items and ${global.blockIds.length} blocks registered`);
@@ -155,3 +121,47 @@ const isString = (value) => typeof value === 'string';
  */
 const isUndefined = (value) => !isDefined(value);
 
+/**
+ * Logs a warning if an item is not found.
+ *
+ * @param {string} itemId - The item id.
+ * @param {string} activityType - The skipped activity.
+ * @param {string} [itemType] - The item type.
+ *
+ * @returns {void}
+ */
+const logItemNotFound = (itemId, activityType, itemType) => {
+    let prefix = itemType ? `${itemType} item` : 'Item';
+
+    console.warn(`[WARN] ${prefix} with id ${itemId} is not found! Skipping ${activityType}`);
+};
+
+/**
+ * Logs a warning if a mod is not loaded.
+ *
+ * @param {string} modName - The mod name.
+ * @param {string} activityType - The skipped activity.
+ *
+ * @returns {void}
+ */
+const logModNotLoaded = (modName, activityType) =>
+    console.log(`[WARN] ${modName} mod is not loaded! Skipping ${activityType}`);
+
+/**
+ * Logs a warning if a tag is not found.
+ *
+ * @param {string} tagId - The tag id.
+ * @param {string} activityType - The activity type.
+ * @param {string} [tagType] - The tag type.
+ *
+ * @returns {void}
+ */
+const logTagNotFound = (tagId, activityType, tagType) => {
+    let prefix = tagType ? `${tagType} tag` : 'Tag';
+
+    console.warn(`[WARN] ${prefix} #${tagId} is not found! Skipping ${activityType}`);
+};
+
+global['logModNotLoaded'] = logModNotLoaded;
+global['logItemIdNotFound'] = logItemNotFound;
+global['logTagNotFound'] = logTagNotFound;
