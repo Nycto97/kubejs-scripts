@@ -162,6 +162,24 @@ const logTagNotFound = (tagId, activityType, tagType) => {
     console.warn(`[WARN] ${prefix} #${tagId} is not found! Skipping ${activityType}`);
 };
 
+/**
+ * Removes duplicate values from an Array.
+ *
+ * @param {*[]} values - The Array from which to remove duplicates.
+ *
+ * @returns {*[]|undefined} A new Array with unique elements, or undefined if argument is invalid.
+ */
+const removeDuplicates = (values) => {
+    if (!isArrayAndNotEmpty(values)) {
+        console.warn(
+            `[WARN] Invalid 'values'. Expected an Array, but received ${typeof values}. Skipping removing duplicates...`
+        );
+        return;
+    }
+
+    return values.filter((value, index) => values.indexOf(value) === index);
+};
+
 global['logModNotLoaded'] = logModNotLoaded;
 global['logItemIdNotFound'] = logItemNotFound;
 global['logTagNotFound'] = logTagNotFound;
