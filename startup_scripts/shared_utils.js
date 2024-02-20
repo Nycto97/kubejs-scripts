@@ -122,6 +122,21 @@ const isString = (value) => typeof value === 'string';
 const isUndefined = (value) => !isDefined(value);
 
 /**
+ * Checks if item(s) exist(s) in the registry.
+ *
+ * @param {string|string[]} itemIds - The item id or item ids to check.
+ *
+ * @returns {boolean} True if the item(s) exist(s), false otherwise.
+ */
+const itemsExist = (itemIds) => {
+    if (!itemIds?.length) return false;
+
+    if (!isArray(itemIds)) itemIds = [itemIds];
+
+    return itemIds.every((itemId) => Item.exists(itemId));
+};
+
+/**
  * Logs a warning if an item is not found.
  *
  * @param {string} itemId - The item id.
