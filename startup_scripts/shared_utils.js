@@ -200,8 +200,8 @@ const formatResourceLocation = (id, isFilepath) => {
     }
 
     /* Checks if 'isFilepath' is a boolean. If it's undefined or not a boolean, defaults it to false. */
-    if (isUndefined(isFilepath) || (isDefined(isFilepath) && !isBoolean(isFilepath))) {
-        if (isDefined(isFilepath) && !isBoolean(isFilepath)) {
+    if (!isBoolean(isFilepath)) {
+        if (isDefined(isFilepath)) {
             console.warn(
                 `[WARN] Invalid 'isFilepath'. Expected boolean value true or false, but received ${typeof isFilepath}. Skipping formatting...`
             );
