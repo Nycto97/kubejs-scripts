@@ -191,7 +191,11 @@ const logTagNotFound = (tagId, activityType, tagType) => {
 const formatResourceLocation = (id, isFilepath) => {
     /* Checks if 'id' is a non-empty string. */
     if (!isStringAndNotEmpty(id)) {
-        console.warn(`[WARN] Invalid 'id'. Expected string, but received ${typeof id}. Skipping formatting...`);
+        console.warn(
+            `[WARN] Invalid 'id'. Expected non-empty string, but received ${
+                isString(id) ? 'empty string' : typeof id
+            }. Skipping formatting...`
+        );
         return;
     }
 
