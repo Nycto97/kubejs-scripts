@@ -191,19 +191,22 @@ const logTagNotFound = (tagId, activityType, tagType) => {
 const formatResourceLocation = (id, isFilepath) => {
     /* Checks if 'id' is a non-empty string. */
     if (!isStringAndNotEmpty(id)) {
-        console.warn(
-            `[WARN] Invalid 'id'. Expected non-empty string, but received ${
-                isString(id) ? 'empty string' : typeof id
-            }. Skipping formatting...`
-        );
-        return;
+        if (isString(id)) {
+            throw new Error(
+                `[ERROR] Invalid 'id'. Expected non-empty string, but received empty string. Aborting formatting...`
+            );
+        } else {
+            throw new TypeError(
+                `[ERROR] Invalid 'id'. Expected non-empty string, but received ${typeof id}. Aborting formatting...`
+            );
+        }
     }
 
-    /* Checks if 'isFilepath' is a boolean. If it's undefined or not a boolean, defaults it to false. */
+    /* Checks if 'isFilepath' is a boolean. If it's undefined, defaults it to false. */
     if (!isBoolean(isFilepath)) {
         if (isDefined(isFilepath)) {
-            console.warn(
-                `[WARN] Invalid 'isFilepath'. Expected boolean value true or false, but received ${typeof isFilepath}. Skipping formatting...`
+            throw new TypeError(
+                `[ERROR] Invalid 'isFilepath'. Expected boolean value true or false, but received ${typeof isFilepath}. Aborting formatting...`
             );
         }
 
