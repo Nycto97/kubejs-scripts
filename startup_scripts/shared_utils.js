@@ -192,7 +192,7 @@ const formatResourceLocation = (id, isFilepath) => {
     /* Checks if 'id' is a non-empty string. */
     if (!isStringAndNotEmpty(id)) {
         if (isString(id)) {
-            throw new Error(
+            throw new RangeError(
                 `[ERROR] Invalid 'id'. Expected non-empty string, but received empty string. Aborting formatting...`
             );
         } else {
