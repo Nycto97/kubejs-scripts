@@ -195,9 +195,6 @@ ServerEvents.tags(BLOCK_TAG_TYPE, (event) => {
     if (Platform.isLoaded('goldenhopper')) {
         event.add('minecraft:mineable/pickaxe', 'goldenhopper:golden_hopper');
     }
-    if (Platform.isLoaded('mcwroofs')) {
-        event.add('minecraft:mineable/pickaxe', 'mcwroofs:gutter_middle');
-    }
     if (Platform.isLoaded('metalbarrels')) {
         event.add('minecraft:mineable/pickaxe', /^metalbarrels:.*barrel$/);
     }
