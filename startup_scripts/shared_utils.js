@@ -178,6 +178,51 @@ const logTagNotFound = (tagId, activityType, tagType) => {
 };
 
 /**
+ * Formats a namespaced id or filepath to a valid Resource Location string.
+ *
+ * Note: Doesn't return an actual Resource Location object, rather a string representing one.
+ *
+ * @param {string} id - The namespaced id or filepath to format.
+ *
+ * @param {boolean} [isFilepath=false] - Whether id is a file path. Allows forward slashes '/' if true. Default: false.
+ *
+ * @returns {string|undefined} The formatted Resource Location string, or undefined if arguments are invalid.
+ */
+const formatResourceLocation = (id, isFilepath) => {
+    /* Checks if 'id' is a non-empty string. */
+    if (!isStringAndNotEmpty(id)) {
+        console.warn(`[WARN] Invalid 'id'. Expected string, but received ${typeof id}. Skipping formatting...`);
+        return;
+    }
+
+    /* Checks if 'isFilepath' is a boolean. If it's undefined or not a boolean, defaults it to false. */
+    if (isUndefined(isFilepath) || (isDefined(isFilepath) && !isBoolean(isFilepath))) {
+        if (isDefined(isFilepath) && !isBoolean(isFilepath)) {
+            console.warn(
+                `[WARN] Invalid 'isFilepath'. Expected boolean value true or false, but received ${typeof isFilepath}. Skipping formatting...`
+            );
+        }
+
+        isFilepath = false;
+    }
+
+    /**
+     * Regular expression pattern for string validation.
+     * Matches any character that is not a lowercase alphanumeric, underscore, hyphen, period, or colon.
+     * If 'isFilepath' is true, it does not match forward slashes either.
+     *
+     * @type {RegExp}
+     */
+    const pattern = isFilepath ? /[^0-9a-z_\-./:]/g : /[^0-9a-z_\-.:]/g;
+
+    /* 
+        Formats 'id' by converting to lower case, trimming start and end spaces, replacing remaining
+        spaces with underscores, and applying the regex pattern to remove disallowed characters.
+    */
+    return id.toLowerCase().trim().replace(/\s+/g, '_').replace(pattern, '');
+};
+
+/**
  * Removes duplicate values from an Array.
  *
  * @param {*[]} values - The Array from which to remove duplicates.
