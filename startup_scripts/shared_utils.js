@@ -178,17 +178,17 @@ const logTagNotFound = (tagId, activityType, tagType) => {
 };
 
 /**
- * Formats a namespaced id or filepath to a valid Resource Location string.
+ * Formats a namespaced id or path to a valid Resource Location string.
  *
- * Note: Doesn't return an actual Resource Location object, rather a string representing one.
+ * @param {string} id - The namespaced id or path to format.
+ * @param {boolean} [isPath=false] - Whether id includes a path. Allows forward slashes '/' if true. Default: false.
  *
- * @param {string} id - The namespaced id or filepath to format.
+ * @returns {string} The formatted Resource Location string.
  *
- * @param {boolean} [isFilepath=false] - Whether id is a file path. Allows forward slashes '/' if true. Default: false.
- *
- * @returns {string|undefined} The formatted Resource Location string, or undefined if arguments are invalid.
+ * @throws {RangeError} If 'id' is an empty string.
+ * @throws {TypeError} If 'id' is not a string, or if 'isPath' is defined but not a boolean.
  */
-const formatResourceLocation = (id, isFilepath) => {
+const formatResourceLocationStr = (id, isPath) => {
     /* Checks if 'id' is a non-empty string. */
     if (!isStringAndNotEmpty(id)) {
         if (isString(id)) {
@@ -202,25 +202,25 @@ const formatResourceLocation = (id, isFilepath) => {
         }
     }
 
-    /* Checks if 'isFilepath' is a boolean. If it's undefined, defaults it to false. */
-    if (!isBoolean(isFilepath)) {
-        if (isDefined(isFilepath)) {
+    /* Checks if 'isPath' is a boolean. If it's undefined, defaults it to false. */
+    if (!isBoolean(isPath)) {
+        if (isDefined(isPath)) {
             throw new TypeError(
-                `[ERROR] Invalid 'isFilepath'. Expected boolean value true or false, but received ${typeof isFilepath}. Aborting formatting...`
+                `[ERROR] Invalid 'isPath'. Expected boolean value true or false, but received ${typeof isPath}. Aborting formatting...`
             );
         }
 
-        isFilepath = false;
+        isPath = false;
     }
 
     /**
      * Regular expression pattern for string validation.
      * Matches any character that is not a lowercase alphanumeric, underscore, hyphen, period, or colon.
-     * If 'isFilepath' is true, it does not match forward slashes either.
+     * If 'isPath' is true, it does not match forward slashes either.
      *
      * @type {RegExp}
      */
-    const pattern = isFilepath ? /[^0-9a-z_\-./:]/g : /[^0-9a-z_\-.:]/g;
+    const pattern = isPath ? /[^0-9a-z_\-./:]/g : /[^0-9a-z_\-.:]/g;
 
     /* 
         Formats 'id' by converting to lower case, trimming start and end spaces, replacing remaining
