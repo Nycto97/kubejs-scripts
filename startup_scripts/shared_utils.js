@@ -36,6 +36,181 @@ StartupEvents.postInit(() => {
 });
 
 /**
+ * Validates the number and types of arguments before invoking the original function.
+ * If the validation fails, it throws an error without invoking the original function.
+ *
+ * Note: This function uses direct type checks with 'typeof', 'instanceof', and 'Array.isArray()' for validation.
+ * This is to avoid circular dependencies and potential infinite loops, as utility functions like 'isString' or 'isNumber' are defined using 'checkArguments'.
+ * 'typeof' is used for primitive types, 'instanceof' is used for RegExp and Date objects, and 'Array.isArray()' is used for Arrays.
+ *
+ * @param {Function} func - The original function to be invoked after validation.
+ * @param {number|string|Array<number|string>} numArgs - The expected number of arguments or an Array of valid numbers of arguments.
+ * @param {string|Array<string>|undefined} [argTypes] - The expected types of the arguments.
+ *
+ * @returns {Function} A new function that validates the number and types of arguments before invoking func.
+ *
+ * @throws {RangeError} If the number of arguments or the value of an argument does not match the expected value or range.
+ * @throws {TypeError} If the type of an argument does not match the expected type.
+ *
+ * @todo Add logic so that each expected type, can be more than 1 expected type. For example a non-empty string or a RegExp or an Array.
+ */
+function checkArguments(func, numArgs, argTypes) {
+    /**
+     * Throws a RangeError with a structured message.
+     *
+     * @param {string} argName - The name of the invalid argument.
+     * @param {string} expected - The expected value or range of the argument.
+     * @param {*} received - The actual value of the argument that caused the error.
+     * @param {string} action - The action that was being performed when the error occurred.
+     *
+     * @returns {void}
+     *
+     * @throws {RangeError} Always throws a RangeError.
+     */
+    function throwRangeError(argName, expected, received, action) {
+        throw new RangeError(
+            `[ERROR] Invalid '${argName}'! Expected ${expected}, but received ${received}. Aborting ${action}...`
+        );
+    }
+
+    /**
+     * Throws a TypeError with a structured message.
+     *
+     * @param {*} arg - The argument that caused the error.
+     * @param {string} argName - The name of the invalid argument.
+     * @param {string} expected - The expected type of the argument.
+     * @param {string} action - The action that was being performed when the error occurred.
+     *
+     * @returns {void}
+     *
+     * @throws {TypeError} Always throws a TypeError.
+     */
+    function throwTypeError(arg, argName, expected, action) {
+        throw new TypeError(
+            `[ERROR] Invalid '${argName}'! Expected ${expected}, but received ${typeof arg}. Aborting ${action}...`
+        );
+    }
+
+    /* Throws an error if the provided function isn't a function. */
+    if (typeof func !== 'function') {
+        throwTypeError(func, 'func', 'function', `function call to ${func.name}`);
+    }
+
+    /* Converts 'numArgs' to a number and puts it in an array, if it's a string. */
+    if (typeof numArgs === 'string') {
+        numArgs = [Number(numArgs)];
+    }
+
+    /* Puts 'numArgs' in an array if it's a number. */
+    if (typeof numArgs === 'number') {
+        numArgs = [numArgs];
+    }
+
+    /*
+        Converts each string element to a number if 'numArgs' is an array, or throws
+        an error if 'numArgs' isn't an array or if not all elements are integers.
+    */
+    if (Array.isArray(numArgs)) {
+        numArgs = numArgs.map((arg) => (typeof arg === 'string' ? Number(arg) : arg));
+
+        if (!numArgs.every(Number.isInteger)) {
+            throwRangeError(
+                'numArgs',
+                'integer or array of integers',
+                numArgs.join(', '),
+                `function call to ${func.name}`
+            );
+        }
+    } else {
+        throwTypeError(numArgs, 'numArgs', 'number, string, or array', `function call to ${func.name}`);
+    }
+
+    /*
+        Puts 'argTypes' in an array if it's defined and is a string, or throws
+        an error if 'argTypes' isn't an array or if not all elements are strings.
+    */
+    if (typeof argTypes !== 'undefined') {
+        if (typeof argTypes === 'string') {
+            argTypes = [argTypes];
+        } else if (
+            !Array.isArray(argTypes) ||
+            (Array.isArray(argTypes) && !argTypes.every((arg) => typeof arg === 'string'))
+        ) {
+            throwTypeError(
+                argTypes,
+                'argTypes',
+                'string, array of strings, or undefined',
+                `function call to ${func.name}`
+            );
+        }
+    }
+
+    /*
+        Returns a new function that validates the number and
+        types of arguments before invoking the original function.
+    */
+    return function () {
+        /* Throws an error if the number of arguments doesn't match the expected value or range. */
+        if (!numArgs.includes(arguments.length)) {
+            throwRangeError(
+                'number of arguments',
+                `one of ${numArgs.join(', ')}`,
+                arguments.length,
+                `function call to ${func.name}`
+            );
+        }
+
+        /**
+         * Checks if the argument is of the expected type.
+         *
+         * @param {*} arg - The argument to check.
+         * @param {string} expectedType - The expected type of the argument.
+         *
+         * @returns {void}
+         *
+         * @throws {TypeError} If the argument is not of the expected type.
+         */
+        function checkArgType(arg, expectedType) {
+            let isValid = true;
+
+            switch (expectedType) {
+                case 'RegExp':
+                    isValid =
+                        arg instanceof RegExp ||
+                        (arg.toString().startsWith('/') && arg.toString().lastIndexOf('/') > 0);
+                    break;
+                case 'Array':
+                    isValid = Array.isArray(arg);
+                    break;
+                case 'Date':
+                    isValid = arg instanceof Date;
+                    break;
+                case 'Object':
+                    isValid = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
+                    break;
+                default:
+                    isValid = typeof arg === expectedType;
+            }
+
+            /* Throws an error if the argument isn't of the expected type. */
+            if (!isValid) {
+                throwTypeError(arg, 'arg', expectedType, `function call to ${func.name}`);
+            }
+        }
+
+        /* Validates the types of the arguments if 'argTypes' is defined. */
+        if (argTypes !== undefined) {
+            for (let i = 0; i < arguments.length; i++) {
+                checkArgType(arguments[i], argTypes[i]);
+            }
+        }
+
+        /* Invokes the original function with the provided arguments if all validations pass. */
+        return func.apply(this, arguments);
+    };
+}
+
+/**
  * Checks if the provided value is an Array.
  *
  * @param {*} value - The value to check.
