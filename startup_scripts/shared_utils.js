@@ -10,6 +10,14 @@
 
 // priority: 999
 
+/**
+ * Loads the TagEventJS class.
+ *
+ * @type {Internal.TagEventJS}
+ * @const
+ */
+const TagEventJS = Java.loadClass('dev.latvian.mods.kubejs.server.tag.TagEventJS');
+
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
     /**
@@ -347,6 +355,15 @@ const isRegExp = (value) => value instanceof RegExp;
  * @returns {boolean} True if the value is of type 'string', false otherwise.
  */
 const isString = (value) => typeof value === 'string';
+
+/**
+ * Checks if the provided value is an instance of TagEventJS.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @returns {boolean} True if the value is an instance of TagEventJS, false otherwise.
+ */
+const isTagEventJS = (value) => value instanceof TagEventJS;
 
 /**
  * Checks if the provided value is of type 'undefined'.
