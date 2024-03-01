@@ -182,11 +182,17 @@ function checkArguments(func, numArgs, argTypes) {
                 case 'Array':
                     isValid = Array.isArray(arg);
                     break;
+                case 'nonEmptyArray':
+                    isValid = Array.isArray(arg) && arg.length > 0;
+                    break;
                 case 'Date':
                     isValid = arg instanceof Date;
                     break;
                 case 'Object':
                     isValid = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
+                    break;
+                case 'nonEmptyString':
+                    isValid = typeof arg === 'string' && arg.trim().length > 0;
                     break;
                 default:
                     isValid = typeof arg === expectedType;
