@@ -136,13 +136,33 @@ function checkArguments(func, numArgs, argTypes) {
             expectedType = expectedType.toLowerCase();
 
             switch (expectedType) {
+                case 'regular expression':
                 case 'regexp':
+                case 'regex':
                     isValidType =
                         arg instanceof RegExp ||
                         (arg.toString().startsWith('/') && arg.toString().lastIndexOf('/') > 0);
                     break;
                 case 'array':
+                case '[]':
                     isValidType = Array.isArray(arg);
+                    isEmptyArray = arg.length < 1;
+                    break;
+                case 'array<string>':
+                case 'string[]':
+                    isValidType = Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'string');
+                    isEmptyArray = arg.length < 1;
+                    break;
+                case 'array<number>':
+                case 'number[]':
+                    isValidType = Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'number');
+                    isEmptyArray = arg.length < 1;
+                    break;
+                case 'array<integer>':
+                case 'array<int>':
+                case 'integer[]':
+                case 'int[]':
+                    isValidType = Array.isArray(arg) && arg.every(Number.isInteger);
                     isEmptyArray = arg.length < 1;
                     break;
                 case 'date':
@@ -157,6 +177,10 @@ function checkArguments(func, numArgs, argTypes) {
                 case 'string':
                     isValidType = typeof arg === 'string';
                     isEmptyString = arg.trim().length < 1;
+                    break;
+                case 'bool':
+                case 'boolean':
+                    isValidType = typeof arg === 'boolean';
                     break;
                 default:
                     isValidType = typeof arg === expectedType;
