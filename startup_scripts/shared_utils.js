@@ -90,7 +90,7 @@ function checkArguments(func, numArgs, argTypes) {
      */
     function throwRangeError(argName, expected, received, action) {
         throw new RangeError(
-            `[ERROR] Invalid '${argName}'! Expected ${expected}, but received ${received}. Aborting ${action}...`
+            `[ERROR] Invalid '${argName.trim()}'! Expected ${expected.trim()}, but received ${received}. Aborting ${action.trim()}...`
         );
     }
 
@@ -108,7 +108,7 @@ function checkArguments(func, numArgs, argTypes) {
      */
     function throwTypeError(arg, argName, expected, action) {
         throw new TypeError(
-            `[ERROR] Invalid '${argName}'! Expected ${expected}, but received ${typeof arg}. Aborting ${action}...`
+            `[ERROR] Invalid '${argName.trim()}'! Expected ${expected.trim()}, but received ${typeof arg}. Aborting ${action.trim()}...`
         );
     }
 
@@ -194,7 +194,7 @@ function checkArguments(func, numArgs, argTypes) {
             throwRangeError('numArgs', expectedNumArgs, `empty string`, `function call to ${func.name}`);
         }
 
-        numArgs = [Number(numArgs)];
+        numArgs = [Number(numArgs.trim())];
     }
 
     /* Puts 'numArgs' in an array if it's a number bigger than 0, or throws an error if 'numArgs' is a number smaller than 1. */
@@ -211,7 +211,7 @@ function checkArguments(func, numArgs, argTypes) {
         an error if 'numArgs' isn't an array or if not all elements are integers.
     */
     if (Array.isArray(numArgs)) {
-        numArgs = numArgs.map((arg) => (typeof arg === 'string' ? Number(arg) : arg));
+        numArgs = numArgs.map((arg) => (typeof arg === 'string' ? Number(arg.trim()) : arg));
 
         if (!numArgs.every(Number.isInteger)) {
             throwRangeError('numArgs', expectedNumArgs, numArgs.join(', '), `function call to ${func.name}`);
@@ -228,7 +228,7 @@ function checkArguments(func, numArgs, argTypes) {
             }
 
             /* Converts argTypes to an array if it's a non-empty string. */
-            argTypes = [argTypes];
+            argTypes = [argTypes.trim()];
         } else if (Array.isArray(argTypes)) {
             /* If argTypes is an array, check if every element is either a string or an array of strings. */
             if (
@@ -241,10 +241,15 @@ function checkArguments(func, numArgs, argTypes) {
                 throwTypeError(argTypes, 'argTypes', expectedArgTypes, `function call to ${func.name}`);
             }
 
+            /* Trims all string elements. */
+            argTypes = argTypes.map((arg) =>
+                typeof arg === 'string' ? arg.trim() : arg.map((subArg) => subArg.trim())
+            );
+
             /* If argTypes is an array, check if every element is either a non-empty string or an array of non-empty strings. */
             if (
                 !argTypes.every((arg) =>
-                    typeof arg === 'string' ? arg.trim().length > 0 : arg.every((subArg) => subArg.trim().length > 0)
+                    typeof arg === 'string' ? arg.length > 0 : arg.every((subArg) => subArg.length > 0)
                 )
             ) {
                 throwRangeError(
@@ -406,9 +411,9 @@ const itemsExist = (itemIds) => {
  * @returns {void}
  */
 const logItemNotFound = (itemId, activityType, itemType) => {
-    let prefix = itemType ? `${itemType} item` : 'Item';
+    const prefix = itemType ? `${itemType.trim()} item` : 'Item';
 
-    console.warn(`[WARN] ${prefix} with id ${itemId} is not found! Skipping ${activityType}`);
+    console.warn(`${prefix} with id ${itemId.trim()} is not found! Skipping ${activityType.trim()}...`);
 };
 
 /**
@@ -420,7 +425,7 @@ const logItemNotFound = (itemId, activityType, itemType) => {
  * @returns {void}
  */
 const logModNotLoaded = (modName, activityType) =>
-    console.log(`[WARN] ${modName} mod is not loaded! Skipping ${activityType}`);
+    console.warn(`${modName.trim()} mod is not loaded! Skipping ${activityType.trim()}...`);
 
 /**
  * Logs a warning if a tag is not found.
@@ -432,9 +437,9 @@ const logModNotLoaded = (modName, activityType) =>
  * @returns {void}
  */
 const logTagNotFound = (tagId, activityType, tagType) => {
-    let prefix = tagType ? `${tagType} tag` : 'Tag';
+    let prefix = tagType ? `${tagType.trim()} tag` : 'Tag';
 
-    console.warn(`[WARN] ${prefix} #${tagId} is not found! Skipping ${activityType}`);
+    console.warn(`[WARN] ${prefix} #${tagId.trim()} is not found! Skipping ${activityType.trim()}`);
 };
 
 /**
