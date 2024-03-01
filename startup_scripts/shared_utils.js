@@ -133,23 +133,25 @@ function checkArguments(func, numArgs, argTypes) {
         }
 
         for (let expectedType of expectedTypes) {
+            expectedType = expectedType.toLowerCase();
+
             switch (expectedType) {
-                case 'RegExp':
+                case 'regexp':
                     isValidType =
                         arg instanceof RegExp ||
                         (arg.toString().startsWith('/') && arg.toString().lastIndexOf('/') > 0);
                     break;
-                case 'Array':
+                case 'array':
                     isValidType = Array.isArray(arg);
                     isEmptyArray = arg.length < 1;
                     break;
-                case 'Date':
+                case 'date':
                     isValidType = arg instanceof Date;
                     break;
-                case 'TagEventJS':
+                case 'tageventjs':
                     isValidType = arg instanceof TagEventJS;
                     break;
-                case 'Object':
+                case 'object':
                     isValidType = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
                     break;
                 case 'string':
