@@ -41,6 +41,22 @@
 
 /* ----------------------------------------------------------------- */
 
+/* 
+   ATTENTION:
+   Default parameters DO NOT WORK!
+   The following code will result in an error (missing formal parameter):
+
+   const addSmeltingRecipe = (inputItemId, outputItemId, timeInTicks = 200, xp = 0) => {
+      event
+         .smelting(outputItemId, inputItemId)
+         .id(composeRecipeId([inputItemId], outputItemId, 'smelting'))
+         .cookingTime(timeInTicks)
+         .xp(xp);
+   };
+*/
+
+/* ----------------------------------------------------------------- */
+
 /*  
    NOTE TO SELF ABOUT Platform.mods[modId] AFTER SEARCHING FOR HOURS
    HOW TO GET SOMETHING LIKE `Platform.mods.${modId}` TO WORK:
