@@ -56,6 +56,19 @@ StartupEvents.postInit(() => {
  */
 function checkArguments(func, numArgs, argTypes) {
     /**
+     * A string containing info about the expected numArgs.
+     *
+     * @type {string}
+     */
+    const expectedNumArgs = `string containing a positive integer, positive integer, or array of strings containing positive integers or positive integers`;
+    /**
+     * A string containing info about the expected argTypes.
+     *
+     * @type {string}
+     */
+    const expectedArgTypes = `non-empty string, array of non-empty strings, or undefined`;
+
+    /**
      * Throws a RangeError with a structured message.
      *
      * @param {string} argName - The name of the invalid argument.
@@ -96,13 +109,21 @@ function checkArguments(func, numArgs, argTypes) {
         throwTypeError(func, 'func', 'function', `function call to ${func.name}`);
     }
 
-    /* Converts 'numArgs' to a number and puts it in an array, if it's a string. */
+    /* Converts 'numArgs' to a number and puts it in an array if it's a string, or throws an error if 'numArgs' is an empty string. */
     if (typeof numArgs === 'string') {
+        if (numArgs.trim().length < 1) {
+            throwRangeError('numArgs', expectedNumArgs, `empty string`, `function call to ${func.name}`);
+        }
+
         numArgs = [Number(numArgs)];
     }
 
-    /* Puts 'numArgs' in an array if it's a number. */
+    /* Puts 'numArgs' in an array if it's a number bigger than 0, or throws an error if 'numArgs' is a number smaller than 1. */
     if (typeof numArgs === 'number') {
+        if (numArgs < 1) {
+            throwRangeError('numArgs', expectedNumArgs, numArgs, `function call to ${func.name}`);
+        }
+
         numArgs = [numArgs];
     }
 
@@ -114,32 +135,37 @@ function checkArguments(func, numArgs, argTypes) {
         numArgs = numArgs.map((arg) => (typeof arg === 'string' ? Number(arg) : arg));
 
         if (!numArgs.every(Number.isInteger)) {
-            throwRangeError(
-                'numArgs',
-                'integer or array of integers',
-                numArgs.join(', '),
-                `function call to ${func.name}`
-            );
+            throwRangeError('numArgs', expectedNumArgs, numArgs.join(', '), `function call to ${func.name}`);
         }
     } else {
-        throwTypeError(numArgs, 'numArgs', 'number, string, or array', `function call to ${func.name}`);
+        throwTypeError(numArgs, 'numArgs', expectedNumArgs, `function call to ${func.name}`);
     }
 
     /*
-        Puts 'argTypes' in an array if it's defined and is a string, or throws
-        an error if 'argTypes' isn't an array or if not all elements are strings.
+        Puts 'argTypes' in an array if it's defined and is a string, or throws an error if 'argTypes'
+        is an empty string or not an array or if not all elements are non-empty strings.
     */
     if (typeof argTypes !== 'undefined') {
         if (typeof argTypes === 'string') {
+            if (argTypes.trim().length < 1) {
+                throwRangeError('argTypes', expectedArgTypes, `empty string`, `function call to ${func.name}`);
+            }
+
             argTypes = [argTypes];
-        } else if (
+        }
+
+        if (
             !Array.isArray(argTypes) ||
             (Array.isArray(argTypes) && !argTypes.every((arg) => typeof arg === 'string'))
         ) {
-            throwTypeError(
-                argTypes,
+            throwTypeError(argTypes, 'argTypes', expectedArgTypes, `function call to ${func.name}`);
+        }
+
+        if (!argTypes.every((arg) => arg.trim().length > 0)) {
+            throwRangeError(
                 'argTypes',
-                'string, array of strings, or undefined',
+                expectedArgTypes,
+                `array containing 1 or more empty strings`,
                 `function call to ${func.name}`
             );
         }
