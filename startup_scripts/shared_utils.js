@@ -18,23 +18,25 @@
  */
 const TagEventJS = Java.loadClass('dev.latvian.mods.kubejs.server.tag.TagEventJS');
 
+let itemIds;
+
+let blockIds;
+
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
     /**
      * The item ids of all items.
      *
      * @type {List<string>}
-     * @const
      */
-    const itemIds = Item.getTypeList();
+    itemIds = Item.getTypeList();
 
     /**
      * The block ids of all blocks.
      *
      * @type {List<string>}
-     * @const
      */
-    const blockIds = Block.getTypeList();
+    blockIds = Block.getTypeList();
 
     global['itemIds'] = itemIds;
     global['blockIds'] = blockIds;
