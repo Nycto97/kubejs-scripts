@@ -36,7 +36,7 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const isOldDimensionWhitelisted = dimensionWhitelistForShader.includes(oldDimension);
     const isNewDimensionWhitelisted = dimensionWhitelistForShader.includes(newDimension);
 
-    if (global.isPlayerDimensionChangeLogEnabled) {
+    if (isPlayerDimensionChangeLogEnabled) {
         console.log(`${username} moved from ${oldDimension.split(':')[1]} to ${newDimension.split(':')[1]}`);
     }
 

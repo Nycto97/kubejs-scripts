@@ -259,7 +259,7 @@ ServerEvents.recipes((event) => {
      */
     const addCrushingRecipe = (inputItemId, timeInTicks, outputItemsInfo) => {
         if (!Platform.isLoaded('create')) {
-            global.logModNotLoaded('Create', 'crushing recipe');
+            logModNotLoaded('Create', 'crushing recipe');
             return;
         }
 
@@ -284,7 +284,7 @@ ServerEvents.recipes((event) => {
      */
     const addOreCrushingRecipe = (inputItemId, oreType, mainBlockItemId) => {
         if (!Platform.isLoaded('create')) {
-            global.logModNotLoaded('Create', 'ore crushing recipe');
+            logModNotLoaded('Create', 'ore crushing recipe');
             return;
         }
 
@@ -433,7 +433,7 @@ ServerEvents.recipes((event) => {
      */
     const addMixingRecipe = (input, outputItemsInfo, requiresHeat, requiresSuperHeat) => {
         if (!Platform.isLoaded('create')) {
-            global.logModNotLoaded('Create', 'mixing recipe');
+            logModNotLoaded('Create', 'mixing recipe');
             return;
         }
 

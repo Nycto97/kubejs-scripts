@@ -18,42 +18,52 @@ const enableAllLogs = true;
 const disableAllLogs = false;
 
 /* Blocks and items */
-global['isBlockAndItemCountLogEnabled'] = true;
+let isBlockAndItemCountLogEnabled = true;
 
 /* Items */
-global['isNonTaggedItemIdsLogEnabled'] = true;
+let isNonTaggedItemIdsLogEnabled = true;
 
 /* Loot */
-global['isBlacklistedRareIceLootLogEnabled'] = false;
+let isBlacklistedRareIceLootLogEnabled = false;
 
 /* Mods */
-global['isModRenameLogEnabled'] = true;
+let isModRenameLogEnabled = true;
 
 /* Players */
-global['isPlayerDimensionChangeLogEnabled'] = true;
+let isPlayerDimensionChangeLogEnabled = true;
 
 /* Tags */
-global['isItemTagsLogEnabled'] = true;
+let isItemTagsLogEnabled = true;
 
 /* Shader (client only) */
-global['isBlockIdsForShaderLogEnabled'] = false;
+let isBlockIdsForShaderLogEnabled = false;
 
 if (enableAllLogs && !disableAllLogs) {
-    global.isBlockAndItemCountLogEnabled = true;
-    global.isNonTaggedItemIdsLogEnabled = true;
-    global.isBlacklistedRareIceLootLogEnabled = true;
-    global.isModRenameLogEnabled = true;
-    global.isPlayerDimensionChangeLogEnabled = true;
-    global.isItemTagsLogEnabled = true;
-    global.isBlockIdsForShaderLogEnabled = true;
+    isBlockAndItemCountLogEnabled = true;
+    isNonTaggedItemIdsLogEnabled = true;
+    isBlacklistedRareIceLootLogEnabled = true;
+    isModRenameLogEnabled = true;
+    isPlayerDimensionChangeLogEnabled = true;
+    isItemTagsLogEnabled = true;
+    isBlockIdsForShaderLogEnabled = true;
 }
 
 if (!enableAllLogs && disableAllLogs) {
-    global.isBlockAndItemCountLogEnabled = false;
-    global.isNonTaggedItemIdsLogEnabled = false;
-    global.isBlacklistedRareIceLootLogEnabled = false;
-    global.isModRenameLogEnabled = false;
-    global.isPlayerDimensionChangeLogEnabled = false;
-    global.isItemTagsLogEnabled = false;
-    global.isBlockIdsForShaderLogEnabled = false;
+    isBlockAndItemCountLogEnabled = false;
+    isNonTaggedItemIdsLogEnabled = false;
+    isBlacklistedRareIceLootLogEnabled = false;
+    isModRenameLogEnabled = false;
+    isPlayerDimensionChangeLogEnabled = false;
+    isItemTagsLogEnabled = false;
+    isBlockIdsForShaderLogEnabled = false;
 }
+
+/* Global exports */
+
+global['isBlockAndItemCountLogEnabled'] = isBlockAndItemCountLogEnabled;
+global['isNonTaggedItemIdsLogEnabled'] = isNonTaggedItemIdsLogEnabled;
+global['isBlacklistedRareIceLootLogEnabled'] = isBlacklistedRareIceLootLogEnabled;
+global['isModRenameLogEnabled'] = isModRenameLogEnabled;
+global['isPlayerDimensionChangeLogEnabled'] = isPlayerDimensionChangeLogEnabled;
+global['isItemTagsLogEnabled'] = isItemTagsLogEnabled;
+global['isBlockIdsForShaderLogEnabled'] = isBlockIdsForShaderLogEnabled;

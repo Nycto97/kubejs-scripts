@@ -41,8 +41,8 @@ StartupEvents.postInit(() => {
     global['itemIds'] = itemIds;
     global['blockIds'] = blockIds;
 
-    if (global.isBlockAndItemCountLogEnabled)
-        console.log(`There are ${global.itemIds.length} items and ${global.blockIds.length} blocks registered`);
+    if (isBlockAndItemCountLogEnabled)
+        console.log(`There are ${itemIds.length} items and ${blockIds.length} blocks registered`);
 });
 
 /**
@@ -505,6 +505,26 @@ const removeDuplicates = (values) => {
     return values.filter((value, index) => values.indexOf(value) === index);
 };
 
+/* Global exports */
+
+global['checkArguments'] = checkArguments;
+
+global['isArray'] = isArray;
+global['isArrayAndNotEmpty'] = isArrayAndNotEmpty;
+global['isBoolean'] = isBoolean;
+global['isDefined'] = isDefined;
+global['isRegExp'] = isRegExp;
+global['isString'] = isString;
+global['isStringAndNotEmpty'] = isStringAndNotEmpty;
+global['isTagEventJS'] = isTagEventJS;
+global['isUndefined'] = isUndefined;
+
+global['itemsExist'] = itemsExist;
+
+global['logItemNotFound'] = logItemNotFound;
 global['logModNotLoaded'] = logModNotLoaded;
-global['logItemIdNotFound'] = logItemNotFound;
 global['logTagNotFound'] = logTagNotFound;
+
+global['formatResourceLocationStr'] = formatResourceLocationStr;
+
+global['removeDuplicates'] = removeDuplicates;

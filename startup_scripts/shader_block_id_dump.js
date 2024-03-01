@@ -31,7 +31,7 @@
 StartupEvents.postInit(() => {
     if (!Platform.isClientEnvironment()) return;
 
-    if (!global.isBlockIdsForShaderLogEnabled) {
+    if (!isBlockIdsForShaderLogEnabled) {
         console.log('Dumping for Complementary Shader disabled!');
         console.log("Set 'isBlockIdsForShaderLogEnabled = true' in settings.js to enable!");
         return;
@@ -87,7 +87,7 @@ StartupEvents.postInit(() => {
     let vanillaFoliageBlockIds =
         'grass short_grass fern oak_sapling spruce_sapling birch_sapling jungle_sapling acacia_sapling dark_oak_sapling bamboo_sapling cherry_sapling dead_bush dandelion poppy blue_orchid allium azure_bluet red_tulip orange_tulip white_tulip pink_tulip oxeye_daisy cornflower lily_of_the_valley wither_rose sweet_berry_bush wheat carrots potatoes beetroots pumpkin_stem melon_stem nether_sprouts warped_roots crimson_roots sunflower:half=lower lilac:half=lower rose_bush:half=lower peony:half=lower tall_grass:half=lower large_fern:half=lower torchflower_crop';
 
-    let moddedFoliageBlockIdsFiltered = global.blockIds.filter(
+    let moddedFoliageBlockIdsFiltered = blockIds.filter(
         (blockId) =>
             !blockId.startsWith('minecraft:') &&
             !blockId.startsWith('dtterralith:') &&
@@ -109,7 +109,7 @@ StartupEvents.postInit(() => {
     */
     let vanillaLeavesBlockIds =
         'leaves leaves2 oak_leaves spruce_leaves birch_leaves jungle_leaves acacia_leaves dark_oak_leaves azalea_leaves flowering_azalea_leaves mangrove_leaves cherry_leaves';
-    let moddedLeavesBlockIdsFiltered = global.blockIds.filter(
+    let moddedLeavesBlockIdsFiltered = blockIds.filter(
         (blockId) =>
             !blockId.startsWith('minecraft:') &&
             !blockId.startsWith('dtterralith:') &&
@@ -125,7 +125,7 @@ StartupEvents.postInit(() => {
     /*
        (MODDED) ORES
     */
-    let moddedOreBlockIdsFiltered = global.blockIds.filter(
+    let moddedOreBlockIdsFiltered = blockIds.filter(
         (block) =>
             !block.startsWith('minecraft:') &&
             !block.startsWith('forbidden_arcanus:') &&
@@ -164,7 +164,7 @@ StartupEvents.postInit(() => {
     */
     let vanillaIronBlockIds = 'iron_block iron_trapdoor heavy_weighted_pressure_plate';
     // TODO look in JEI which block ids to add to the RegEx
-    let moddedIronBlockIdsFiltered = global.blockIds.filter((blockId) =>
+    let moddedIronBlockIdsFiltered = blockIds.filter((blockId) =>
         RegExp(
             /^(?!minecraft).*:(?!.*(cast|compressed|dark|industrial|rough)).*iron.*(block|fence|nub).*(?!(cast|compressed|dark|industrial|rough))$/
         ).test(blockId)
@@ -196,7 +196,7 @@ StartupEvents.postInit(() => {
     // TODO add other stained glass block ids to array
     // INFO: Connected Glass' stained glass blocks does not have 'stained' in the block id!
     // Include tinted glass?
-    let moddedStainedGlassBlockIdsFiltered = global.blockIds.filter(
+    let moddedStainedGlassBlockIdsFiltered = blockIds.filter(
         (blockId) =>
             !blockId.startsWith('minecraft:') &&
             !blockId.includes('pane') &&
