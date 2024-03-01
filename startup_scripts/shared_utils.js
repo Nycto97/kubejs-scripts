@@ -161,7 +161,7 @@ function checkArguments(func, numArgs, argTypes) {
         }
 
         /**
-         * Checks if the argument is of the expected type.
+         * Checks if the argument is of the expected type or instance and not empty if argument is an Array or a string.
          *
          * @param {*} arg - The argument to check.
          * @param {string} expectedType - The expected type of the argument.
@@ -169,45 +169,58 @@ function checkArguments(func, numArgs, argTypes) {
          * @returns {void}
          *
          * @throws {TypeError} If the argument is not of the expected type.
+         * @throws {RangeError} If the argument is an empty Array or an empty string.
          */
-        function checkArgType(arg, expectedType) {
-            let isValid = true;
+        function checkArg(arg, expectedType) {
+            let isValidType = true;
+
+            let isEmptyArray = false;
+            let isEmptyString = false;
 
             switch (expectedType) {
                 case 'RegExp':
-                    isValid =
+                    isValidType =
                         arg instanceof RegExp ||
                         (arg.toString().startsWith('/') && arg.toString().lastIndexOf('/') > 0);
                     break;
                 case 'Array':
-                    isValid = Array.isArray(arg);
-                    break;
-                case 'nonEmptyArray':
-                    isValid = Array.isArray(arg) && arg.length > 0;
+                    isValidType = Array.isArray(arg);
+                    isEmptyArray = arg.length < 1;
                     break;
                 case 'Date':
-                    isValid = arg instanceof Date;
+                    isValidType = arg instanceof Date;
                     break;
                 case 'Object':
-                    isValid = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
+                    isValidType = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
                     break;
-                case 'nonEmptyString':
-                    isValid = typeof arg === 'string' && arg.trim().length > 0;
+                case 'string':
+                    isValidType = typeof arg === 'string';
+                    isEmptyString = arg.trim().length < 1;
                     break;
                 default:
-                    isValid = typeof arg === expectedType;
+                    isValidType = typeof arg === expectedType;
             }
 
             /* Throws an error if the argument isn't of the expected type. */
-            if (!isValid) {
+            if (!isValidType) {
                 throwTypeError(arg, 'arg', expectedType, `function call to ${func.name}`);
+            }
+
+            /* Throws an error if the argument is an empty Array or an empty string. */
+            if (isEmptyArray || isEmptyString) {
+                throwRangeError(
+                    'arg',
+                    `non-empty ${expectedType}`,
+                    `empty ${expectedType}`,
+                    `function call to ${func.name}`
+                );
             }
         }
 
         /* Validates the types of the arguments if 'argTypes' is defined. */
         if (argTypes !== undefined) {
             for (let i = 0; i < arguments.length; i++) {
-                checkArgType(arguments[i], argTypes[i]);
+                checkArg(arguments[i], argTypes[i]);
             }
         }
 
