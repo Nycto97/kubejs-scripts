@@ -144,6 +144,9 @@ function checkArguments(func, numArgs, argTypes) {
                 case 'Date':
                     isValidType = arg instanceof Date;
                     break;
+                case 'TagEventJS':
+                    isValidType = arg instanceof TagEventJS;
+                    break;
                 case 'Object':
                     isValidType = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
                     break;
