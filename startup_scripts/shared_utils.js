@@ -378,18 +378,18 @@ const isTagEventJS = (value) => value instanceof TagEventJS;
 const isUndefined = (value) => !isDefined(value);
 
 /**
- * Checks if item(s) exist(s) in the registry.
+ * Checks if (an) item(s) exist(s) in the registry.
  *
- * @param {string|string[]} itemIds - The item id or item ids to check.
+ * @param {string|string[]} itemIds - The item id(s) to check.
  *
- * @returns {boolean} True if the item(s) exist(s), false otherwise.
+ * @returns {boolean} True if the item(s) exist(s).
  */
 const itemsExist = (itemIds) => {
     if (!itemIds?.length) return false;
 
     if (!isArray(itemIds)) itemIds = [itemIds];
 
-    return itemIds.every((itemId) => Item.exists(itemId));
+    return itemIds.map((itemId) => formatResourceLocationStr(itemId)).every((itemId) => Item.exists(itemId));
 };
 
 /**
