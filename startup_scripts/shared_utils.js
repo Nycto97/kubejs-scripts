@@ -46,23 +46,23 @@ StartupEvents.postInit(() => {
 });
 
 /**
- * Validates the number and types of arguments before invoking the original function.
- * If the validation fails, it throws an error without invoking the original function.
+ * Validates the number and types of arguments. If the validation fails, it throws an error.
  *
  * Note: This function uses direct type checks with 'typeof', 'instanceof', and 'Array.isArray()' for validation.
  * This is to avoid circular dependencies and potential infinite loops, as utility functions like 'isString' or 'isNumber' are defined using 'checkArguments'.
  * 'typeof' is used for primitive types, 'instanceof' is used for RegExp and Date objects, and 'Array.isArray()' is used for Arrays.
  *
- * @param {Function} func - The original function to be invoked after validation.
+ * @param {string} funcName - The name of the function to check the arguments for.
+ * @param {*} args - The arguments to check.
  * @param {number|string|Array<number|string>} numArgs - The expected number of arguments or an Array of valid numbers of arguments.
  * @param {string|Array<string>|Array<Array<string>>|undefined} [argTypes] - The expected types of the arguments.
  *
  * @throws {RangeError} If the number of arguments or the value of an argument does not match the expected value or range.
  * @throws {TypeError} If the type of an argument does not match the expected type.
  *
- * @returns {Function} A new function that validates the number and types of arguments before invoking func.
+ * @returns {void}
  */
-function checkArguments(func, numArgs, argTypes) {
+function checkArguments(funcName, args, numArgs, argTypes) {
     /**
      * A string containing info about the expected numArgs.
      *
@@ -193,7 +193,7 @@ function checkArguments(func, numArgs, argTypes) {
 
         /* Throws an error if the argument isn't of any of the expected types. */
         if (!isValidType) {
-            throwTypeError(arg, 'arg', expectedTypes.join(' or '), `function call to ${func.name}`);
+            throwTypeError(arg, 'arg', expectedTypes.join(' or '), `'${funcName}' function`);
         }
 
         /* Throws an error if the argument is an empty Array or an empty string. */
@@ -202,20 +202,29 @@ function checkArguments(func, numArgs, argTypes) {
                 'arg',
                 `non-empty ${expectedTypes.join(' or ')}`,
                 `empty ${expectedTypes.join(' or ')}`,
-                `function call to ${func.name}`
+                `'${funcName}' function`
             );
         }
     }
 
-    /* Throws an error if the provided function isn't a function. */
-    if (typeof func !== 'function') {
-        throwTypeError(func, 'func', 'function', `function call to ${func.name}`);
+    /* Throws an error if the provided 'funcName' isn't a string. */
+    if (typeof funcName !== 'string') {
+        throwTypeError(funcName, 'funcName', 'string', 'function');
+    }
+
+    /* Throws an error if the provided 'funcName' is an empty string. */
+    if (funcName.trim().length < 1) {
+        throwRangeError('funcName', 'non-empty string', `empty string`, 'function');
+    }
+
+    if (typeof args === 'undefined') {
+        throwRangeError('args', '1 or more arguments', 0, `'${funcName}' function`);
     }
 
     /* Converts 'numArgs' to a number and puts it in an array if it's a non-empty string, or throws an error if 'numArgs' is an empty string. */
     if (typeof numArgs === 'string') {
         if (numArgs.trim().length < 1) {
-            throwRangeError('numArgs', expectedNumArgs, `empty string`, `function call to ${func.name}`);
+            throwRangeError('numArgs', expectedNumArgs, `empty string`, `'${funcName}' function`);
         }
 
         numArgs = [Number(numArgs.trim())];
@@ -224,7 +233,7 @@ function checkArguments(func, numArgs, argTypes) {
     /* Puts 'numArgs' in an array if it's a number bigger than 0, or throws an error if 'numArgs' is a number smaller than 1. */
     if (typeof numArgs === 'number') {
         if (numArgs < 1) {
-            throwRangeError('numArgs', expectedNumArgs, numArgs, `function call to ${func.name}`);
+            throwRangeError('numArgs', expectedNumArgs, numArgs, `'${funcName}' function`);
         }
 
         numArgs = [numArgs];
@@ -238,17 +247,17 @@ function checkArguments(func, numArgs, argTypes) {
         numArgs = numArgs.map((arg) => (typeof arg === 'string' ? Number(arg.trim()) : arg));
 
         if (!numArgs.every(Number.isInteger)) {
-            throwRangeError('numArgs', expectedNumArgs, numArgs.join(', '), `function call to ${func.name}`);
+            throwRangeError('numArgs', expectedNumArgs, numArgs.join(', '), `'${funcName}' function`);
         }
     } else {
-        throwTypeError(numArgs, 'numArgs', expectedNumArgs, `function call to ${func.name}`);
+        throwTypeError(numArgs, 'numArgs', expectedNumArgs, `'${funcName}' function`);
     }
 
     /* Validates if argTypes is a non-empty string, array of non-empty strings, or array of arrays with non-empty strings. */
     if (typeof argTypes !== 'undefined') {
         if (typeof argTypes === 'string') {
             if (argTypes.trim().length < 1) {
-                throwRangeError('argTypes', expectedArgTypes, `empty string`, `function call to ${func.name}`);
+                throwRangeError('argTypes', expectedArgTypes, `empty string`, `'${funcName}' function`);
             }
 
             /* Converts argTypes to an array if it's a non-empty string. */
@@ -262,7 +271,7 @@ function checkArguments(func, numArgs, argTypes) {
                         (Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'string'))
                 )
             ) {
-                throwTypeError(argTypes, 'argTypes', expectedArgTypes, `function call to ${func.name}`);
+                throwTypeError(argTypes, 'argTypes', expectedArgTypes, `'${funcName}' function`);
             }
 
             /* Trims all string elements. */
@@ -280,39 +289,25 @@ function checkArguments(func, numArgs, argTypes) {
                     'argTypes',
                     expectedArgTypes,
                     `array or array of arrays containing 1 or more empty strings`,
-                    `function call to ${func.name}`
+                    `'${funcName}' function`
                 );
             }
         } else {
-            throwTypeError(argTypes, 'argTypes', expectedArgTypes, `function call to ${func.name}`);
+            throwTypeError(argTypes, 'argTypes', expectedArgTypes, `'${funcName}' function`);
         }
     }
 
-    /*
-        Returns a new function that validates the number and
-        types of arguments before invoking the original function.
-    */
-    return function () {
-        /* Validates the number of arguments. */
-        if (!numArgs.includes(arguments.length)) {
-            throwRangeError(
-                'number of arguments',
-                `one of ${numArgs.join(', ')}`,
-                arguments.length,
-                `function call to ${func.name}`
-            );
-        }
+    /* Validates the number of arguments. */
+    if (!numArgs.includes(args.length)) {
+        throwRangeError('number of arguments', `one of ${numArgs.join(', ')}`, args.length, `'${funcName}' function`);
+    }
 
-        /* Validates the types of the arguments if 'argTypes' is defined. */
-        if (argTypes !== undefined) {
-            for (let i = 0; i < arguments.length; i++) {
-                checkArg(arguments[i], argTypes[i]);
-            }
+    /* Validates the types of the arguments if 'argTypes' is defined. */
+    if (argTypes !== undefined) {
+        for (let i = 0; i < args.length; i++) {
+            checkArg(args[i], argTypes[i]);
         }
-
-        /* Invokes the original function with the provided arguments if all validations pass. */
-        return func.apply(this, arguments);
-    };
+    }
 }
 
 /**
