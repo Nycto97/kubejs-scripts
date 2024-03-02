@@ -42,6 +42,8 @@ const formatResourceLocationStr = global['formatResourceLocationStr'];
 
 const removeDuplicates = global['removeDuplicates'];
 
+const throwError = global['throwError'];
+
 /* From settings.js */
 
 const isBlockAndItemCountLogEnabled = global['isBlockAndItemCountLogEnabled'];

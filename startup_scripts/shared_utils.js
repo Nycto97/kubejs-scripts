@@ -77,42 +77,6 @@ function checkArguments(funcName, args, numArgs, argTypes) {
     const expectedArgTypes = `non-empty string, array of non-empty strings, array of arrays of non-empty strings, or undefined`;
 
     /**
-     * Throws a RangeError with a structured message.
-     *
-     * @param {string} argName - The name of the invalid argument.
-     * @param {string} expected - The expected value or range of the argument.
-     * @param {*} received - The actual value of the argument that caused the error.
-     * @param {string} action - The action that was being performed when the error occurred.
-     *
-     * @returns {void}
-     *
-     * @throws {RangeError} Always throws a RangeError.
-     */
-    function throwRangeError(argName, expected, received, action) {
-        throw new RangeError(
-            `[ERROR] Invalid '${argName.trim()}'! Expected ${expected.trim()}, but received ${received}. Aborting ${action.trim()}...`
-        );
-    }
-
-    /**
-     * Throws a TypeError with a structured message.
-     *
-     * @param {*} arg - The argument that caused the error.
-     * @param {string} argName - The name of the invalid argument.
-     * @param {string} expected - The expected type of the argument.
-     * @param {string} action - The action that was being performed when the error occurred.
-     *
-     * @returns {void}
-     *
-     * @throws {TypeError} Always throws a TypeError.
-     */
-    function throwTypeError(arg, argName, expected, action) {
-        throw new TypeError(
-            `[ERROR] Invalid '${argName.trim()}'! Expected ${expected.trim()}, but received ${typeof arg}. Aborting ${action.trim()}...`
-        );
-    }
-
-    /**
      * Checks if the argument is of one of the expected types or instances and not empty if argument is an Array or a string.
      *
      * @param {*} arg - The argument to check.
@@ -564,6 +528,115 @@ const removeDuplicates = (values) => {
     return values.filter((value, index) => values.indexOf(value) === index);
 };
 
+/**
+ * Throws an error with a structured message.
+ *
+ * Note: This function is not called recursively within itself to prevent an infinite loop and a potential stack overflow.
+ *
+ * Note: The 'checkArguments' function is not used in this function to validate the parameters because it could create a circular dependency as 'checkArguments' also uses this function. Instead, basic type checks are used to validate the parameters.
+ *
+ * @param {string} errorType - The type of error to throw ('RangeError' or 'TypeError').
+ * @param {*} arg - The argument that caused the error.
+ * @param {string} argName - The name of the invalid argument.
+ * @param {string} expected - The expected value, range, or type of the argument.
+ * @param {string} action - The action that was being performed when the error occurred.
+ * @param {*} [received=typeof arg] - The actual value of the argument that caused the error (only used for RangeError).
+ *
+ * @returns {void}
+ *
+ * @throws {RangeError|TypeError} Throws a RangeError or TypeError based on 'errorType'. If 'errorType' is not 'RangeError' or 'TypeError', a generic Error is thrown.
+ */
+function throwError(errorType, arg, argName, expected, action, received) {
+    /*
+        Throws a TypeError if 'errorType' isn't a string,
+        or a RangeError if 'errorType' is an empty string.
+    */
+    if (!isStringAndNotEmpty(errorType)) {
+        if (!isString(errorType)) {
+            throw new TypeError(
+                `Invalid 'errorType'! Expected string, but received ${typeof errorType}. Aborting throwing initial error...`
+            );
+        } else {
+            throw new RangeError(
+                `Invalid 'errorType'! Expected non-empty string, but received empty string. Aborting throwing initial error...`
+            );
+        }
+    }
+
+    /* Throws a RangeError if 'arg' is undefined. */
+    if (isUndefined(arg)) {
+        throw new RangeError(
+            `Invalid 'arg'! Expected an argument, but received none. Aborting throwing initial error...`
+        );
+    }
+
+    /*
+        Throws a TypeError if 'argName' isn't a string,
+        or a RangeError if 'argName' is an empty string.
+    */
+    if (!isStringAndNotEmpty(argName)) {
+        if (!isString(argName)) {
+            throw new TypeError(
+                `Invalid 'argName'! Expected string, but received ${typeof argName}. Aborting throwing initial error...`
+            );
+        } else {
+            throw new RangeError(
+                `Invalid 'argName'! Expected non-empty string, but received empty string. Aborting throwing initial error...`
+            );
+        }
+    }
+
+    /*
+        Throws a TypeError if 'expected' isn't a string,
+        or a RangeError if 'expected' is an empty string.
+    */
+    if (!isStringAndNotEmpty(expected)) {
+        if (!isString(expected)) {
+            throw new TypeError(
+                `Invalid 'expected'! Expected string, but received ${typeof expected}. Aborting throwing initial error...`
+            );
+        } else {
+            throw new RangeError(
+                `Invalid 'expected'! Expected non-empty string, but received empty string. Aborting throwing initial error...`
+            );
+        }
+    }
+
+    /*
+        Throws a TypeError if 'action' isn't a string,
+        or a RangeError if 'action' is an empty string.
+    */
+    if (!isStringAndNotEmpty(action)) {
+        if (!isString(action)) {
+            throw new TypeError(
+                `Invalid 'action'! Expected string, but received ${typeof action}. Aborting throwing initial error...`
+            );
+        } else {
+            throw new RangeError(
+                `Invalid 'action'! Expected non-empty string, but received empty string. Aborting throwing initial error...`
+            );
+        }
+    }
+
+    /* Defaults 'received' to 'typeof arg' if it's undefined. */
+    if (isUndefined(received)) {
+        received = typeof arg;
+    }
+
+    const message = `Invalid '${argName.trim()}'! Expected ${expected.trim()}, but received ${received}. Aborting ${action.trim()}...`;
+
+    switch (errorType) {
+        case 'RangeError':
+            throw new RangeError(message);
+        case 'TypeError':
+            throw new TypeError(message);
+        default:
+            throw new Error(
+                `Invalid error type: '${errorType}'! Expected 'RangeError' or 'TypeError'. Aborting throwing initial error...`
+            );
+    }
+}
+
 /* Global exports */
 
 global['checkArguments'] = checkArguments;
@@ -587,3 +660,5 @@ global['logTagNotFound'] = logTagNotFound;
 global['formatResourceLocationStr'] = formatResourceLocationStr;
 
 global['removeDuplicates'] = removeDuplicates;
+
+global['throwError'] = throwError;
