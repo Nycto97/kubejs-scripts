@@ -22,6 +22,8 @@ const itemIds = global['itemIds'];
 
 const checkArguments = global['checkArguments'];
 
+const formatResourceLocationStr = global['formatResourceLocationStr'];
+
 const isArray = global['isArray'];
 const isArrayAndNotEmpty = global['isArrayAndNotEmpty'];
 const isBoolean = global['isBoolean'];
@@ -37,8 +39,6 @@ const itemsExist = global['itemsExist'];
 const logItemNotFound = global['logItemNotFound'];
 const logModNotLoaded = global['logModNotLoaded'];
 const logTagNotFound = global['logTagNotFound'];
-
-const formatResourceLocationStr = global['formatResourceLocationStr'];
 
 const removeDuplicates = global['removeDuplicates'];
 

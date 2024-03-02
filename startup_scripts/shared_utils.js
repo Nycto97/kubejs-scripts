@@ -321,6 +321,52 @@ function checkArguments(funcName, args, numArgs, argTypes) {
 }
 
 /**
+ * Formats a namespaced id or path to a valid Resource Location string.
+ *
+ * @param {string} id - The namespaced id or path to format. Cannot contain more than 1 colon (':').
+ * @param {boolean|undefined} [isPath=false] - Whether 'id' includes a path. If true, allows forward slashes ('/'). Default: false.
+ *
+ * @throws {RangeError} If number of arguments is not 1 or 2, or if 'id' is an empty string, or if 'id' contains more than 1 colon.
+ * @throws {TypeError} If 'id' is not a string, or if 'isPath' is defined but not a boolean.
+ *
+ * @returns {string} The formatted Resource Location string.
+ */
+const formatResourceLocationStr = (id, isPath) => {
+    checkArguments('formatResourceLocationStr', arguments, [1, 2], ['string', 'boolean']);
+
+    /* Throws a RangeError if 'id' contains more than 1 colon. */
+    if (id.split(':').length > 2) {
+        throwError(
+            'RangeError',
+            id,
+            'id',
+            `'id' not to contain more than 1 colon (':')`,
+            `'formatResourceLocationStr' function`,
+            `'id' containing ${id.split(':').length - 1} colons`
+        );
+    }
+
+    /* Defaults 'isPath' to false if it's undefined. */
+    isPath = isPath ? isPath : false;
+
+    /**
+     * RexExp pattern for Resource Location string validation.
+     *
+     * Matches any character that isn't a lowercase alphanumeric, underscore, hyphen, period, or colon.
+     * If 'isPath' is true, it doesn't match forward slashes either.
+     *
+     * @type {RegExp}
+     */
+    const pattern = isPath ? /[^0-9a-z_\-./:]/g : /[^0-9a-z_\-.:]/g;
+
+    /* 
+        Formats 'id' by converting to lowercase, trimming start and end spaces, replacing remaining
+        spaces with underscores, and applying the regex pattern to remove disallowed characters.
+    */
+    return id.toLowerCase().trim().replace(/\s+/g, '_').replace(pattern, '');
+};
+
+/**
  * Checks if a value is an Array.
  *
  * @param {*} value - The value to check.
@@ -524,41 +570,6 @@ const logTagNotFound = (tagId, activityType, tagType) => {
 };
 
 /**
- * Formats a namespaced id or path to a valid Resource Location string.
- *
- * @param {string} id - The namespaced id or path to format.
- * @param {boolean|undefined} [isPath=false] - Whether id includes a path. Allows forward slashes '/' if true. Default: false.
- *
- * @throws {RangeError} If number of arguments is not 1 or 2, or if 'id' is an empty string.
- * @throws {TypeError} If 'id' is not a string, or if 'isPath' is defined but not a boolean.
- *
- * @returns {string} The formatted Resource Location string.
- */
-const formatResourceLocationStr = (id, isPath) => {
-    checkArguments('formatResourceLocationStr', arguments, [1, 2], ['string', 'boolean']);
-
-    /* Defaults 'isPath' to false if it's undefined. */
-    if (isUndefined(isPath)) {
-        isPath = false;
-    }
-
-    /**
-     * Regular expression pattern for string validation.
-     * Matches any character that is not a lowercase alphanumeric, underscore, hyphen, period, or colon.
-     * If 'isPath' is true, it does not match forward slashes either.
-     *
-     * @type {RegExp}
-     */
-    const pattern = isPath ? /[^0-9a-z_\-./:]/g : /[^0-9a-z_\-.:]/g;
-
-    /* 
-        Formats 'id' by converting to lower case, trimming start and end spaces, replacing remaining
-        spaces with underscores, and applying the regex pattern to remove disallowed characters.
-    */
-    return id.toLowerCase().trim().replace(/\s+/g, '_').replace(pattern, '');
-};
-
-/**
  * Removes duplicate values from an Array.
  *
  * @param {*[]} values - The Array from which to remove duplicates.
@@ -687,6 +698,8 @@ function throwError(errorType, arg, argName, expected, action, received) {
 
 global['checkArguments'] = checkArguments;
 
+global['formatResourceLocationStr'] = formatResourceLocationStr;
+
 global['isArray'] = isArray;
 global['isArrayAndNotEmpty'] = isArrayAndNotEmpty;
 global['isBoolean'] = isBoolean;
@@ -702,8 +715,6 @@ global['itemsExist'] = itemsExist;
 global['logItemNotFound'] = logItemNotFound;
 global['logModNotLoaded'] = logModNotLoaded;
 global['logTagNotFound'] = logTagNotFound;
-
-global['formatResourceLocationStr'] = formatResourceLocationStr;
 
 global['removeDuplicates'] = removeDuplicates;
 
