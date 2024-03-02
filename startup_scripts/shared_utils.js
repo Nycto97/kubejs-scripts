@@ -311,97 +311,129 @@ function checkArguments(funcName, args, numArgs, argTypes) {
 }
 
 /**
- * Checks if the provided value is an Array.
+ * Checks if a value is an Array.
  *
  * @param {*} value - The value to check.
  *
- * @returns {boolean} True if the value is an Array, false otherwise.
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is an Array.
  */
-const isArray = Array.isArray;
+const isArray = (value) => {
+    checkArguments('isArray', arguments, 1);
 
-/**
- * Checks if the provided value is of type 'boolean'.
- *
- * @param {*} value - The value to check.
- *
- * @returns {boolean} True if the value is of type 'boolean', false otherwise.
- */
-const isBoolean = (value) => typeof value === 'boolean';
-
-/**
- * Checks if the provided value is defined.
- *
- * @param {*} value - The value to check.
- *
- * @returns {boolean} True if the value is defined, false otherwise.
- */
-const isDefined = (value) => typeof value !== 'undefined';
-
-/**
- * Checks if the provided 'value' is a non-empty array.
- *
- * @param {*} value - The value to check.
- *
- * @returns {boolean} True if 'value' is a non-empty array, false otherwise.
- */
-const isNonEmptyArray = (value) => {
-    if (!isArray(value)) {
-        console.warn(`[WARN] Expected 'value' to be an array, got ${typeof value}`);
-        return false;
-    }
-
-    return value.length > 0;
+    return Array.isArray(value);
 };
 
 /**
- * Checks if the provided 'value' is a non-empty string.
+ * Checks if a value is an Array and not empty.
  *
  * @param {*} value - The value to check.
  *
- * @returns {boolean} True if 'value' is a non-empty string, false otherwise.
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is an Array and not empty.
  */
-const isNonEmptyString = (value) => {
-    if (!isString(value)) {
-        console.warn(`[WARN] Expected 'value' to be a string, got ${typeof value}`);
-        return false;
-    }
+const isArrayAndNotEmpty = (value) => isArray(value) && value.length > 0;
 
-    return value.trim().length > 0;
+/**
+ * Checks if a value is a boolean.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is a boolean.
+ */
+const isBoolean = (value) => {
+    checkArguments('isBoolean', arguments, 1);
+
+    return typeof value === 'boolean';
 };
 
 /**
- * Checks if the provided value is of instance RegExp.
+ * Checks if a value is defined.
  *
  * @param {*} value - The value to check.
  *
- * @returns {boolean} True if the value is of instance RegExp, false otherwise.
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is defined.
  */
-const isRegExp = (value) => value instanceof RegExp;
+const isDefined = (value) => {
+    checkArguments('isDefined', arguments, 1);
+
+    return typeof value !== 'undefined';
+};
 
 /**
- * Checks if the provided value is of type 'string'.
+ * Checks if a value is a RegExp.
  *
  * @param {*} value - The value to check.
  *
- * @returns {boolean} True if the value is of type 'string', false otherwise.
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is a RegExp or looks like a RegExp.
+ *
+ * Temporary solution! Will also match any string starting with a forward slash and containing another.
+ *
+ * @todo Fix the check for RegExp instances. Rhino's regexes are not instances of RegExp. They're from dev.latvian.mods.rhino.regexp.NativeRegExp. Currently there's no way to check if a value is an instance of a Rhino RegExp.
  */
-const isString = (value) => typeof value === 'string';
+const isRegExp = (value) => {
+    checkArguments('isRegExp', arguments, 1);
+
+    return value instanceof RegExp || (value.toString().startsWith('/') && value.toString().lastIndexOf('/') > 0);
+};
 
 /**
- * Checks if the provided value is an instance of TagEventJS.
+ * Checks if a value is a string.
  *
  * @param {*} value - The value to check.
  *
- * @returns {boolean} True if the value is an instance of TagEventJS, false otherwise.
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is a string.
  */
-const isTagEventJS = (value) => value instanceof TagEventJS;
+const isString = (value) => {
+    checkArguments('isString', arguments, 1);
+
+    return typeof value === 'string';
+};
 
 /**
- * Checks if the provided value is of type 'undefined'.
+ * Checks if a value is a string and not empty.
  *
  * @param {*} value - The value to check.
  *
- * @returns {boolean} True if the value is of type 'undefined', false otherwise.
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is a string and not empty.
+ */
+const isStringAndNotEmpty = (value) => isString(value) && value.trim().length > 0;
+
+/**
+ * Checks if a value is a TagEventJS.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is a TagEventJS.
+ */
+const isTagEventJS = (value) => {
+    checkArguments('isTagEventJS', arguments, 1);
+
+    return value instanceof TagEventJS;
+};
+
+/**
+ * Checks if a value is undefined.
+ *
+ * @param {*} value - The value to check.
+ *
+ * @throws {RangeError} If number of arguments is not 1.
+ *
+ * @returns {boolean} True if the value is undefined.
  */
 const isUndefined = (value) => !isDefined(value);
 
@@ -410,11 +442,15 @@ const isUndefined = (value) => !isDefined(value);
  *
  * @param {string|string[]} itemIds - The item id(s) to check.
  *
+ * @throws {RangeError} If number of arguments is not 1, or if 'itemIds' is an empty string or an empty Array.
+ * @throws {TypeError} If 'itemIds' is not a string or an array of strings.
+ *
  * @returns {boolean} True if the item(s) exist(s).
  */
 const itemsExist = (itemIds) => {
-    if (!itemIds?.length) return false;
+    checkArguments('itemsExist', arguments, 1, ['string', 'string[]']);
 
+    /* Wraps 'itemIds' in an array for further processing, if it isn't an array already. */
     if (!isArray(itemIds)) itemIds = [itemIds];
 
     return itemIds.map((itemId) => formatResourceLocationStr(itemId)).every((itemId) => Item.exists(itemId));
@@ -425,11 +461,16 @@ const itemsExist = (itemIds) => {
  *
  * @param {string} itemId - The item id.
  * @param {string} activityType - The skipped activity.
- * @param {string} [itemType] - The item type.
+ * @param {string|undefined} [itemType] - The item type.
+ *
+ * @throws {RangeError} If number of arguments is not 2 or 3.
+ * @throws {TypeError} If 'itemId' or 'activityType' is not a string, or if 'itemType' is defined but not a string.
  *
  * @returns {void}
  */
 const logItemNotFound = (itemId, activityType, itemType) => {
+    checkArguments('logItemNotFound', arguments, [2, 3], ['string', 'string', 'string']);
+
     const prefix = itemType ? `${itemType.trim()} item` : 'Item';
 
     console.warn(`${prefix} with id ${itemId.trim()} is not found! Skipping ${activityType.trim()}...`);
@@ -441,59 +482,53 @@ const logItemNotFound = (itemId, activityType, itemType) => {
  * @param {string} modName - The mod name.
  * @param {string} activityType - The skipped activity.
  *
+ * @throws {RangeError} If number of arguments is not 2.
+ * @throws {TypeError} If 'modName' or 'activityType' is not a string.
+ *
  * @returns {void}
  */
-const logModNotLoaded = (modName, activityType) =>
+const logModNotLoaded = (modName, activityType) => {
+    checkArguments('logModNotLoaded', arguments, 2, ['string', 'string']);
+
     console.warn(`${modName.trim()} mod is not loaded! Skipping ${activityType.trim()}...`);
+};
 
 /**
  * Logs a warning if a tag is not found.
  *
  * @param {string} tagId - The tag id.
  * @param {string} activityType - The activity type.
- * @param {string} [tagType] - The tag type.
+ * @param {string|undefined} [tagType] - The tag type.
+ *
+ * @throws {RangeError} If number of arguments is not 2 or 3.
+ * @throws {TypeError} If 'tagId' or 'activityType' is not a string, or if 'tagType' is defined but not a string.
  *
  * @returns {void}
  */
 const logTagNotFound = (tagId, activityType, tagType) => {
-    let prefix = tagType ? `${tagType.trim()} tag` : 'Tag';
+    checkArguments('logTagNotFound', arguments, [2, 3], ['string', 'string', 'string']);
 
-    console.warn(`[WARN] ${prefix} #${tagId.trim()} is not found! Skipping ${activityType.trim()}`);
+    const prefix = tagType ? `${tagType.trim()} tag` : 'Tag';
+
+    console.warn(`${prefix} #${tagId.trim()} is not found! Skipping ${activityType.trim()}...`);
 };
 
 /**
  * Formats a namespaced id or path to a valid Resource Location string.
  *
  * @param {string} id - The namespaced id or path to format.
- * @param {boolean} [isPath=false] - Whether id includes a path. Allows forward slashes '/' if true. Default: false.
+ * @param {boolean|undefined} [isPath=false] - Whether id includes a path. Allows forward slashes '/' if true. Default: false.
+ *
+ * @throws {RangeError} If number of arguments is not 1 or 2, or if 'id' is an empty string.
+ * @throws {TypeError} If 'id' is not a string, or if 'isPath' is defined but not a boolean.
  *
  * @returns {string} The formatted Resource Location string.
- *
- * @throws {RangeError} If 'id' is an empty string.
- * @throws {TypeError} If 'id' is not a string, or if 'isPath' is defined but not a boolean.
  */
 const formatResourceLocationStr = (id, isPath) => {
-    /* Checks if 'id' is a non-empty string. */
-    if (!isStringAndNotEmpty(id)) {
-        if (isString(id)) {
-            throw new RangeError(
-                `[ERROR] Invalid 'id'. Expected non-empty string, but received empty string. Aborting formatting...`
-            );
-        } else {
-            throw new TypeError(
-                `[ERROR] Invalid 'id'. Expected non-empty string, but received ${typeof id}. Aborting formatting...`
-            );
-        }
-    }
+    checkArguments('formatResourceLocationStr', arguments, [1, 2], ['string', 'boolean']);
 
-    /* Checks if 'isPath' is a boolean. If it's undefined, defaults it to false. */
-    if (!isBoolean(isPath)) {
-        if (isDefined(isPath)) {
-            throw new TypeError(
-                `[ERROR] Invalid 'isPath'. Expected boolean value true or false, but received ${typeof isPath}. Aborting formatting...`
-            );
-        }
-
+    /* Defaults 'isPath' to false if it's undefined. */
+    if (isUndefined(isPath)) {
         isPath = false;
     }
 
@@ -518,15 +553,13 @@ const formatResourceLocationStr = (id, isPath) => {
  *
  * @param {*[]} values - The Array from which to remove duplicates.
  *
- * @returns {*[]|undefined} A new Array with unique elements, or undefined if argument is invalid.
+ * @throws {RangeError} If number of arguments is not 1, or if 'values' is an empty Array.
+ * @throws {TypeError} If 'values' is not an Array.
+ *
+ * @returns {*[]} A new Array with unique elements.
  */
 const removeDuplicates = (values) => {
-    if (!isArrayAndNotEmpty(values)) {
-        console.warn(
-            `[WARN] Invalid 'values'. Expected an Array, but received ${typeof values}. Skipping removing duplicates...`
-        );
-        return;
-    }
+    checkArguments('removeDuplicates', arguments, 1, '[]');
 
     return values.filter((value, index) => values.indexOf(value) === index);
 };
