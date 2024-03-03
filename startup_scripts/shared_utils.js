@@ -331,8 +331,8 @@ function checkArguments(funcName, args, numArgs, argTypes) {
  *
  * @returns {string} The formatted Resource Location string.
  */
-const formatResourceLocationStr = (id, isPath) => {
-    checkArguments('formatResourceLocationStr', arguments, [1, 2], ['string', 'boolean']);
+function formatResourceLocationStr(id, isPath) {
+    checkArguments('formatResourceLocationStr', arguments, [1, 2], ['string', ['boolean', undefined]]);
 
     /* Throws a RangeError if 'id' contains more than 1 colon. */
     if (id.split(':').length > 2) {
@@ -364,7 +364,7 @@ const formatResourceLocationStr = (id, isPath) => {
         spaces with underscores, and applying the regex pattern to remove disallowed characters.
     */
     return id.toLowerCase().trim().replace(/\s+/g, '_').replace(pattern, '');
-};
+}
 
 /**
  * Checks if a value is an Array.
@@ -375,11 +375,11 @@ const formatResourceLocationStr = (id, isPath) => {
  *
  * @returns {boolean} True if the value is an Array.
  */
-const isArray = (value) => {
+function isArray(value) {
     checkArguments('isArray', arguments, 1);
 
     return Array.isArray(value);
-};
+}
 
 /**
  * Checks if a value is an Array and not empty.
@@ -390,7 +390,9 @@ const isArray = (value) => {
  *
  * @returns {boolean} True if the value is an Array and not empty.
  */
-const isArrayAndNotEmpty = (value) => isArray(value) && value.length > 0;
+function isArrayAndNotEmpty(value) {
+    return isArray(value) && value.length > 0;
+}
 
 /**
  * Checks if a value is a boolean.
@@ -401,11 +403,11 @@ const isArrayAndNotEmpty = (value) => isArray(value) && value.length > 0;
  *
  * @returns {boolean} True if the value is a boolean.
  */
-const isBoolean = (value) => {
+function isBoolean(value) {
     checkArguments('isBoolean', arguments, 1);
 
     return typeof value === 'boolean';
-};
+}
 
 /**
  * Checks if a value is defined.
@@ -416,11 +418,11 @@ const isBoolean = (value) => {
  *
  * @returns {boolean} True if the value is defined.
  */
-const isDefined = (value) => {
+function isDefined(value) {
     checkArguments('isDefined', arguments, 1);
 
     return typeof value !== 'undefined';
-};
+}
 
 /**
  * Checks if a value is a RegExp.
@@ -435,11 +437,11 @@ const isDefined = (value) => {
  *
  * @todo Fix the check for RegExp instances. Rhino's regexes are not instances of RegExp. They're from dev.latvian.mods.rhino.regexp.NativeRegExp. Currently there's no way to check if a value is an instance of a Rhino RegExp.
  */
-const isRegExp = (value) => {
+function isRegExp(value) {
     checkArguments('isRegExp', arguments, 1);
 
     return value instanceof RegExp || (value.toString().startsWith('/') && value.toString().lastIndexOf('/') > 0);
-};
+}
 
 /**
  * Checks if a value is a string.
@@ -450,11 +452,11 @@ const isRegExp = (value) => {
  *
  * @returns {boolean} True if the value is a string.
  */
-const isString = (value) => {
+function isString(value) {
     checkArguments('isString', arguments, 1);
 
     return typeof value === 'string';
-};
+}
 
 /**
  * Checks if a value is a string and not empty.
@@ -465,7 +467,9 @@ const isString = (value) => {
  *
  * @returns {boolean} True if the value is a string and not empty.
  */
-const isStringAndNotEmpty = (value) => isString(value) && value.trim().length > 0;
+function isStringAndNotEmpty(value) {
+    return isString(value) && value.trim().length > 0;
+}
 
 /**
  * Checks if a value is a TagEventJS.
@@ -476,11 +480,11 @@ const isStringAndNotEmpty = (value) => isString(value) && value.trim().length > 
  *
  * @returns {boolean} True if the value is a TagEventJS.
  */
-const isTagEventJS = (value) => {
+function isTagEventJS(value) {
     checkArguments('isTagEventJS', arguments, 1);
 
     return value instanceof TagEventJS;
-};
+}
 
 /**
  * Checks if a value is undefined.
@@ -491,7 +495,9 @@ const isTagEventJS = (value) => {
  *
  * @returns {boolean} True if the value is undefined.
  */
-const isUndefined = (value) => !isDefined(value);
+function isUndefined(value) {
+    return !isDefined(value);
+}
 
 /**
  * Checks if (an) item(s) exist(s) in the registry.
@@ -503,14 +509,14 @@ const isUndefined = (value) => !isDefined(value);
  *
  * @returns {boolean} True if the item(s) exist(s).
  */
-const itemsExist = (itemIds) => {
+function itemsExist(itemIds) {
     checkArguments('itemsExist', arguments, 1, ['string', 'string[]']);
 
     /* Wraps 'itemIds' in an array for further processing, if it isn't an array already. */
     if (!isArray(itemIds)) itemIds = [itemIds];
 
     return itemIds.map((itemId) => formatResourceLocationStr(itemId)).every((itemId) => Item.exists(itemId));
-};
+}
 
 /**
  * Logs a warning if an item is not found.
@@ -524,13 +530,13 @@ const itemsExist = (itemIds) => {
  *
  * @returns {void}
  */
-const logItemNotFound = (itemId, activityType, itemType) => {
+function logItemNotFound(itemId, activityType, itemType) {
     checkArguments('logItemNotFound', arguments, [2, 3], ['string', 'string', 'string']);
 
     const prefix = itemType ? `${itemType.trim()} item` : 'Item';
 
     console.warn(`${prefix} with id ${itemId.trim()} is not found! Skipping ${activityType.trim()}...`);
-};
+}
 
 /**
  * Logs a warning if a mod is not loaded.
@@ -543,11 +549,11 @@ const logItemNotFound = (itemId, activityType, itemType) => {
  *
  * @returns {void}
  */
-const logModNotLoaded = (modName, activityType) => {
+function logModNotLoaded(modName, activityType) {
     checkArguments('logModNotLoaded', arguments, 2, ['string', 'string']);
 
     console.warn(`${modName.trim()} mod is not loaded! Skipping ${activityType.trim()}...`);
-};
+}
 
 /**
  * Logs a warning if a tag is not found.
@@ -561,13 +567,13 @@ const logModNotLoaded = (modName, activityType) => {
  *
  * @returns {void}
  */
-const logTagNotFound = (tagId, activityType, tagType) => {
+function logTagNotFound(tagId, activityType, tagType) {
     checkArguments('logTagNotFound', arguments, [2, 3], ['string', 'string', 'string']);
 
     const prefix = tagType ? `${tagType.trim()} tag` : 'Tag';
 
     console.warn(`${prefix} #${tagId.trim()} is not found! Skipping ${activityType.trim()}...`);
-};
+}
 
 /**
  * Removes duplicate values from an Array.
@@ -579,11 +585,11 @@ const logTagNotFound = (tagId, activityType, tagType) => {
  *
  * @returns {*[]} A new Array with unique elements.
  */
-const removeDuplicates = (values) => {
+function removeDuplicates(values) {
     checkArguments('removeDuplicates', arguments, 1, '[]');
 
     return values.filter((value, index) => values.indexOf(value) === index);
-};
+}
 
 /**
  * Throws an error with a structured message.
