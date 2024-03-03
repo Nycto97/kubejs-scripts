@@ -32,6 +32,9 @@ let isModRenameLogEnabled = true;
 /* Players */
 let isPlayerDimensionChangeLogEnabled = true;
 
+/* Recipes */
+let isRecipeIdCompositionLogEnabled = true;
+
 /* Tags */
 let isItemTagsLogEnabled = true;
 
@@ -44,6 +47,7 @@ if (enableAllLogs && !disableAllLogs) {
     isBlacklistedRareIceLootLogEnabled = true;
     isModRenameLogEnabled = true;
     isPlayerDimensionChangeLogEnabled = true;
+    isRecipeIdCompositionLogEnabled = true;
     isItemTagsLogEnabled = true;
     isBlockIdsForShaderLogEnabled = true;
 }
@@ -54,6 +58,7 @@ if (!enableAllLogs && disableAllLogs) {
     isBlacklistedRareIceLootLogEnabled = false;
     isModRenameLogEnabled = false;
     isPlayerDimensionChangeLogEnabled = false;
+    isRecipeIdCompositionLogEnabled = false;
     isItemTagsLogEnabled = false;
     isBlockIdsForShaderLogEnabled = false;
 }
@@ -65,5 +70,6 @@ global['isNonTaggedItemIdsLogEnabled'] = isNonTaggedItemIdsLogEnabled;
 global['isBlacklistedRareIceLootLogEnabled'] = isBlacklistedRareIceLootLogEnabled;
 global['isModRenameLogEnabled'] = isModRenameLogEnabled;
 global['isPlayerDimensionChangeLogEnabled'] = isPlayerDimensionChangeLogEnabled;
+global['isRecipeIdCompositionLogEnabled'] = isRecipeIdCompositionLogEnabled;
 global['isItemTagsLogEnabled'] = isItemTagsLogEnabled;
 global['isBlockIdsForShaderLogEnabled'] = isBlockIdsForShaderLogEnabled;

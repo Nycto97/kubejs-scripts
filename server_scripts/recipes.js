@@ -44,39 +44,94 @@ ServerEvents.recipes((event) => {
     ];
 
     /**
-     * Composes a recipe id. Only the main output item id of the recipe is used.
-     * @param {string|string[]} [inputItemOrTagIdOrInputItemAndTagIds] - Id of the input item or input tag, or ids of the input items and/or input tags.
-     * @param {string} outputItemId - Id of the output item.
-     * @param {string} [recipeType] - Type of the recipe.
-     * @returns {string} Id of the recipe.
+     * Composes a recipe id. Only the main output item of the recipe is used.
+     *
+     * Note: Tag ids do not start with a '#', but the 'formatResourceLocationStr'
+     *     function handles this by removing invalid characters.
+     *
+     * @param {string} outputItemId - The output item id.
+     * @param {string|string[]} [input=''] - The input item id(s) and/or tag id(s). Default: empty string.
+     * @param {string} [recipeType=''] - The recipe type. Default: empty string.
+     *
+     * @throws {RangeError}
+     * @throws {TypeError}
+     *
+     * @returns {string} The composed recipe id.
      */
-    const composeRecipeId = (inputItemOrTagIdOrInputItemAndTagIds, outputItemId, recipeType) => {
-        if (outputItemId.includes(':')) outputItemId = outputItemId.split(':')[1];
+    function composeRecipeId(outputItemId, input, recipeType) {
+        checkArguments(
+            'composeRecipeId',
+            arguments,
+            [1, 2, 3],
+            ['string', ['string', 'string[]', undefined], ['string', undefined]]
+        );
 
-        if (inputItemOrTagIdOrInputItemAndTagIds) {
-            if (!Array.isArray(inputItemOrTagIdOrInputItemAndTagIds))
-                inputItemOrTagIdOrInputItemAndTagIds = [inputItemOrTagIdOrInputItemAndTagIds];
+        /* Formats 'outputItemId'. */
+        outputItemId = formatResourceLocationStr(outputItemId, true);
 
-            /* In case of empty array */
-            if (inputItemOrTagIdOrInputItemAndTagIds.length)
-                inputItemOrTagIdOrInputItemAndTagIds = inputItemOrTagIdOrInputItemAndTagIds
+        /* 
+            Removes all characters in front of the forward slash '/', including
+            the forward slash, or all characters in front of the colon ':',
+            including the colon, to only keep the last part of the 'itemId'.
+
+            Example: 'v_slab_compat:createdeco/bricks_vertical_slab' becomes 'bricks_vertical_slab'.
+        */
+        if (outputItemId.includes('/')) {
+            outputItemId = outputItemId.split('/')[1];
+        } else if (outputItemId.includes(':')) {
+            outputItemId = outputItemId.split(':')[1];
+        }
+
+        /* Converts 'input' if it is defined. */
+        if (input) {
+            /* Wraps 'input' in an array for further processing, if it isn't an array already. */
+            if (!isArray(input)) {
+                input = [input];
+            }
+
+            /*
+                Converts 'input' to a string, starting with '_from_', followed by all formatted items and/or tags,
+                which got all characters in front of the forward slash '/', including the forward slash, or all
+                characters in front of the colon ':', including the colon removed, concatenated with '_and_'.
+            */
+            input = '_from_'.concat(
+                input
                     .map((itemOrTagId) => {
+                        itemOrTagId = formatResourceLocationStr(itemOrTagId, true);
+
                         if (itemOrTagId.includes('/')) {
                             itemOrTagId = itemOrTagId.split('/')[1];
                         } else if (itemOrTagId.includes(':')) {
                             itemOrTagId = itemOrTagId.split(':')[1];
-                        } else if (itemOrTagId.startsWith('#')) {
-                            itemOrTagId = itemOrTagId.slice(1);
                         }
+
                         return itemOrTagId;
                     })
-                    .join('_and_');
+                    .join('_and_')
+            );
+        } else {
+            /* Defaults 'input' to an empty string if it's undefined. */
+            input = '';
         }
 
-        return `nycto:${recipeType ? `${recipeType}/` : ''}${outputItemId}${
-            inputItemOrTagIdOrInputItemAndTagIds ? `_from_${inputItemOrTagIdOrInputItemAndTagIds}` : ''
-        }`;
-    };
+        /* Formats 'recipeType' if it's defined, or defaults it to an empty string if it's undefined. */
+        recipeType = recipeType ? `${formatResourceLocationStr(recipeType, true)}/` : '';
+
+        /**
+         * The recipe id, concatenated with 'recipeType',
+         * 'outputItemId', and 'input', with a prefix of 'nycto:'.
+         *
+         * @type {string}
+         */
+        const recipeId = `nycto:${recipeType + outputItemId + input}`;
+
+        /* Logs 'recipeId' if the logging is enabled. */
+        if (isRecipeIdCompositionLogEnabled) {
+            console.info(`Composed recipe id: ${recipeId}`);
+        }
+
+        return recipeId;
+    }
 
     /**
      * Adds a smelting recipe.
@@ -97,7 +152,7 @@ ServerEvents.recipes((event) => {
 
         event
             .smelting(outputItemId, inputItemId)
-            .id(composeRecipeId(inputItemId, outputItemId, 'smelting'))
+            .id(composeRecipeId(outputItemId, inputItemId, 'smelting'))
             .cookingTime(timeInTicks)
             .xp(xp);
     };
@@ -121,7 +176,7 @@ ServerEvents.recipes((event) => {
 
         event
             .blasting(outputItemId, inputItemId)
-            .id(composeRecipeId(inputItemId, outputItemId, 'blasting'))
+            .id(composeRecipeId(outputItemId, inputItemId, 'blasting'))
             .cookingTime(timeInTicks)
             .xp(xp);
     };
@@ -145,7 +200,7 @@ ServerEvents.recipes((event) => {
 
         event
             .smoking(outputItemId, inputItemId)
-            .id(composeRecipeId(inputItemId, outputItemId, 'smoking'))
+            .id(composeRecipeId(outputItemId, inputItemId, 'smoking'))
             .cookingTime(timeInTicks)
             .xp(xp);
     };
@@ -195,7 +250,7 @@ ServerEvents.recipes((event) => {
                 S: '#forge:rods/wooden',
                 H: 'minecraft:hay_block'
             })
-            .id(composeRecipeId(undefined, itemId));
+            .id(composeRecipeId(itemId));
     };
 
     /**
@@ -267,7 +322,7 @@ ServerEvents.recipes((event) => {
 
         event.recipes.create
             .crushing(composeOutputItems(outputItemsInfo), inputItemId)
-            .id(composeRecipeId(inputItemId, outputItemsInfo[0].itemId, 'crushing'))
+            .id(composeRecipeId(outputItemsInfo[0].itemId, inputItemId, 'crushing'))
             .processingTime(timeInTicks);
     };
 
@@ -438,7 +493,7 @@ ServerEvents.recipes((event) => {
         }
 
         const outputItems = composeOutputItems(outputItemsInfo);
-        const recipeId = composeRecipeId(input, outputItemsInfo[0].itemId, 'mixing');
+        const recipeId = composeRecipeId(outputItemsInfo[0].itemId, input, 'mixing');
 
         if (!requiresHeat && !requiresSuperHeat) {
             event.recipes.create.mixing(outputItems, input).id(recipeId);
@@ -480,7 +535,7 @@ ServerEvents.recipes((event) => {
         .shaped(Item.of('minecraft:chest', 1), ['PPP', 'P P', 'PPP'], {
             P: '#minecraft:planks'
         })
-        .id(composeRecipeId('planks', 'chest'));
+        .id(composeRecipeId('chest', 'planks'));
 
     /* Just Another Rotten Flesh to Leather Mod mod replacement
     
@@ -501,7 +556,7 @@ ServerEvents.recipes((event) => {
             D: 'minecraft:dragon_egg',
             S: 'minecraft:end_stone'
         })
-        .id(composeRecipeId(undefined, 'end_portal_frame'));
+        .id(composeRecipeId('end_portal_frame'));
 
     /* Add crafting recipe for minecraft:tuff */
     event
@@ -510,7 +565,7 @@ ServerEvents.recipes((event) => {
             D: 'minecraft:diorite',
             L: 'minecraft:lava_bucket'
         })
-        .id(composeRecipeId(['andesite', 'diorite'], 'tuff'));
+        .id(composeRecipeId('tuff', ['andesite', 'diorite']));
 
     /* Add mixing recipe for minecraft:tuff */
     addMixingRecipe(
@@ -833,10 +888,10 @@ ServerEvents.recipes((event) => {
             .shaped('1x undergarden:regalium_crystal', ['SSS', 'SSS', 'SSS'], {
                 S: 'undergarden:regalic_shard'
             })
-            .id(composeRecipeId('regalic_shard', 'regalium_crystal'));
+            .id(composeRecipeId('regalium_crystal', 'regalic_shard'));
         event
             .shapeless('9x undergarden:regalic_shard', ['undergarden:regalium_crystal'])
-            .id(composeRecipeId('regalium_crystal', 'regalic_shard'));
+            .id(composeRecipeId('regalic_shard', 'regalium_crystal'));
 
         addOreCrushingRecipe('undergarden:depthrock_coal_ore', 'coal', 'undergarden:depthrock');
         addOreCrushingRecipe('undergarden:shiverstone_coal_ore', 'coal', 'undergarden:shiverstone');
@@ -858,7 +913,7 @@ ServerEvents.recipes((event) => {
         //         ['9x undergarden:cloggrum_nugget', Item.of('createcafe:oreo_crushed').withChance(0.75)],
         //         'undergarden:crushed_raw_cloggrum'
         //     )
-        //     id(composeRecipeId('crushed_raw_cloggrum', 'cloggrum_nugget', 'splashing'));
+        //     id(composeRecipeId('cloggrum_nugget', 'crushed_raw_cloggrum', 'splashing'));
 
         addOreCrushingRecipe('undergarden:shiverstone_froststeel_ore', 'froststeel', 'undergarden:shiverstone');
 
@@ -869,7 +924,7 @@ ServerEvents.recipes((event) => {
                         ['9x undergarden:froststeel_nugget', Item.of('endermanoverhaul:icy_pearl').withChance(0.08)],
                         'undergarden:crushed_raw_froststeel'
                     )
-                    .id(composeRecipeId('crushed_raw_froststeel', 'froststeel_nugget', 'splashing'));
+                    .id(composeRecipeId('froststeel_nugget', 'crushed_raw_froststeel', 'splashing'));
 
             addOreCrushingRecipe('undergarden:depthrock_utherium_ore', 'utherium', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_utherium_ore', 'utherium', 'undergarden:shiverstone');
@@ -884,7 +939,7 @@ ServerEvents.recipes((event) => {
                         ]),
                         'undergarden:crushed_raw_utherium'
                     )
-                    .id(composeRecipeId('crushed_raw_utherium', 'utheric_shard', 'splashing'));
+                    .id(composeRecipeId('utheric_shard', 'crushed_raw_utherium', 'splashing'));
 
             addOreCrushingRecipe('undergarden:depthrock_regalium_ore', 'regalium', 'undergarden:depthrock');
             addOreCrushingRecipe('undergarden:shiverstone_regalium_ore', 'regalium', 'undergarden:shiverstone');
@@ -894,7 +949,7 @@ ServerEvents.recipes((event) => {
                     ['9x undergarden:regalic_shard', Item.of('enchanted_golden_apple').withChance(0.05)],
                     'undergarden:crushed_raw_regalium'
                 )
-                .id(composeRecipeId('crushed_raw_regalium', 'regalic_shard', 'splashing'));
+                .id(composeRecipeId('regalic_shard', 'crushed_raw_regalium', 'splashing'));
         }
     }
 });

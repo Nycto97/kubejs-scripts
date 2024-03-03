@@ -51,5 +51,6 @@ const isNonTaggedItemIdsLogEnabled = global['isNonTaggedItemIdsLogEnabled'];
 const isBlacklistedRareIceLootLogEnabled = global['isBlacklistedRareIceLootLogEnabled'];
 const isModRenameLogEnabled = global['isModRenameLogEnabled'];
 const isPlayerDimensionChangeLogEnabled = global['isPlayerDimensionChangeLogEnabled'];
+const isRecipeIdCompositionLogEnabled = global['isRecipeIdCompositionLogEnabled'];
 const isItemTagsLogEnabled = global['isItemTagsLogEnabled'];
 const isBlockIdsForShaderLogEnabled = global['isBlockIdsForShaderLogEnabled'];
