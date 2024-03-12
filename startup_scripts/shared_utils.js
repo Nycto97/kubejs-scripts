@@ -46,6 +46,125 @@ StartupEvents.postInit(() => {
 });
 
 /**
+ * Checks if the argument is of one of the expected types or instances and not empty if argument is an Array or a string.
+ *
+ * IMPORTANT: This function is intended to be used only in conjunction with
+ *     the checkArguments function, and should not be used independently!
+ *
+ * @param {string} funcName - The name of the function to check the argument for.
+ * @param {*} arg - The argument to check.
+ * @param {string|Array<string>} expectedType - The expected type(s) of the argument.
+ *
+ * @returns {void}
+ *
+ * @throws {TypeError} If the argument is not of any of the expected types.
+ * @throws {RangeError} If the argument is an empty Array or an empty string.
+ *
+ * @see {@link checkArguments}
+ */
+function checkArg(funcName, arg, expectedTypes) {
+    let isValidType = false;
+    let isEmptyArray = false;
+    let isEmptyString = false;
+
+    /* Wraps 'expectedTypes' in an array for further processing, if it isn't an array already. */
+    if (!Array.isArray(expectedTypes)) {
+        expectedTypes = [expectedTypes];
+    }
+
+    /* Iterates over 'expectedTypes'. */
+    for (let expectedType of expectedTypes) {
+        /* Converts 'expectedType' to lowercase for consistent comparison. */
+        expectedType = expectedType.toLowerCase();
+
+        /* Checks the type of the argument against the expected type(s). */
+        switch (expectedType) {
+            case 'array':
+            case '[]':
+                isValidType = Array.isArray(arg);
+                isEmptyArray = arg.length < 1;
+                break;
+            case 'array<integer>':
+            case 'array<int>':
+            case 'integer[]':
+            case 'int[]':
+                isValidType = Array.isArray(arg) && arg.every(Number.isInteger);
+                isEmptyArray = arg.length < 1;
+                break;
+            case 'array<number>':
+            case 'number[]':
+                isValidType = Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'number');
+                isEmptyArray = arg.length < 1;
+                break;
+            case 'array<string>':
+            case 'string[]':
+                isValidType = Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'string');
+                isEmptyArray = arg.length < 1;
+                isEmptyString = arg.some((subArg) => subArg.trim().length < 1);
+                break;
+            case 'bool':
+            case 'boolean':
+                isValidType = typeof arg === 'boolean';
+                break;
+            case 'date':
+                isValidType = arg instanceof Date;
+                break;
+            case 'int':
+            case 'integer':
+                isValidType = Number.isInteger(arg);
+                break;
+            case 'num':
+            case 'number':
+                isValidType = typeof arg === 'number';
+                break;
+            case 'obj':
+            case 'object':
+            case '{}':
+                isValidType = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
+                break;
+            case 'regular expression':
+            case 'regexp':
+            case 'regex':
+                isValidType =
+                    arg instanceof RegExp || (arg.toString().startsWith('/') && arg.toString().lastIndexOf('/') > 0);
+                break;
+            case 'str':
+            case 'string':
+                isValidType = typeof arg === 'string';
+                isEmptyString = arg.trim().length < 1;
+                break;
+            case 'tageventjs':
+                isValidType = arg instanceof TagEventJS;
+                break;
+            default:
+                isValidType = typeof arg === expectedType;
+        }
+
+        /* Stops checking the other types if the argument is of a valid type. */
+        if (isValidType) {
+            break;
+        }
+    }
+
+    /* Throws a TypeError if the argument isn't of any of the expected types. */
+    if (!isValidType) {
+        throwError('TypeError', arg, 'arg', expectedTypes.join(' or '), `'${funcName}' function`);
+    }
+
+    /* Throws a RangeError if the argument is an empty Array or an empty string. */
+    if (isEmptyArray || isEmptyString) {
+        throwError(
+            'RangeError',
+            arg,
+            'arg',
+            `non-empty ${isEmptyArray ? 'array' : 'string'}`,
+            `'${funcName}' function`,
+            `empty ${isEmptyArray ? 'array' : 'string'}`
+        );
+    }
+}
+
+/**
  * Validates the number and types of arguments. If the validation fails, it throws an error.
  *
  * Note: This function uses direct type checks with 'typeof', 'instanceof', and 'Array.isArray()' for validation.
@@ -60,6 +179,8 @@ StartupEvents.postInit(() => {
  *
  * @throws {RangeError} If the number of arguments or the value of an argument does not match the expected value or range.
  * @throws {TypeError} If the type of an argument does not match the expected type.
+ *
+ * @see {@link checkArg}
  */
 function checkArguments(funcName, args, numArgs, argTypes) {
     /**
@@ -199,123 +320,9 @@ function checkArguments(funcName, args, numArgs, argTypes) {
             );
         }
 
-        /**
-         * Checks if the argument is of one of the expected types or instances and not empty if argument is an Array or a string.
-         *
-         * @param {*} arg - The argument to check.
-         * @param {string|Array<string>} expectedType - The expected type(s) of the argument.
-         *
-         * @returns {void}
-         *
-         * @throws {TypeError} If the argument is not of any of the expected types.
-         * @throws {RangeError} If the argument is an empty Array or an empty string.
-         */
-        function checkArg(arg, expectedTypes) {
-            let isValidType = false;
-            let isEmptyArray = false;
-            let isEmptyString = false;
-
-            /* Wraps 'expectedTypes' in an array for further processing, if it isn't an array already. */
-            if (!Array.isArray(expectedTypes)) {
-                expectedTypes = [expectedTypes];
-            }
-
-            /* Iterates over 'expectedTypes'. */
-            for (let expectedType of expectedTypes) {
-                /* Converts 'expectedType' to lowercase for consistent comparison. */
-                expectedType = expectedType.toLowerCase();
-
-                /* Checks the type of the argument against the expected type(s). */
-                switch (expectedType) {
-                    case 'array':
-                    case '[]':
-                        isValidType = Array.isArray(arg);
-                        isEmptyArray = arg.length < 1;
-                        break;
-                    case 'array<integer>':
-                    case 'array<int>':
-                    case 'integer[]':
-                    case 'int[]':
-                        isValidType = Array.isArray(arg) && arg.every(Number.isInteger);
-                        isEmptyArray = arg.length < 1;
-                        break;
-                    case 'array<number>':
-                    case 'number[]':
-                        isValidType = Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'number');
-                        isEmptyArray = arg.length < 1;
-                        break;
-                    case 'array<string>':
-                    case 'string[]':
-                        isValidType = Array.isArray(arg) && arg.every((subArg) => typeof subArg === 'string');
-                        isEmptyArray = arg.length < 1;
-                        isEmptyString = arg.some((subArg) => subArg.trim().length < 1);
-                        break;
-                    case 'bool':
-                    case 'boolean':
-                        isValidType = typeof arg === 'boolean';
-                        break;
-                    case 'date':
-                        isValidType = arg instanceof Date;
-                        break;
-                    case 'int':
-                    case 'integer':
-                        isValidType = Number.isInteger(arg);
-                        break;
-                    case 'num':
-                    case 'number':
-                        isValidType = typeof arg === 'number';
-                        break;
-                    case 'obj':
-                    case 'object':
-                    case '{}':
-                        isValidType = typeof arg === 'object' && arg !== null && !Array.isArray(arg);
-                        break;
-                    case 'regular expression':
-                    case 'regexp':
-                    case 'regex':
-                        isValidType =
-                            arg instanceof RegExp ||
-                            (arg.toString().startsWith('/') && arg.toString().lastIndexOf('/') > 0);
-                        break;
-                    case 'str':
-                    case 'string':
-                        isValidType = typeof arg === 'string';
-                        isEmptyString = arg.trim().length < 1;
-                        break;
-                    case 'tageventjs':
-                        isValidType = arg instanceof TagEventJS;
-                        break;
-                    default:
-                        isValidType = typeof arg === expectedType;
-                }
-
-                /* Stops checking the other types if the argument is of a valid type. */
-                if (isValidType) {
-                    break;
-                }
-            }
-
-            /* Throws a TypeError if the argument isn't of any of the expected types. */
-            if (!isValidType) {
-                throwError('TypeError', arg, 'arg', expectedTypes.join(' or '), `'${funcName}' function`);
-            }
-
-            /* Throws a RangeError if the argument is an empty Array or an empty string. */
-            if (isEmptyArray || isEmptyString) {
-                throwError(
-                    'RangeError',
-                    arg,
-                    'arg',
-                    `non-empty ${isEmptyArray ? 'array' : 'string'}`,
-                    `'${funcName}' function`,
-                    `empty ${isEmptyArray ? 'array' : 'string'}`
-                );
-            }
-        }
-
         /* Checks the types of the arguments. */
         for (let i = 0; i < args.length; i++) {
-            checkArg(args[i], argTypes[i]);
+            checkArg(funcName, args[i], argTypes[i]);
         }
     }
 }
