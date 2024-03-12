@@ -22,7 +22,7 @@ ServerEvents.tags(ITEM_TAG_TYPE, (event) => {
     itemTagIds = event.tags
         .values()
         .toArray()
-        .map((tag) => tag.id.toString());
+        .map((tag) => `${tag.id}`);
 
     let itemIdsTaggedByMods;
 

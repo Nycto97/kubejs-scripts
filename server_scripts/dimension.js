@@ -11,16 +11,16 @@
 /* Show a title on screen and send a message regarding
    shaders to the player when they change dimension */
 CommonAddedEvents.playerChangeDimension((event) => {
-    const username = event.player.username;
+    const username = `${event.player.username}`;
     const server = event.server;
 
     const dimensions = server
         .levelKeys()
         .toArray()
-        .map((levelKey) => levelKey.location().toString());
+        .map((levelKey) => `${levelKey.location()}`);
 
-    const oldDimension = event.oldLevel.dimension.toString();
-    const newDimension = event.newLevel.dimension.toString();
+    const oldDimension = `${event.oldLevel.dimension}`;
+    const newDimension = `${event.newLevel.dimension}`;
 
     const dimensionWhitelistForShader = [
         'minecraft:overworld',

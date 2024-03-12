@@ -75,6 +75,15 @@
 
 /* ----------------------------------------------------------------- */
 
+/* 
+   NOTE:
+   Use `${}` to interpolate variables into strings instead of using .toString()
+   KubeJS overrides the .toString() method. This doesn't return the expected
+   JavaScript string, but instead 'object' (Java String).
+*/
+
+/* ----------------------------------------------------------------- */
+
 /*
    INFO:
    Using RegEx with \/^(.)*$\/

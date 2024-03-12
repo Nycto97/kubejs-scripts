@@ -485,7 +485,7 @@ function isDefined(value) {
 function isRegExp(value) {
     checkArguments('isRegExp', arguments, 1);
 
-    return value instanceof RegExp || (value.toString().startsWith('/') && value.toString().lastIndexOf('/') > 0);
+    return value instanceof RegExp || (`${value}`.startsWith('/') && `${value}`.lastIndexOf('/') > 0);
 }
 
 /**
