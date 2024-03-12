@@ -92,7 +92,6 @@ LootJS.modifiers((event) => {
 
         const blacklistedRareIceLootItemIds = itemIds.filter(
             (itemId) =>
-                itemId == 'minecraft:air' ||
                 rareIceLootCannotStartWith.some((itemIdStart) => itemId.startsWith(itemIdStart)) ||
                 RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(itemId) ||
                 RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(itemId)

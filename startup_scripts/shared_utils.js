@@ -18,31 +18,37 @@
  */
 const TagEventJS = Java.loadClass('dev.latvian.mods.kubejs.server.tag.TagEventJS');
 
-let itemIds;
-
+/**
+ * The block ids of all blocks.
+ *
+ * @type {string[]}
+ */
 let blockIds;
+
+/**
+ * The item ids of all items.
+ *
+ * @type {string[]}
+ */
+let itemIds;
 
 /* Listen to post-init event, after all mods have loaded */
 StartupEvents.postInit(() => {
-    /**
-     * The item ids of all items.
-     *
-     * @type {List<string>}
-     */
-    itemIds = Item.getTypeList();
+    blockIds = Block.getTypeList()
+        .toArray()
+        .map((blockId) => `${blockId}`)
+        .filter((blockId) => blockId !== 'minecraft:air');
 
-    /**
-     * The block ids of all blocks.
-     *
-     * @type {List<string>}
-     */
-    blockIds = Block.getTypeList();
+    itemIds = Item.getTypeList()
+        .toArray()
+        .map((itemId) => `${itemId}`)
+        .filter((itemId) => itemId !== 'minecraft:air');
 
-    global['itemIds'] = itemIds;
     global['blockIds'] = blockIds;
+    global['itemIds'] = itemIds;
 
     if (isBlockAndItemCountLogEnabled) {
-        console.info(`[INFO] There are ${itemIds.length} items and ${blockIds.length} blocks registered`);
+        console.info(`There are ${blockIds.length} blocks and ${itemIds.length} items registered.`);
 
         /* Creates maps to store the count of items and blocks for each mod. */
         let modItemCounts = {};

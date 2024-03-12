@@ -84,6 +84,22 @@
 
 /* ----------------------------------------------------------------- */
 
+/* 
+   NOTE:
+   Whenever fetching a list of tags, dimensions, etc. from the server and
+   using .toArray(), or fetching items, blocks, etc. with Item.getTypeList(),
+   Block.getTypeList(), etc., it returns a java.util.ArrayList.
+
+   I'm able to use .map() and .filter() on it, and maybe more, but not .forEach() I think.
+
+   Checking if it's an array with Array.isArray() returns true,
+   even though the type still logs as java.util.ArrayList.
+   
+   For convenience, I documented the type as array in the JSDoc comments.
+*/
+
+/* ----------------------------------------------------------------- */
+
 /*
    INFO:
    Using RegEx with \/^(.)*$\/
