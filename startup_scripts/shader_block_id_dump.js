@@ -32,8 +32,8 @@ StartupEvents.postInit(() => {
     if (!Platform.isClientEnvironment()) return;
 
     if (!isBlockIdsForShaderLogEnabled) {
-        console.log('Dumping for Complementary Shader disabled!');
-        console.log("Set 'isBlockIdsForShaderLogEnabled = true' in settings.js to enable!");
+        console.info('Dumping for Complementary Shader disabled!');
+        console.info(`Set 'isBlockIdsForShaderLogEnabled = true' in settings.js to enable!`);
         return;
     }
 
@@ -42,13 +42,9 @@ StartupEvents.postInit(() => {
     let composeBlockIdsForShader = (vanillaBlockIds, moddedBlockIdsFiltered, moddedBlockIds) => {
         let composedBlockIdsStr = '';
 
-        moddedBlockIdsFiltered.forEach((blockId) => {
-            moddedBlockIds.push(blockId);
-        });
+        moddedBlockIdsFiltered.forEach((blockId) => moddedBlockIds.push(blockId));
 
-        moddedBlockIds.sort().forEach((blockId) => {
-            composedBlockIdsStr += blockId.concat(' ');
-        });
+        moddedBlockIds.sort().forEach((blockId) => (composedBlockIdsStr += blockId.concat(' ')));
 
         composedBlockIdsStr = vanillaBlockIds
             .concat(' ')
@@ -61,17 +57,15 @@ StartupEvents.postInit(() => {
         };
     };
 
-    let printBlockIdsForShader = (
-        moddedBlockIds,
-        composedBlockIdsStr,
-        blockType,
-        shaderBlockId,
-        isModdedBlockIdsOnly
-    ) => {
-        console.log(
-            `\n\nFiltered out ${moddedBlockIds.length} modded ${blockType} block ids. ${
-                !isModdedBlockIdsOnly ? `Merged vanilla and modded ${blockType} block ids. ` : ''
-            }Please add these to block.${shaderBlockId} in block.properties from Complementary Reimagined.\n\n${composedBlockIdsStr}\n`
+    let printBlockIdsForShader = (moddedBlockIds, composedBlockIdsStr, blockType, shaderBlockId, isModdedOnly) => {
+        console.info(
+            '\n' +
+                '\n' +
+                `Filtered out ${moddedBlockIds.length} modded ${blockType} block ids.` +
+                `${!isModdedOnly ? ` Merged vanilla and modded ${blockType} block ids.` : ''}` +
+                ` Please add these to block.${shaderBlockId} in block.properties from Complementary Reimagined.\n` +
+                '\n' +
+                `${composedBlockIdsStr}\n`
         );
     };
 
@@ -82,10 +76,20 @@ StartupEvents.postInit(() => {
     // TODO: some need to get removed from here and put on another more dedicated block id!
     // prettier-ignore
     let foliage = [
-            'allium', 'amaranth', 'bird_of_paradise', 'bluebell', 'bluet', 'brush', 'bush', 'cartwheel', 'cattail', 'cattails', 'cosmos', 'crop', 'crops', 'crocus', 'bulbis_anomaly', 'bulbis_oddity', 'daisy', 'dandelion', 'delphinium', 'dianthus', 'fern', 'fiddlehead', 'flower', 'flowers', 'frond', 'grass', 'hibiscus', 'mayapple', 'orchid', 'orchids', 'poppy', 'roots', 'rose', 'roses', 'rush', 'sapling', 'saplings', 'searocket', 'sprout', 'gilia', 'sprouts', 'stem', 'shrub', 'stems', 'tulip', 'tulips', 'violet', 'weed', 'weeds', 'wheat'
-];
+            'allium', 'amaranth', 'bird_of_paradise', 'bluebell', 'bluet', 'brush', 'bush', 'cartwheel', 'cattail',
+            'cattails', 'cosmos', 'crop', 'crops', 'crocus', 'bulbis_anomaly', 'bulbis_oddity', 'daisy', 'dandelion',
+            'delphinium', 'dianthus', 'fern', 'fiddlehead', 'flower', 'flowers', 'frond', 'grass', 'hibiscus',
+            'mayapple', 'orchid', 'orchids', 'poppy', 'roots', 'rose', 'roses', 'rush', 'sapling', 'saplings',
+            'searocket', 'sprout', 'gilia', 'sprouts', 'stem', 'shrub', 'stems', 'tulip', 'tulips', 'violet', 'weed',
+            'weeds', 'wheat'
+    ];
     let vanillaFoliageBlockIds =
-        'grass short_grass fern oak_sapling spruce_sapling birch_sapling jungle_sapling acacia_sapling dark_oak_sapling bamboo_sapling cherry_sapling dead_bush dandelion poppy blue_orchid allium azure_bluet red_tulip orange_tulip white_tulip pink_tulip oxeye_daisy cornflower lily_of_the_valley wither_rose sweet_berry_bush wheat carrots potatoes beetroots pumpkin_stem melon_stem nether_sprouts warped_roots crimson_roots sunflower:half=lower lilac:half=lower rose_bush:half=lower peony:half=lower tall_grass:half=lower large_fern:half=lower torchflower_crop';
+        'grass short_grass fern oak_sapling spruce_sapling birch_sapling jungle_sapling acacia_sapling' +
+        ' dark_oak_sapling bamboo_sapling cherry_sapling dead_bush dandelion poppy blue_orchid allium azure_bluet' +
+        ' red_tulip orange_tulip white_tulip pink_tulip oxeye_daisy cornflower lily_of_the_valley wither_rose' +
+        ' sweet_berry_bush wheat carrots potatoes beetroots pumpkin_stem melon_stem nether_sprouts warped_roots' +
+        ' crimson_roots sunflower:half=lower lilac:half=lower rose_bush:half=lower peony:half=lower' +
+        ' tall_grass:half=lower large_fern:half=lower torchflower_crop';
 
     let moddedFoliageBlockIdsFiltered = blockIds.filter(
         (blockId) =>
@@ -108,7 +112,8 @@ StartupEvents.postInit(() => {
        LEAVES
     */
     let vanillaLeavesBlockIds =
-        'leaves leaves2 oak_leaves spruce_leaves birch_leaves jungle_leaves acacia_leaves dark_oak_leaves azalea_leaves flowering_azalea_leaves mangrove_leaves cherry_leaves';
+        'leaves leaves2 oak_leaves spruce_leaves birch_leaves jungle_leaves acacia_leaves dark_oak_leaves' +
+        ' azalea_leaves flowering_azalea_leaves mangrove_leaves cherry_leaves';
     let moddedLeavesBlockIdsFiltered = blockIds.filter(
         (blockId) =>
             !blockId.startsWith('minecraft:') &&
@@ -134,13 +139,9 @@ StartupEvents.postInit(() => {
     );
     /* INFO: Add other block ids that should be treated as ores to the array */
     let moddedOreBlockIds = ['infernalexp:dimstone'];
-    moddedOreBlockIdsFiltered.forEach((blockId) => {
-        moddedOreBlockIds.push(blockId);
-    });
+    moddedOreBlockIdsFiltered.forEach((blockId) => moddedOreBlockIds.push(blockId));
     let formattedOreBlockIds = '';
-    moddedOreBlockIds.sort().forEach((blockId) => {
-        formattedOreBlockIds += blockId.concat(' ');
-    });
+    moddedOreBlockIds.sort().forEach((blockId) => (formattedOreBlockIds += blockId.concat(' ')));
     formattedOreBlockIds = formattedOreBlockIds.slice(0, formattedOreBlockIds.length - 1);
 
     printBlockIdsForShader(moddedOreBlockIds, formattedOreBlockIds, 'ore', '10024', true);
@@ -192,7 +193,10 @@ StartupEvents.postInit(() => {
        Villagers and Easy Piglins glass block ids as well
     */
     let vanillaStainedGlassBlockIds =
-        'stained_glass white_stained_glass orange_stained_glass magenta_stained_glass light_blue_stained_glass yellow_stained_glass lime_stained_glass pink_stained_glass gray_stained_glass light_gray_stained_glass cyan_stained_glass purple_stained_glass blue_stained_glass brown_stained_glass green_stained_glass red_stained_glass black_stained_glass';
+        'stained_glass white_stained_glass orange_stained_glass magenta_stained_glass light_blue_stained_glass' +
+        ' yellow_stained_glass lime_stained_glass pink_stained_glass gray_stained_glass light_gray_stained_glass' +
+        ' cyan_stained_glass purple_stained_glass blue_stained_glass brown_stained_glass green_stained_glass' +
+        ' red_stained_glass black_stained_glass';
     // TODO add other stained glass block ids to array
     // INFO: Connected Glass' stained glass blocks does not have 'stained' in the block id!
     // Include tinted glass?

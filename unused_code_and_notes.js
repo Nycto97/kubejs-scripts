@@ -124,17 +124,14 @@
    NOTE:
    .some() can be used to avoid repetitive code:
 
-   blockIds.filter(
-       (block) =>
-           block.endsWith('thisThing') ||
-           block.endsWith('thatThing') ||
-           block.endsWith('...')
-   );
+   blockIds.filter((block) => block.endsWith('thisThing') || block.endsWith('thatThing') || block.endsWith('...'));
 
    Can also be written as:
 
    const someThings = ['thisThing', 'thatThing', '...'];
-   someThings.some((thing) => block.endsWith(thing));
+
+   blockIds.filter((block) => someThings.some((thing) => block.endsWith(thing)));
+
 */
 
 /* ----------------------------------------------------------------- */
@@ -212,7 +209,8 @@
 // });
 
 // console.log(
-//     `There are ${arrayWithAllModIdsForInControlBlacklistStringified.length} mods loaded on the server (including minecraft, forge and jar in jar mods).`
+//     `There are ${arrayWithAllModIdsForInControlBlacklistStringified.length} mods loaded on the server` +
+//         ' (including minecraft, forge and jar in jar mods).'
 // );
 
 // for (let i = 0; i < 5; i++) {
@@ -239,7 +237,9 @@
 // JsonIO.read(filePath) != null
 //     ? console.log(`File has been successfully saved to "Server Nycto/${filePath}"`)
 //     : console.log(
-//           `Something went wrong! Failed to save to "Server Nycto/${filePath}" Config file not found, meaning the script successfully located and deleted the file, but failed to write to it! Please check and fix your JsonIO.write() call!`
+//           `Something went wrong! Failed to save to "Server Nycto/${filePath}" Config file not found,` +
+//               ' meaning the script successfully located and deleted the file, but failed to write to it!' +
+//               ' Please check and fix your JsonIO.write() call!'
 //       );
 
 /* ----------------------------------------------------------------- */
@@ -311,7 +311,9 @@
 
 /* Make end_portal_frame breakable */
 
-// BlockEvents.modification((event) => event.modify('minecraft:end_portal_frame', (block) => (block.destroySpeed = 0.3)));
+/*
+BlockEvents.modification((event) => event.modify('minecraft:end_portal_frame', (block) => (block.destroySpeed = 0.3)));
+*/
 
 /* BlockEvents.modification((event) => {
     const sharedHardness = 1.5; // 1.5 is the default hardness

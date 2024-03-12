@@ -14,7 +14,10 @@
    Block tags are used for controlling behavior with blocks in block form
 */
 
-// TODO if checking for item or block existence, only check if block or item exists, skip mod loaded check since mod is always loaded whenever the block or item is registered OR still check if mod is loaded first for performance since there are less mods than items... ??? CHECK 1 TIME FOR MOD EXISTENCE (IN SHARED UTILS) AND THEN CHECK FOR ITEM OR BLOCK EXISTENCE ???!!!
+/*
+    TODO: Group code by mod with a mod loaded check, then check if a block, item, ... exists before adding.
+          Do this in all files.
+*/
 
 ServerEvents.tags(BLOCK_TAG_TYPE, (event) => {
     let blockIdsTaggedByMods;

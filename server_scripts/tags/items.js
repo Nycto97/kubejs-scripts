@@ -117,7 +117,8 @@ ServerEvents.tags(ITEM_TAG_TYPE, (event) => {
         ]);
     }
 
-    // TODO untag refined storage's wrench as it seems like this has another functionality and if it's tagged it won't be able to use that function on let's say Create blocks because it will act as a Create wrench
+    // TODO untag refined storage's wrench as it seems like this has another functionality and if it's tagged
+    // it won't be able to use that function on let's say Create blocks because it will act as a Create wrench
     /* Add wrenches that aren't tagged as wrenches to wrench tag */
     if (Platform.isLoaded('refinedstorage')) {
         event.add('forge:tools/wrench', 'refinedstorage:wrench');
@@ -323,7 +324,7 @@ ServerEvents.tags(ITEM_TAG_TYPE, (event) => {
 if (global.isItemTagsLogEnabled || global.isNonTaggedItemIdsLogEnabled) {
     ServerEvents.loaded(() => {
         if (global.isItemTagsLogEnabled) {
-            console.log(`\n\n${itemTagIds.length} registered minecraft:item tags found!\n`);
+            console.info('\n' + '\n' + `${itemTagIds.length} registered ${ITEM_TAG_TYPE} tags found!\n`);
             console.log(itemTagIds.map((tagId) => `#${tagId}`).sort());
         }
 
@@ -335,7 +336,9 @@ if (global.isItemTagsLogEnabled || global.isNonTaggedItemIdsLogEnabled) {
                 if (itemStack.getTags().toList().isEmpty()) nonTaggedItemIds.add(itemStack.getId());
             });
 
-            console.log(`\n\n${nonTaggedItemIds.size()} items are currently NOT TAGGED with minecraft:item tags!\n`);
+            console.info(
+                '\n' + '\n' + `${nonTaggedItemIds.size()} items are currently NOT TAGGED with ${ITEM_TAG_TYPE} tags!\n`
+            );
             console.log(nonTaggedItemIds.toArray().sort());
         }
     });

@@ -63,7 +63,7 @@ ServerEvents.recipes((event) => {
             'composeRecipeId',
             arguments,
             [1, 2, 3],
-            ['string', ['string', 'string[]', undefined], ['string', undefined]]
+            ['string', ['string', 'string[]', 'undefined'], ['string', 'undefined']]
         );
 
         /* Formats 'outputItemId'. */
@@ -344,8 +344,9 @@ ServerEvents.recipes((event) => {
         }
 
         if (!supportedOreTypes.includes(oreType)) {
-            console.log(
-                `[WARN] Ore type ${oreType} not supported! Add logic to addOreCrushingRecipe() in recipes.js to handle this ore type. Skipping ore crushing recipe`
+            console.warn(
+                `Ore type '${oreType}' not supported! Add logic to 'addOreCrushingRecipe' function` +
+                    ' in recipes.js to handle this ore type. Skipping ore crushing recipe...'
             );
             return;
         }

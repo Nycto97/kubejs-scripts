@@ -90,38 +90,37 @@ LootJS.modifiers((event) => {
         /* There will be many more items that need to be added! */
         const rareIceLootCannotStartWith = ['ftbquests', 'randomium', 'doubleslabs', 'minecraft:structure'];
 
-        const blacklistedRareIceLootItemIds = itemIds.filter(
+        const rareIceLootBlacklist = itemIds.filter(
             (itemId) =>
                 rareIceLootCannotStartWith.some((itemIdStart) => itemId.startsWith(itemIdStart)) ||
                 RegExp(/^.*(spawn_egg|command_block|jigsaw|barrier|debug).*$/).test(itemId) ||
                 RegExp(/^(buildersaddition:|v_slab_compat:createdeco).*vertical_slab$/).test(itemId)
         );
 
-        const isRareIceLootItemIdNotBlacklisted = (itemId) => {
-            return !blacklistedRareIceLootItemIds.contains(itemId);
-        };
+        const isRareIceLootItemBlacklisted = (itemId) => rareIceLootBlacklist.contains(itemId);
 
-        const rareIceLootItemIds = global.itemIds.filter((itemId) => isRareIceLootItemIdNotBlacklisted(itemId));
+        const rareIceLootItemIds = itemIds.filter((itemId) => !isRareIceLootItemBlacklisted(itemId));
 
         if (isBlacklistedRareIceLootLogEnabled) {
-            console.log(
-                `\n\n${
-                    itemIds.length - rareIceLootItemIds.length
-                } blacklisted items will not be added to rare_ice 'chest' loot:\n\n${blacklistedRareIceLootItemIds}\n`
+            console.info(
+                '\n' +
+                    '\n' +
+                    `${rareIceLootBlacklist.length} blacklisted items will not be added to rare_ice 'chest' loot:\n` +
+                    '\n' +
+                    `${rareIceLootBlacklist}\n`
             );
         }
 
-        event.addLootTableModifier('rare-ice:chests/rare_ice').apply((ctx) => {
+        event.addLootTableModifier('rare-ice:chests/rare_ice').apply((ctx) =>
             ctx.findLoot(Ingredient.all).forEach((item) => {
-                let count = item.count;
+                let lootItemCount = item.count;
+
+                let newItemId = rareIceLootItemIds[Math.floor(Math.random() * rareIceLootItemIds.length)];
 
                 ctx.removeLoot(item);
-                ctx.addLoot(
-                    LootEntry.of(rareIceLootItemIds[Math.floor(Math.random() * rareIceLootItemIds.length)]).limitCount(
-                        count
-                    )
-                );
-            });
-        });
+
+                ctx.addLoot(LootEntry.of(newItemId).limitCount(lootItemCount));
+            })
+        );
     }
 });
