@@ -41,8 +41,46 @@ StartupEvents.postInit(() => {
     global['itemIds'] = itemIds;
     global['blockIds'] = blockIds;
 
-    if (isBlockAndItemCountLogEnabled)
-        console.log(`There are ${itemIds.length} items and ${blockIds.length} blocks registered`);
+    if (isBlockAndItemCountLogEnabled) {
+        console.info(`[INFO] There are ${itemIds.length} items and ${blockIds.length} blocks registered`);
+
+        /* Creates maps to store the count of items and blocks for each mod. */
+        let modItemCounts = {};
+        let modBlockCounts = {};
+
+        /* Iterates over each item id. */
+        for (let itemId of itemIds) {
+            /* Splits the item id at the colon to get the mod name. */
+            let [modName] = itemId.split(':');
+
+            /* If the mod name is not already in the map, adds it with a count of 1. */
+            /* If the mod name is already in the map, increments its count. */
+            modItemCounts[modName] = (modItemCounts[modName] || 0) + 1;
+        }
+
+        /* Iterates over each block id. */
+        for (let blockId of blockIds) {
+            /* Splits the block id at the colon to get the mod name. */
+            let [modName] = blockId.split(':');
+
+            /* If the mod name is not already in the map, adds it with a count of 1. */
+            /* If the mod name is already in the map, increments its count. */
+            modBlockCounts[modName] = (modBlockCounts[modName] || 0) + 1;
+        }
+
+        /* Converts the maps to arrays of [modName, count] pairs, sorts them in descending order of count, and logs the sorted counts. */
+        Object.entries(modItemCounts)
+            .sort((a, b) => b[1] - a[1])
+            .forEach(([modName, count]) => {
+                console.info(`ITEM: Mod '${modName}' has ${count} item${count > 1 ? 's' : ''}.`);
+            });
+
+        Object.entries(modBlockCounts)
+            .sort((a, b) => b[1] - a[1])
+            .forEach(([modName, count]) => {
+                console.info(`BLOCK: Mod '${modName}' has ${count} block${count > 1 ? 's' : ''}.`);
+            });
+    }
 });
 
 /**
