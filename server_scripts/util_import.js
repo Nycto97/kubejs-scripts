@@ -36,10 +36,6 @@ const isUndefined = global['isUndefined'];
 
 const itemsExist = global['itemsExist'];
 
-const logItemNotFound = global['logItemNotFound'];
-const logModNotLoaded = global['logModNotLoaded'];
-const logTagNotFound = global['logTagNotFound'];
-
 const removeDuplicates = global['removeDuplicates'];
 
 const throwError = global['throwError'];
