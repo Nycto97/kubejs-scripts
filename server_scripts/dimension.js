@@ -37,10 +37,6 @@ CommonAddedEvents.playerChangeDimension((event) => {
     const isOldDimensionWhitelisted = dimensionWhitelistForShader.includes(oldDimension);
     const isNewDimensionWhitelisted = dimensionWhitelistForShader.includes(newDimension);
 
-    if (isPlayerDimensionChangeLogEnabled) {
-        console.log(`${username} moved from ${oldDimension.split(':')[1]} to ${newDimension.split(':')[1]}`);
-    }
-
     const shaderTip =
         '§bTip:§f Press ESC > Options > Control Settings > Key Binds >' +
         ` type 'shader' in the text field > bind Toggle Shaders to F7`;
@@ -90,5 +86,36 @@ CommonAddedEvents.playerChangeDimension((event) => {
                     `${shaderTip}`
             );
         });
+    }
+
+    if (isPlayerDimensionChangeLogEnabled) {
+        /**
+         * Formats a dimension name by splitting the dimension Resource Location string
+         *     at the colon and capitalizing the first letter of each word.
+         *
+         * Handles special cases like 'usw_vanilla' which becomes 'USW Vanilla'.
+         *
+         * @param {string} dimension - The dimension Resource Location string to format.
+         *
+         * @returns {string} The formatted dimension name.
+         */
+        let formatDimensionName = (dimension) => {
+            /* Splits the string at the colon and takes the second part. */
+            let dimensionName = dimension.split(':')[1];
+
+            /* Handles special cases. */
+            if (dimensionName === 'usw_vanilla') {
+                return 'USW Vanilla';
+            }
+
+            /* Replaces underscores with spaces and capitalizes the first letter of each word. */
+            dimensionName = dimensionName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+
+            return dimensionName;
+        };
+
+        console.info(
+            `${username} moved from ${formatDimensionName(oldDimension)} to ${formatDimensionName(newDimension)}`
+        );
     }
 });
